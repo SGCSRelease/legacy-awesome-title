@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
@@ -11,12 +11,14 @@ app.config.from_object(config)
 from db import (
     db,
     URL,
+    NickRecom,
 )
 db.init_app(app)
 migrate = Migrate(app, db)
 
 admin = Admin(app)
 admin.add_view(ModelView(URL, db.session))
+admin.add_view(ModelView(NickRecom, db.session))
 
 
 @app.route("/")
@@ -58,6 +60,30 @@ def addURL(link, id):
     db.session.add(newP)
     db.session.commit()
     return "등록됐습니다."
+
+@app.route('/test/nick/recom/<nick>/<fromA>/<toB>/')
+def RecommendNickname(nick, fromA, toB):
+    new = NickRecom()
+    new.nick = nick
+    new.fromA = fromA
+    new.toB = toB
+    db.session.add(new)
+    db.session.commit()
+    return '추천되었습니다!'
+
+@app.route('/test/nick/recom/<id>')
+def Search(id):
+	#db 안의 toB 가 id와 일치하는 경우 모두(nick,from,toB) 출력할 것
+	found = NickRecom.query.filter(
+		NickRecom.toB == id,
+	).all()
+	result = {}
+	for i in found:	
+		if i.nick in result:
+			result[i.nick].append(i.fromA)
+		else:
+			result[i.nick] = [i.fromA]
+	return jsonify(result)
 
 
 if __name__ == "__main__":
