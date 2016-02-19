@@ -90,6 +90,7 @@ Issue에 선배를 소환한 후, 코드리뷰를 받습니다.
 ```bash
 git checkout master
 git merge issue_no_10
+git push origin master
 ```
-이 때, merge 명령에서 문제가 일어날 수 있습니다.
+이 때 문제가 일어날 수 있습니다.
 (선배를 부르세요!)
