@@ -54,9 +54,12 @@ A. 뭐 어떡합니까 ;ㅅ;ㅠㅠ
 ### Q. 소그룹이나 업적에는 별명을 붙일 수 없나요?
 
 -----
+## 회원가입 /newbie #1
+
 ## 기능 /api
 ### /api/register
-### /api/check_id
+### /api/check_id #4
+### /api/check_hakbun #4
 ### /api/admin/...
 
 -----
