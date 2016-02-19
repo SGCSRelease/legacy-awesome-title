@@ -1,0 +1,5 @@
+flask
+flask-admin
+flask-migrate
+flask-sqlalchemy
+pymysql
