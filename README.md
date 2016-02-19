@@ -1,6 +1,8 @@
 # AwesomeTitle (http://title.reluv.me)
 릴리즈의, 릴리즈에 의한, 릴리즈를 위한 **별명/업적 관리 사비스**
 
+- [개발하는법](https://github.com/minhoryang/AwesomeTitle/blob/master/DEVELOPMENT.md)
+
 -----
 ## 릴리즈 사람들을 찾을 수 있어요! [#3](https://github.com/minhoryang/AwesomeTitle/issues/3)
 아래 URL들은 다 같은 페이지를 보여줄 겁니다. 어떻게? [#5](https://github.com/minhoryang/AwesomeTitle/issues/5)

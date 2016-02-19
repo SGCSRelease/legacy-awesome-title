@@ -38,9 +38,13 @@ def goto(link):
         URL.link == link,
     ).first()
     if found:
-        return found.ID + "의 페이지 입니다."
+        return userpage(found.ID)
     else:
         return "존재하지 않는 페이지입니다.", 404
+
+
+def userpage(id):
+    return id + "의 페이지 입니다."
 
 
 # TODO : 테스트 용이 아니라 다른 친구들이 사용할 수 있도록 함수로 만들어주세요. 그러니까 나중에는 URL을 빼주세요!
@@ -61,6 +65,7 @@ def addURL(link, id):
     db.session.commit()
     return "등록됐습니다."
 
+
 @app.route('/test/nick/recom/<nick>/<fromA>/<toB>/')
 def RecommendNickname(nick, fromA, toB):
     new = NickRecom()
@@ -71,19 +76,20 @@ def RecommendNickname(nick, fromA, toB):
     db.session.commit()
     return '추천되었습니다!'
 
+
 @app.route('/test/nick/recom/<id>')
 def Search(id):
-	#db 안의 toB 가 id와 일치하는 경우 모두(nick,from,toB) 출력할 것
-	found = NickRecom.query.filter(
-		NickRecom.toB == id,
-	).all()
-	result = {}
-	for i in found:	
-		if i.nick in result:
-			result[i.nick].append(i.fromA)
-		else:
-			result[i.nick] = [i.fromA]
-	return jsonify(result)
+    #db 안의 toB 가 id와 일치하는 경우 모두(nick,from,toB) 출력할 것
+    found = NickRecom.query.filter(
+            NickRecom.toB == id,
+    ).all()
+    result = {}
+    for i in found:	
+	if i.nick in result:
+	    result[i.nick].append(i.fromA)
+	else:
+	    result[i.nick] = [i.fromA]
+    return jsonify(result)
 
 
 if __name__ == "__main__":
