@@ -1,8 +1,12 @@
 # $ pip install flask-sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
 
-class Test(db.Model):
-    __tablename__ = "test"
-    idx = db.Column(db.Integer, primary_key=True)
+db = SQLAlchemy()
+N = 50
+
+
+class URL(db.Model):
+    __tablename__ = "URL"
+    link = db.Column(db.String(N), primary_key=True)
+    ID = db.Column(db.String(N))
