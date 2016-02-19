@@ -5,6 +5,12 @@
 git clone https://github.com/minhoryang/AwesomeTitle.git
 cd AwesomeTitle
 ```
+아래의 명령을 한번도 쳐 본 기억이 없다면, 새 컴퓨터에서 작업을 하신다면, 아래의 명령을 쳐주세요.
+```bash
+git config --global user.name "자신의 이름을 영어로"
+git config --global user.email "자신의 Github이메일"
+git config --global core.editor vim
+```
 
 ## 2. Pyenv를 이용해 자신이 사용할 Python 환경을 맞춥니다!
 ```bash
