@@ -8,6 +8,7 @@ from flask import (
         request,
         send_from_directory,
         redirect,
+        url_for,
 )
 from flask.ext.bcrypt import Bcrypt
 from flask_admin import Admin
@@ -26,6 +27,7 @@ from db import (
     User,
     URL,
     NickRecom,
+    Photo,
 )
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -170,21 +172,51 @@ def Search(id):
             result[i.nick] = [i.fromA]
     return jsonify(result)
 
-@app.route('/test/upload',methods=["GET","POST"])
-def file_upload():
-    #jmg) 파일을 업로드해 서버에 저장하는 함수입니다.
+@app.route('/test/upload/<username>',methods=["GET","POST"])
+def file_upload(username):
+    # jmg) 파일을 업로드해 서버에 저장하는 함수입니다.
+    user_found = check_username(username, is_internal=True)
+    if not user_found :
+        return "존재하지 않는 아이디입니다.", 400
+
+    # 파일을 업로드
     if request.method == "GET":
         return """
-        <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/test/upload">
-            File to upload: <INPUT TYPE=FILE NAME="upfile" accept="video/*, image/*"><BR> 
+        <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/test/upload/%s">
+            File to upload: <INPUT TYPE=FILE NAME="upfile" accept="image/*"><BR> 
             <INPUT TYPE=SUBMIT VALUE="Submit"> 
         </FORM>
-        """
+        """ % (username,)
+    
+    # 파일을 업로드 후 저장
     else :
-        file=request.files['upfile']
-        filename = secure_filename(file.filename)
+        file = request.files['upfile']
+        filename = username+os.path.splitext(file.filename)[1]
+
+        #폴더가 없다면 만들어줍니다.
+        if not os.path.exists(app.config['UPLOAD_FOLDER']) :
+                os.makedirs(app.config['UPLOAD_FOLDER'])
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        #return uploaded_file(filename)
+        
+        found = Photo.query.filter(
+                Photo.username == username,
+        ).first()
+        
+        # Photo db에 저장이 되어있지 않으면 db에 추가
+        if not found:
+            new_photo = Photo()
+            new_photo.username = username
+            new_photo.photo = filename
+            
+            db.session.add(new_photo)
+            db.session.commit()
+
+        #Photo db에 저장이 되어있으면 db의 photo부분을 수정
+        else :
+            found.photo = filename
+            db.session.add(found)
+            db.session.commit()
+        
         return redirect(url_for('uploaded_file', filename=filename))
 
 @app.route('/uploaded_file/<filename>')

@@ -44,3 +44,8 @@ class NickRecom(db.Model):
     nick = db.Column(db.String(N))
     fromA = db.Column(db.String(N))
     toB = db.Column(db.String(N))
+
+class Photo(db.Model):
+    __tablename__ = "photo"
+    username = db.Column(db.String(N), primary_key=True)
+    photo = db.Column(db.String(60))

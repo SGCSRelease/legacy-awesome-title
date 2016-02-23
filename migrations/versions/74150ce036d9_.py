@@ -1,4 +1,4 @@
-"""URL db의 변수명을 수정했습니다. ID -> username -jmg
+"""URL db의 변수명을 수정했습니다. ID -> username -jmg7173
 
 Revision ID: 74150ce036d9
 Revises: fec9ce1da9ff
