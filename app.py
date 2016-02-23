@@ -1,15 +1,25 @@
 from datetime import datetime
+import os
 
-from flask import Flask, jsonify, render_template, request
+from flask import (
+        Flask,
+        jsonify,
+        render_template,
+        request,
+        send_from_directory,
+        redirect,
+)
 from flask.ext.bcrypt import Bcrypt
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
+from werkzeug import secure_filename
 
 app = Flask(__name__)
 
 import config
 app.config.from_object(config)
+app.config['UPLOAD_FOLDER'] = './DOWNLOADED/'
 
 from db import (
     db,
@@ -40,9 +50,7 @@ def register():
         username = request.form['usr']
         if not username: return 'Failed', 400
         if len(username)>50: return 'Failed', 400
-        found = User.query.filter(
-                User.username == username,
-                ).first()
+        found = check_username(username, is_internal=True)
         if found: return "Existing Username", 400
 
         if not request.form['pwd']: return 'Failed', 400
@@ -87,13 +95,18 @@ def register():
         return "성공하였습니다!"
 
 @app.route("/check_username/<username>")
-def check_username(username):
+def check_username(username, is_internal=False):
     found = User.query.filter(
             User.username == username,
     ).first()
-    if found:
-        return "Existing Username", 400
-    return "Good to go!"
+    if not is_internal:
+        if found:
+            return "Existing Username", 400
+        return "Good to go!"
+    else:
+        if found:
+            return found
+        return None
 
 @app.route("/<link>")
 def goto(link):
@@ -102,20 +115,22 @@ def goto(link):
             URL.link == link,
     ).first()
     if found:
-        return userpage(found.ID)
+        return userpage(found.username)
     else:
         return "존재하지 않는 페이지입니다.", 404
 
-
+#TODO : 페이지를 만들어야 합니다.
 def userpage(id):
     return id + "의 페이지 입니다."
 
 
-# TODO : 테스트 용이 아니라 다른 친구들이 사용할 수 있도록 함수로 만들어주세요. 그러니까 나중에는 URL을 빼주세요!
-@app.route("/test/add_URL/<link>/<id>")
-def addURL(link, id):
+def addURL(link, username):
     """jmg) 아이디에 여러 링크를 연결하는 함수입니다."""
-    # TODO : 광희랑 이야기해서 ID가 있는지 확인하는 함수를 호출해 주세요. 
+    # ID가 있는지 확인하는 함수 
+    found = check_username(username, is_internal=True)
+    if not found:
+        return "존재하지 않는 아이디입니다.", 400
+    
     # link 중복 check
     found = URL.query.filter(
             URL.link == link,
@@ -124,7 +139,7 @@ def addURL(link, id):
         return "이미 생성된 링크입니다.", 400
     newP = URL()
     newP.link = link
-    newP.ID = id
+    newP.username = username
     db.session.add(newP)
     db.session.commit()
     return "등록됐습니다."
@@ -154,6 +169,28 @@ def Search(id):
         else:
             result[i.nick] = [i.fromA]
     return jsonify(result)
+
+@app.route('/test/upload',methods=["GET","POST"])
+def file_upload():
+    #jmg) 파일을 업로드해 서버에 저장하는 함수입니다.
+    if request.method == "GET":
+        return """
+        <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/test/upload">
+            File to upload: <INPUT TYPE=FILE NAME="upfile" accept="video/*, image/*"><BR> 
+            <INPUT TYPE=SUBMIT VALUE="Submit"> 
+        </FORM>
+        """
+    else :
+        file=request.files['upfile']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #return uploaded_file(filename)
+        return redirect(url_for('uploaded_file', filename=filename))
+
+@app.route('/uploaded_file/<filename>')
+def uploaded_file(filename):
+    #jmg) 업로드한 파일을 보여주는 함수입니다.
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 if __name__ == "__main__":

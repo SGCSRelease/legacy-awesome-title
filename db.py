@@ -36,7 +36,7 @@ class User(db.Model):
 class URL(db.Model):
     __tablename__ = "URL"
     link = db.Column(db.String(N), primary_key=True)
-    ID = db.Column(db.String(N))
+    username = db.Column(db.String(N))
 
 class NickRecom(db.Model):
     __tablename__ = "nickrecom"
