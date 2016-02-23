@@ -37,7 +37,7 @@ admin = Admin(app)
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(URL, db.session))
 admin.add_view(ModelView(NickRecom, db.session))
-
+admin.add_view(ModelView(Photo, db.session))
 
 @app.route("/")
 def main():
@@ -222,6 +222,30 @@ def file_upload(username):
 def uploaded_file(filename):
     #jmg) 업로드한 파일을 보여주는 함수입니다.
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/test/login', methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return """
+            <form method=POST action="/test/login">
+                ID: <input type=text class='usr' id=usr name=usr /> <br>
+                PW: <input type=password class='pwd' id=pwd name=pwd /> <br>
+                <input type=submit />
+            </form>
+            """
+    else :
+        found = User.query.filter(
+                User.username == request.form['usr'],
+        ).first()
+        if not found :
+            return "로그인 입력정보가 잘못되었습니다.", 400
+        
+        if not bcrypt.check_password_hash(found.password_hash, request.form['pwd']):
+            return "로그인 입력정보가 잘못되었습니다.", 400
+
+
+        return "로그인 되었습니다!", 200
+        
 
 
 if __name__ == "__main__":
