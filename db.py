@@ -7,7 +7,7 @@ N = 50
 
 class User(db.Model):
     username = db.Column(db.String(N), primary_key=True)
-    password_hash = db.Column(db.String(60), nullable=False)
+    password_hash = db.Column(db.String(N + 10), nullable=False)
     first_name_kr = db.Column(db.String(N), nullable=False)
     last_name_kr = db.Column(db.String(N), nullable=False)
     first_name_en = db.Column(db.String(N), nullable=False)
@@ -48,4 +48,4 @@ class NickRecom(db.Model):
 class Photo(db.Model):
     __tablename__ = "photo"
     username = db.Column(db.String(N), primary_key=True)
-    photo = db.Column(db.String(60))
+    photo = db.Column(db.String(N + 10))

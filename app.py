@@ -43,7 +43,6 @@ admin.add_view(ModelView(NickRecom, db.session))
 def main():
     return 'main'
 
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
@@ -172,7 +171,7 @@ def Search(id):
             result[i.nick] = [i.fromA]
     return jsonify(result)
 
-@app.route('/test/upload/<username>',methods=["GET","POST"])
+@app.route('/test/upload/<username>', methods=["GET","POST"])
 def file_upload(username):
     # jmg) 파일을 업로드해 서버에 저장하는 함수입니다.
     user_found = check_username(username, is_internal=True)
@@ -191,7 +190,7 @@ def file_upload(username):
     # 파일을 업로드 후 저장
     else :
         file = request.files['upfile']
-        filename = username+os.path.splitext(file.filename)[1]
+        filename = username + os.path.splitext(file.filename)[1]
 
         #폴더가 없다면 만들어줍니다.
         if not os.path.exists(app.config['UPLOAD_FOLDER']) :
