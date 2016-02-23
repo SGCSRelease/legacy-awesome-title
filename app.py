@@ -171,7 +171,7 @@ def Search(id):
             result[i.nick] = [i.fromA]
     return jsonify(result)
 
-@app.route('/test/upload/<username>', methods=["GET","POST"])
+@app.route('/test/upload/<username>', methods=["GET", "POST"])
 def file_upload(username):
     # jmg) 파일을 업로드해 서버에 저장하는 함수입니다.
     user_found = check_username(username, is_internal=True)
