@@ -9,6 +9,8 @@ from flask import (
         send_from_directory,
         redirect,
         url_for,
+        escape,
+        session,
 )
 from flask.ext.bcrypt import Bcrypt
 from flask_admin import Admin
@@ -18,9 +20,9 @@ from werkzeug import secure_filename
 
 app = Flask(__name__)
 
+
 import config
 app.config.from_object(config)
-app.config['UPLOAD_FOLDER'] = './DOWNLOADED/'
 
 from db import (
     db,
@@ -243,10 +245,20 @@ def login():
         if not bcrypt.check_password_hash(found.password_hash, request.form['pwd']):
             return "로그인 입력정보가 잘못되었습니다.", 400
 
+        session['username'] = request.form['usr']
+        #return "%s님! 로그인 되었습니다!" % found.username, 200         
+        return redirect(url_for('index'))
 
-        return "로그인 되었습니다!", 200
-        
+@app.route('/test/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('index'))
 
+@app.route('/test')
+def index():
+    if 'username' in session:
+        return 'Logged in as %s' % escape(session['username'])
+    return 'You are not logged in'
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
