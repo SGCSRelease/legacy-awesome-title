@@ -42,8 +42,11 @@ admin.add_view(ModelView(NickRecom, db.session))
 admin.add_view(ModelView(Photo, db.session))
 
 @app.route("/")
-def main():
-    return 'main'
+def index():
+    perhaps_logged_in_username = get_logged_in_username()
+    if perhaps_logged_in_username:
+        return '안녕하세요 %s님!' % (perhaps_logged_in_username,)
+    return '로그인안하셨어요 /login 가 보세요'
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -148,8 +151,21 @@ def addURL(link, username):
     return "등록됐습니다."
 
 
-@app.route('/test/nick/recom/<nick>/<fromA>/<toB>/')
-def RecommendNickname(nick, fromA, toB):
+#@app.route('/test/nick/recom/<nick>/<fromA>/<toB>/')
+#def RecommendNickname(nick, fromA, toB):
+# TODO : Change URL and Name of Function!  -- NEED TO MAKE AN ISSUE!
+@app.route('/test/nick/recom/<nick>/<toB>/')
+def RecommendNickname(nick, toB):
+    """Issue #9, A라는 사용자가 B라는 사용자에게 nick이라는 별명을 추천하는 함수입니다.
+    
+    하지만 정민교(크하하하하)가 로그인 되었는지 알려주는 함수를 만들었기 때문에!
+    A라는 사용자의 아이디를 매번 URL로 요청받을 필요가 없어졌습니다.
+    """
+    fromA = get_logged_in_username()
+    if not fromA:
+        return '로그인이 안되어 있습니다!!!!', 400
+    if not check_username(toB, is_internal=True):
+        return '존재하지 않는 유저에게 추천하려고 하였습니다.', 400
     new = NickRecom()
     new.nick = nick
     new.fromA = fromA
@@ -159,8 +175,14 @@ def RecommendNickname(nick, fromA, toB):
     return '추천되었습니다!'
 
 
-@app.route('/test/nick/recom/<id>')
-def Search(id):
+# TODO : Change URL and Name of Function!  -- NEED TO MAKE AN ISSUE!
+@app.route('/test/nick/recom')
+def Search():
+    """Issue #9, 내가 추천받은 닉네임들을 보여줍니다."""
+    id = get_logged_in_username()
+    if not id:
+        return '로그인이 안되어 있다구욧!!!!', 400
+    # TODO
     #db 안의 toB 가 id와 일치하는 경우 모두(nick,from,toB) 출력할 것
     found = NickRecom.query.filter(
             NickRecom.toB == id,
@@ -173,21 +195,21 @@ def Search(id):
             result[i.nick] = [i.fromA]
     return jsonify(result)
 
-@app.route('/test/upload/<username>', methods=["GET", "POST"])
-def file_upload(username):
-    # jmg) 파일을 업로드해 서버에 저장하는 함수입니다.
-    user_found = check_username(username, is_internal=True)
-    if not user_found :
-        return "존재하지 않는 아이디입니다.", 400
-
+@app.route('/upload', methods=["GET", "POST"])
+def file_upload():
+    """Issue #11, jmg) 파일을 업로드해 서버에 저장하는 함수입니다."""
+    username = get_logged_in_username()
+    if not username:
+        return "로그인이 되어있지 않습니다.", 400
+    
     # 파일을 업로드
     if request.method == "GET":
         return """
-        <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/test/upload/%s">
+        <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/upload">
             File to upload: <INPUT TYPE=FILE NAME="upfile" accept="image/*"><BR> 
             <INPUT TYPE=SUBMIT VALUE="Submit"> 
         </FORM>
-        """ % (username,)
+        """
     
     # 파일을 업로드 후 저장
     else :
@@ -220,25 +242,25 @@ def file_upload(username):
         
         return redirect(url_for('uploaded_file', filename=filename))
 
+# TODO(정민교): 로그인 안하고도 볼 수 있는데 이게 맞나요?
 @app.route('/uploaded_file/<filename>')
 def uploaded_file(filename):
-    #jmg) 업로드한 파일을 보여주는 함수입니다.
+    """Issue #11, jmg) 업로드한 파일을 보여주는 함수입니다."""
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route('/test/login', methods=["GET", "POST"])
+@app.route('/login', methods=["GET", "POST"])
 def login():
+    """Issue #12, 로그인"""
     if request.method == "GET":
         return """
-            <form method=POST action="/test/login">
+            <form method=POST action="/login">
                 ID: <input type=text class='usr' id=usr name=usr /> <br>
                 PW: <input type=password class='pwd' id=pwd name=pwd /> <br>
                 <input type=submit />
             </form>
             """
     else :
-        found = User.query.filter(
-                User.username == request.form['usr'],
-        ).first()
+        found = check_username(request.form['usr'], is_internal=True)
         if not found :
             return "로그인 입력정보가 잘못되었습니다.", 400
         
@@ -247,18 +269,32 @@ def login():
 
         session['username'] = request.form['usr']
         #return "%s님! 로그인 되었습니다!" % found.username, 200         
-        return redirect(url_for('index'))
+        return redirect('/')
 
-@app.route('/test/logout')
+@app.route('/logout')
 def logout():
+    """issue #12 로그아웃"""
     session.pop('username', None)
-    return redirect(url_for('index'))
+    return redirect('/')
 
-@app.route('/test')
-def index():
-    if 'username' in session:
-        return 'Logged in as %s' % escape(session['username'])
-    return 'You are not logged in'
+def get_logged_in_username():
+    """issue #12 로그인 됬는지 확인하여 Username을 리턴합니다 (없으면 None).
+
+    사실 아래를 짯습니다.
+    >>> if 'username' in session:
+    ...     return session['username']
+    ... return None
+
+    근데 민호형이 이렇게 바꾸었습니다.
+    >>> try:
+    ...     return session['username']
+    ... except KeyError:
+    ...     return None
+
+    한번 더 바꾸면 아래처럼 됩니다.
+    """
+    return session.get('username')  # 없으면 None이 출력됨.
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
