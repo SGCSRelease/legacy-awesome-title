@@ -1,45 +1,33 @@
-from datetime import datetime
-import os
-
-from flask import (
-        Flask,
-        jsonify,
-        render_template,
-        request,
-        send_from_directory,
-        redirect,
-        url_for,
-        session,
-)
-from flask.ext.bcrypt import Bcrypt
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask_migrate import Migrate
+from flask import Flask
 
 import config
 from db import (
+    admin,
     db,
-    User,
+    migrate,
     URL,
-    NickRecom,
-    Photo,
-    N,
+)
+from nickname import add_routes as add_nickname_routes
+from photo import add_routes as add_photo_routes
+from user import add_routes as add_user_routes
+from user import (
+    bcrypt,
+    check_username,
+    get_logged_in_username,
 )
 
 app = Flask(__name__)
 
 app.config.from_object(config)
 
-
+admin.init_app(app)
+bcrypt.init_app(app)
 db.init_app(app)
-migrate = Migrate(app, db)
-bcrypt = Bcrypt(app)
+migrate.init_app(app, db)
 
-admin = Admin(app)
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(URL, db.session))
-admin.add_view(ModelView(NickRecom, db.session))
-admin.add_view(ModelView(Photo, db.session))
+add_user_routes(app)
+add_nickname_routes(app)
+add_photo_routes(app)
 
 
 @app.route("/")
@@ -48,82 +36,6 @@ def index():
     if perhaps_logged_in_username:
         return '안녕하세요 %s님!' % (perhaps_logged_in_username,)
     return '로그인안하셨어요 /login 가 보세요'
-
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "GET":
-        return render_template("register.html")
-    else:
-        username = request.form['usr']
-        if not username or len(username) > N:
-            return 'Failed', 400
-        found = check_username(username, is_internal=True)
-        if found:
-            return "Existing Username", 400
-
-        if not request.form['pwd']:
-            return 'Failed', 400
-        if request.form['pwd'] != request.form['pwda']:
-            return 'Failed', 400
-        password_hash = bcrypt.generate_password_hash(request.form['pwd'])
-
-        first_name_kr = request.form['fnk']
-        if not first_name_kr or len(first_name_kr) > N:
-            return 'Failed', 400
-
-        last_name_kr = request.form['lnk']
-        if not last_name_kr or len(last_name_kr) > N:
-            return 'Failed', 400
-
-        first_name_en = request.form['fne']
-        if not first_name_en or len(first_name_en) > N:
-            return 'Failed', 400
-
-        middle_name_en = request.form['mne']
-        if len(middle_name_en) > N:
-            return 'Failed', 400
-
-        last_name_en = request.form['lne']
-        if not last_name_en or len(last_name_en) > N:
-            return 'Failed', 400
-
-        try:
-            student_number = int(request.form['sn'])
-        except ValueError:
-            return 'Failed', 400
-
-        last_login = datetime.now()
-
-        new_user = User()
-        new_user.username = username
-        new_user.password_hash = password_hash
-        new_user.first_name_kr = first_name_kr
-        new_user.last_name_kr = last_name_kr
-        new_user.first_name_en = first_name_en
-        new_user.middle_name_en = middle_name_en
-        new_user.last_name_en = last_name_en
-        new_user.student_number = student_number
-        new_user.last_login = last_login
-
-        db.session.add(new_user)
-        db.session.commit()
-        return "성공하였습니다!"
-
-
-@app.route("/check_username/<username>")
-def check_username(username, is_internal=False):
-    found = User.query.filter(
-            User.username == username,
-    ).first()
-    if not is_internal:
-        if found:
-            return "Existing Username", 400
-        return "Good to go!"
-    else:
-        if found:
-            return found
-        return None
 
 
 @app.route("/<link>")
@@ -162,158 +74,6 @@ def addURL(link, username):
     db.session.add(newP)
     db.session.commit()
     return "등록됐습니다."
-
-
-# @app.route('/test/nick/recom/<nick>/<fromA>/<toB>/')
-# def RecommendNickname(nick, fromA, toB):
-# TODO : Change URL and Name of Function!  -- NEED TO MAKE AN ISSUE!
-@app.route('/test/nick/recomm/<nick>/<target>/')
-def RecommendNickname(nick, target):
-    """Issue #9, A라는 사용자가 B라는 사용자에게 nick이라는 별명을 추천하는 함수입니다.
-    하지만 정민교(크하하하하)가 로그인 되었는지 알려주는 함수를 만들었기 때문에!
-    A라는 사용자의 아이디를 매번 URL로 요청받을 필요가 없어졌습니다.
-    """
-    username = get_logged_in_username()
-    if not username:
-        return '로그인이 안되어 있습니다!!!!', 400
-    if not check_username(username, is_internal=True):
-        return '존재하지 않는 유저에게 추천하려고 하였습니다.', 400
-    new = NickRecom()
-    new.nick = nick
-    new.recommender = username
-    new.username = target
-    db.session.add(new)
-    db.session.commit()
-    return '추천되었습니다!'
-
-
-# TODO : Change URL and Name of Function!  -- NEED TO MAKE AN ISSUE!
-@app.route('/test/nick/recomm')
-def Search():
-    """Issue #9, 내가 추천받은 닉네임들을 보여줍니다."""
-    username = get_logged_in_username()
-    if not username:
-        return '로그인이 안되어 있다구욧!!!!', 400
-
-    # db 안의 toB 가 id와 일치하는 경우 모두(nick,from,toB) 출력할 것
-    found = NickRecom.query.filter(
-            NickRecom.username == username,
-    ).all()
-
-    result = {}
-    for i in found:
-        if i.nick in result:
-            result[i.nick].append(i.recommender)
-        else:
-            result[i.nick] = [i.recommender]
-    return jsonify(result)
-
-
-@app.route('/upload', methods=["GET", "POST"])
-def file_upload():
-    """Issue #11, jmg) 파일을 업로드해 서버에 저장하는 함수입니다."""
-    username = get_logged_in_username()
-    if not username:
-        return "로그인이 되어있지 않습니다.", 400
-
-    # 파일을 업로드
-    if request.method == "GET":
-        return """
-        <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/upload">
-            File to upload: <INPUT TYPE=FILE NAME="upfile" accept="image/*"><BR>
-            <INPUT TYPE=SUBMIT VALUE="Submit">
-        </FORM>
-        """
-
-    # 파일을 업로드 후 저장
-    else:
-        file = request.files['upfile']
-        filename = username + os.path.splitext(file.filename)[1]
-
-        # 폴더가 없다면 만들어줍니다.
-        if not os.path.exists(app.config['UPLOAD_FOLDER']):
-            os.makedirs(app.config['UPLOAD_FOLDER'])
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-        found = Photo.query.filter(
-                Photo.username == username,
-        ).first()
-
-        # Photo db에 저장이 되어있지 않으면 db에 추가
-        if not found:
-            new_photo = Photo()
-            new_photo.username = username
-            new_photo.photo = filename
-
-            db.session.add(new_photo)
-            db.session.commit()
-
-        # Photo db에 저장이 되어있으면 db의 photo부분을 수정
-        else:
-            found.photo = filename
-            db.session.add(found)
-            db.session.commit()
-
-        return redirect(url_for('uploaded_file', filename=filename))
-
-
-# TODO(정민교): 로그인 안하고도 볼 수 있는데 이게 맞나요?
-@app.route('/uploaded_file/<filename>')
-def uploaded_file(filename):
-    """Issue #11, jmg) 업로드한 파일을 보여주는 함수입니다."""
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    """Issue #12, 로그인"""
-    if request.method == "GET":
-        return """
-            <form method=POST action="/login">
-                ID: <input type=text class='usr' id=usr name=usr /> <br>
-                PW: <input type=password class='pwd' id=pwd name=pwd /> <br>
-                <input type=submit />
-            </form>
-            """
-    else:
-        found = check_username(request.form['usr'], is_internal=True)
-        if not found:
-            return "로그인 입력정보가 잘못되었습니다.", 400
-
-        if not bcrypt.check_password_hash(
-                found.password_hash,
-                request.form['pwd']
-        ):
-            return "로그인 입력정보가 잘못되었습니다.", 400
-
-        session['username'] = request.form['usr']
-        return redirect('/')
-
-
-@app.route('/logout')
-def logout():
-    """issue #12 로그아웃"""
-    session.pop('username', None)
-    return redirect('/')
-
-
-def get_logged_in_username():
-    """issue #12 로그인 됬는지 확인하여 Username을 리턴합니다 (없으면 None).
-
-    사실 아래를 짯습니다.
-    >>> if 'username' in session:
-    ...     return session['username']
-    ... return None
-
-    근데 민호형이 이렇게 바꾸었습니다.
-    >>> try:
-    ...     return session['username']
-    ... except KeyError:
-    ...     return None
-
-    한번 더 바꾸면 아래처럼 됩니다.
-    """
-    return session.get('username')  # 없으면 None이 출력됨.
 
 
 if __name__ == "__main__":

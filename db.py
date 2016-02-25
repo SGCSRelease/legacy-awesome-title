@@ -1,8 +1,12 @@
-# $ pip install flask-sqlalchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 
+admin = Admin()
 db = SQLAlchemy()
+migrate = Migrate()
 N = 50
 
 
@@ -44,3 +48,9 @@ class Photo(db.Model):
     __tablename__ = "photo"
     username = db.Column(db.String(N), primary_key=True)
     photo = db.Column(db.String(N + 10))
+
+
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(URL, db.session))
+admin.add_view(ModelView(NickRecom, db.session))
+admin.add_view(ModelView(Photo, db.session))
