@@ -55,7 +55,7 @@ pip install -r requirements.txt
 - 다시 DB를 구성합니다
 
 ```bash
-python manage.py db upgrade
+python db.py db upgrade
 ```
 
 ## 3. 작업할 브랜치를 만듭니다.
@@ -71,9 +71,9 @@ git checkout issue_no_10
 
 ### 4-2. DB구조에 변화를 주었을 때는 Migrate 스크립트를 만듭니다.
 ```bash
-python manage.py db migrate
-python manage.py db edit  # 꼭 확인!
-python manage.py db upgrade
+python db.py db migrate
+python db.py db edit  # 꼭 확인!
+python db.py db upgrade
 ```
 - Migrate 후 꼭 생성된 파일을 edit 명령으로 확인해봅시다.
 
