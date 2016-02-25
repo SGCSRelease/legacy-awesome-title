@@ -16,8 +16,8 @@ from user import get_logged_in_username
 
 
 def add_routes(app):
-    app.route('/upload', methods=["GET", "POST"])(photo_upload)
-    app.route('/uploaded_photo/<filename>')(uploaded_photo)
+    app.route('/upload/', methods=["GET", "POST"])(photo_upload)
+    app.route('/uploaded_photo/<filename>/')(uploaded_photo)
 
 
 def photo_upload():

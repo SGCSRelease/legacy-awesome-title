@@ -38,7 +38,7 @@ def index():
     return '로그인안하셨어요 /login 가 보세요'
 
 
-@app.route("/<link>")
+@app.route("/<link>/")
 def goto(link):
     """jmg) 여러 링크를 입력해도 같은 아이디의 페이지로 이동하는 함수입니다."""
     found = URL.query.filter(

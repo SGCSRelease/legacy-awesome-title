@@ -20,10 +20,10 @@ bcrypt = Bcrypt()
 
 
 def add_routes(app):
-    app.route("/register", methods=["GET", "POST"])(register)
-    app.route("/check_username/<username>")(check_username)
-    app.route('/login', methods=["GET", "POST"])(login)
-    app.route('/logout')(logout)
+    app.route("/register/", methods=["GET", "POST"])(register)
+    app.route("/check_username/<username>/")(check_username)
+    app.route('/login/', methods=["GET", "POST"])(login)
+    app.route('/logout/')(logout)
 
 
 def register():

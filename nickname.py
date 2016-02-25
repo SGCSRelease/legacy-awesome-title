@@ -1,6 +1,3 @@
-# RecommendNickname
-# Search????
-
 from flask import (
     jsonify,
 )
@@ -16,13 +13,13 @@ from user import (
 
 
 def add_routes(app):
+    # TODO : Change URL
+    app.route('/nickname/')(ManageMyNicknames)
     app.route('/test/nick/recomm/<nick>/<target>/')(RecommendNickname)
-    app.route('/test/nick/recomm')(Search)
+    app.route('/test/nick/recomm/')(RecommendedNicknamesForMe)
 
 
-# @app.route('/test/nick/recom/<nick>/<fromA>/<toB>/')
-# def RecommendNickname(nick, fromA, toB):
-# TODO : Change URL and Name of Function!  -- NEED TO MAKE AN ISSUE!
+# TODO : 자신이 자신 추천하면 안되요 안되.
 def RecommendNickname(nick, target):
     """Issue #9, A라는 사용자가 B라는 사용자에게 nick이라는 별명을 추천하는 함수입니다.
     하지만 정민교(크하하하하)가 로그인 되었는지 알려주는 함수를 만들었기 때문에!
@@ -42,8 +39,7 @@ def RecommendNickname(nick, target):
     return '추천되었습니다!'
 
 
-# TODO : Change URL and Name of Function!  -- NEED TO MAKE AN ISSUE!
-def Search():
+def RecommendedNicknamesForMe():
     """Issue #9, 내가 추천받은 닉네임들을 보여줍니다."""
     username = get_logged_in_username()
     if not username:
@@ -61,3 +57,17 @@ def Search():
         else:
             result[i.nick] = [i.recommender]
     return jsonify(result)
+
+
+def ManageMyNicknames():
+    """
+    1. 내 닉네임들을 보여줌
+    2. 내 닉네임들을 빼거나 추가할 수 있음.
+      - 닉네임 등록 시 url db에 추가할지 물어보고, True일경우 추가해줌.
+      - 이미 추천된 닉네임을 추가하려고할 경우, 추천받은 닉네임을 추가하는 것처럼 행동.
+    3. 추천받은 닉네임 + 추천수를 보여줌
+    4. 추천받은 닉네임을 추가할 수 있음.
+      - 그러면 추천DB를 돌면서, 해당 닉네임을 추천한 것들을 다 지워야함.
+      - recommender 채우기
+    """
+    return """."""
