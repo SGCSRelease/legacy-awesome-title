@@ -24,12 +24,20 @@ class URL(db.Model):
     username = db.Column(db.String(N))
 
 
+class Nickname(db.Model):
+    __tablename__ = "nickname"
+    idx = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(N))
+    nick = db.Column(db.String(N))
+    recommender = db.Column(db.String(N))
+
+
 class NickRecom(db.Model):
     __tablename__ = "nickrecom"
     idx = db.Column(db.Integer, primary_key=True)
     nick = db.Column(db.String(N))
-    fromA = db.Column(db.String(N))
-    toB = db.Column(db.String(N))
+    recommender = db.Column(db.String(N))
+    username = db.Column(db.String(N))
 
 
 class Photo(db.Model):
