@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 N = 50
 
+
 class User(db.Model):
     username = db.Column(db.String(N), primary_key=True)
     password_hash = db.Column(db.String(N + 10), nullable=False)
@@ -38,12 +39,14 @@ class URL(db.Model):
     link = db.Column(db.String(N), primary_key=True)
     username = db.Column(db.String(N))
 
+
 class NickRecom(db.Model):
     __tablename__ = "nickrecom"
     idx = db.Column(db.Integer, primary_key=True)
     nick = db.Column(db.String(N))
     fromA = db.Column(db.String(N))
     toB = db.Column(db.String(N))
+
 
 class Photo(db.Model):
     __tablename__ = "photo"

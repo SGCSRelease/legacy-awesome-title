@@ -9,28 +9,28 @@ from flask import (
         send_from_directory,
         redirect,
         url_for,
-        escape,
         session,
 )
 from flask.ext.bcrypt import Bcrypt
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
-from werkzeug import secure_filename
-
-app = Flask(__name__)
-
 
 import config
-app.config.from_object(config)
-
 from db import (
     db,
     User,
     URL,
     NickRecom,
     Photo,
+    N,
 )
+
+app = Flask(__name__)
+
+app.config.from_object(config)
+
+
 db.init_app(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
@@ -41,6 +41,7 @@ admin.add_view(ModelView(URL, db.session))
 admin.add_view(ModelView(NickRecom, db.session))
 admin.add_view(ModelView(Photo, db.session))
 
+
 @app.route("/")
 def index():
     perhaps_logged_in_username = get_logged_in_username()
@@ -48,35 +49,44 @@ def index():
         return '안녕하세요 %s님!' % (perhaps_logged_in_username,)
     return '로그인안하셨어요 /login 가 보세요'
 
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
         return render_template("register.html")
     else:
         username = request.form['usr']
-        if not username: return 'Failed', 400
-        if len(username)>50: return 'Failed', 400
+        if not username or len(username) > N:
+            return 'Failed', 400
         found = check_username(username, is_internal=True)
-        if found: return "Existing Username", 400
+        if found:
+            return "Existing Username", 400
 
-        if not request.form['pwd']: return 'Failed', 400
-        if request.form['pwd'] != request.form['pwda']: return 'Failed', 400
+        if not request.form['pwd']:
+            return 'Failed', 400
+        if request.form['pwd'] != request.form['pwda']:
+            return 'Failed', 400
         password_hash = bcrypt.generate_password_hash(request.form['pwd'])
 
         first_name_kr = request.form['fnk']
-        if not first_name_kr or len(first_name_kr)>50: return 'Failed', 400
+        if not first_name_kr or len(first_name_kr) > N:
+            return 'Failed', 400
 
         last_name_kr = request.form['lnk']
-        if not last_name_kr or len(last_name_kr)>50: return 'Failed', 400
+        if not last_name_kr or len(last_name_kr) > N:
+            return 'Failed', 400
 
         first_name_en = request.form['fne']
-        if not first_name_en or len(first_name_en)>50: return 'Failed', 400
+        if not first_name_en or len(first_name_en) > N:
+            return 'Failed', 400
 
         middle_name_en = request.form['mne']
-        if len(middle_name_en)>50: return 'Failed', 400
+        if len(middle_name_en) > N:
+            return 'Failed', 400
 
         last_name_en = request.form['lne']
-        if not last_name_en or len(last_name_en)>50: return 'Failed', 400
+        if not last_name_en or len(last_name_en) > N:
+            return 'Failed', 400
 
         try:
             student_number = int(request.form['sn'])
@@ -100,6 +110,7 @@ def register():
         db.session.commit()
         return "성공하였습니다!"
 
+
 @app.route("/check_username/<username>")
 def check_username(username, is_internal=False):
     found = User.query.filter(
@@ -114,6 +125,7 @@ def check_username(username, is_internal=False):
             return found
         return None
 
+
 @app.route("/<link>")
 def goto(link):
     """jmg) 여러 링크를 입력해도 같은 아이디의 페이지로 이동하는 함수입니다."""
@@ -125,18 +137,19 @@ def goto(link):
     else:
         return "존재하지 않는 페이지입니다.", 404
 
-#TODO : 페이지를 만들어야 합니다.
+
+# TODO : 페이지를 만들어야 합니다.
 def userpage(id):
     return id + "의 페이지 입니다."
 
 
 def addURL(link, username):
     """jmg) 아이디에 여러 링크를 연결하는 함수입니다."""
-    # ID가 있는지 확인하는 함수 
+    # ID가 있는지 확인하는 함수.
     found = check_username(username, is_internal=True)
     if not found:
         return "존재하지 않는 아이디입니다.", 400
-    
+
     # link 중복 check
     found = URL.query.filter(
             URL.link == link,
@@ -151,13 +164,12 @@ def addURL(link, username):
     return "등록됐습니다."
 
 
-#@app.route('/test/nick/recom/<nick>/<fromA>/<toB>/')
-#def RecommendNickname(nick, fromA, toB):
+# @app.route('/test/nick/recom/<nick>/<fromA>/<toB>/')
+# def RecommendNickname(nick, fromA, toB):
 # TODO : Change URL and Name of Function!  -- NEED TO MAKE AN ISSUE!
 @app.route('/test/nick/recom/<nick>/<toB>/')
 def RecommendNickname(nick, toB):
     """Issue #9, A라는 사용자가 B라는 사용자에게 nick이라는 별명을 추천하는 함수입니다.
-    
     하지만 정민교(크하하하하)가 로그인 되었는지 알려주는 함수를 만들었기 때문에!
     A라는 사용자의 아이디를 매번 URL로 요청받을 필요가 없어졌습니다.
     """
@@ -182,18 +194,20 @@ def Search():
     id = get_logged_in_username()
     if not id:
         return '로그인이 안되어 있다구욧!!!!', 400
-    # TODO
-    #db 안의 toB 가 id와 일치하는 경우 모두(nick,from,toB) 출력할 것
+
+    # db 안의 toB 가 id와 일치하는 경우 모두(nick,from,toB) 출력할 것
     found = NickRecom.query.filter(
             NickRecom.toB == id,
     ).all()
+
     result = {}
-    for i in found:	
+    for i in found:
         if i.nick in result:
             result[i.nick].append(i.fromA)
         else:
             result[i.nick] = [i.fromA]
     return jsonify(result)
+
 
 @app.route('/upload', methods=["GET", "POST"])
 def file_upload():
@@ -201,52 +215,54 @@ def file_upload():
     username = get_logged_in_username()
     if not username:
         return "로그인이 되어있지 않습니다.", 400
-    
+
     # 파일을 업로드
     if request.method == "GET":
         return """
         <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/upload">
-            File to upload: <INPUT TYPE=FILE NAME="upfile" accept="image/*"><BR> 
-            <INPUT TYPE=SUBMIT VALUE="Submit"> 
+            File to upload: <INPUT TYPE=FILE NAME="upfile" accept="image/*"><BR>
+            <INPUT TYPE=SUBMIT VALUE="Submit">
         </FORM>
         """
-    
+
     # 파일을 업로드 후 저장
-    else :
+    else:
         file = request.files['upfile']
         filename = username + os.path.splitext(file.filename)[1]
 
-        #폴더가 없다면 만들어줍니다.
-        if not os.path.exists(app.config['UPLOAD_FOLDER']) :
-                os.makedirs(app.config['UPLOAD_FOLDER'])
+        # 폴더가 없다면 만들어줍니다.
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        
+
         found = Photo.query.filter(
                 Photo.username == username,
         ).first()
-        
+
         # Photo db에 저장이 되어있지 않으면 db에 추가
         if not found:
             new_photo = Photo()
             new_photo.username = username
             new_photo.photo = filename
-            
+
             db.session.add(new_photo)
             db.session.commit()
 
-        #Photo db에 저장이 되어있으면 db의 photo부분을 수정
-        else :
+        # Photo db에 저장이 되어있으면 db의 photo부분을 수정
+        else:
             found.photo = filename
             db.session.add(found)
             db.session.commit()
-        
+
         return redirect(url_for('uploaded_file', filename=filename))
+
 
 # TODO(정민교): 로그인 안하고도 볼 수 있는데 이게 맞나요?
 @app.route('/uploaded_file/<filename>')
 def uploaded_file(filename):
     """Issue #11, jmg) 업로드한 파일을 보여주는 함수입니다."""
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -259,23 +275,27 @@ def login():
                 <input type=submit />
             </form>
             """
-    else :
+    else:
         found = check_username(request.form['usr'], is_internal=True)
-        if not found :
+        if not found:
             return "로그인 입력정보가 잘못되었습니다.", 400
-        
-        if not bcrypt.check_password_hash(found.password_hash, request.form['pwd']):
+
+        if not bcrypt.check_password_hash(
+                found.password_hash,
+                request.form['pwd']
+        ):
             return "로그인 입력정보가 잘못되었습니다.", 400
 
         session['username'] = request.form['usr']
-        #return "%s님! 로그인 되었습니다!" % found.username, 200         
         return redirect('/')
+
 
 @app.route('/logout')
 def logout():
     """issue #12 로그아웃"""
     session.pop('username', None)
     return redirect('/')
+
 
 def get_logged_in_username():
     """issue #12 로그인 됬는지 확인하여 Username을 리턴합니다 (없으면 None).
