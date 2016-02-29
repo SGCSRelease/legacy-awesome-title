@@ -6,14 +6,13 @@ from flask import (
     request,
     redirect,
 )
+from flask.ext.bcrypt import Bcrypt
 
 from db import (
     db,
     User,
     N,
 )
-
-from flask.ext.bcrypt import Bcrypt
 
 
 bcrypt = Bcrypt()
@@ -69,8 +68,6 @@ def register():
         except ValueError:
             return 'Failed', 400
 
-        last_login = datetime.now()
-
         new_user = User()
         new_user.username = username
         new_user.password_hash = password_hash
@@ -80,11 +77,23 @@ def register():
         new_user.middle_name_en = middle_name_en
         new_user.last_name_en = last_name_en
         new_user.student_number = student_number
-        new_user.last_login = last_login
 
+        # XXX: 로그인한적도없는데 last_login을 넣었으므로, 회원가입하면 자동로그인ㅋㅋ
+        new_user.last_login = datetime.now()
+        session['username'] = request.form['usr']
         db.session.add(new_user)
         db.session.commit()
-        return "성공하였습니다!"
+
+        return """
+        <html>
+        <head>
+        <meta http-equiv="refresh" content="3; url=/"></meta>
+        </head>
+        <body>
+        성공하였습니다! 3초 후에 메인화면으로 갑니다!
+        </body>
+        </html>
+        """
 
 
 def check_username(username, is_internal=False):
@@ -105,8 +114,20 @@ def check_username(username, is_internal=False):
 def login():
     """Issue #12, 로그인 /login"""
     if request.method == "GET":
+        if get_logged_in_username():
+            return """
+                <html>
+                    <head>
+                        <meta http-equiv="refresh" content="2; url=/"></meta>
+                    </head>
+                    <body>
+                        이미 로그인이 되어있습니다!!
+                    </body>
+                </html>
+            """
+
         return """
-            <form method=POST action="/login">
+            <form method=POST action="/login/">
                 ID: <input type=text class='usr' id=usr name=usr /> <br>
                 PW: <input type=password class='pwd' id=pwd name=pwd /> <br>
                 <input type=submit />
@@ -123,6 +144,9 @@ def login():
         ):
             return "로그인 입력정보가 잘못되었습니다.", 400
 
+        found.last_login = datetime.now()
+        db.session.add(found)
+        db.session.commit()
         session['username'] = request.form['usr']
         return redirect('/')
 
@@ -130,7 +154,17 @@ def login():
 def logout():
     """issue #12 로그아웃"""
     session.pop('username', None)
-    return redirect('/')
+    return """
+        <html>
+            <head>
+                <meta http-equiv="refresh" content="2; url=/"></meta>
+            </head>
+            <body>
+                로그아웃 합니다! 2초 후 메인페이지로 이동합니다.
+            </body>
+        </html>
+        """
+    # return redirect('/')
 
 
 def get_logged_in_username():
