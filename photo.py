@@ -32,7 +32,7 @@ def photo_upload():
     if request.method == "GET":
         # TODO: template/upload.html
         return """
-        <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/upload">
+        <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/upload/">
             File to upload: <INPUT TYPE=FILE NAME="upfile" accept="image/*"><BR>
             <INPUT TYPE=SUBMIT VALUE="Submit">
         </FORM>

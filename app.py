@@ -1,4 +1,7 @@
-from flask import Flask
+from flask import (
+    Flask,
+    render_template,
+)
 
 import config
 from db import (
@@ -34,8 +37,14 @@ add_url_routes(app)
 def index():
     perhaps_logged_in_username = get_logged_in_username()
     if perhaps_logged_in_username:
-        return '안녕하세요 %s님!' % (perhaps_logged_in_username,)
-    return '로그인안하셨어요 /login 가 보세요'
+        return render_template(
+                "main.html",
+                naeyoung='안녕하세요 %s님!' % (perhaps_logged_in_username,),
+        )
+    return render_template(
+            "main.html",
+            naeyoung='로그인안하셨어요 /login 가 보세요',
+    )
 
 
 if __name__ == "__main__":

@@ -13,6 +13,7 @@ from db import (
     User,
     N,
 )
+from url import addURL
 
 
 bcrypt = Bcrypt()
@@ -83,6 +84,17 @@ def register():
         session['username'] = request.form['usr']
         db.session.add(new_user)
         db.session.commit()
+
+        # TODO: Oh... God...
+        addURL('%s %s' % (first_name_kr, last_name_kr), username)
+        addURL('%s %s' % (last_name_kr, first_name_kr), username)
+        addURL('%s%s' % (first_name_kr, last_name_kr), username)
+        addURL('%s%s' % (last_name_kr, first_name_kr), username)
+        addURL('%s %s' % (first_name_en, last_name_en), username)
+        addURL('%s %s' % (last_name_en, first_name_en), username)
+        addURL('%s%s' % (first_name_en, last_name_en), username)
+        addURL('%s%s' % (last_name_en, first_name_en), username)
+        addURL('%s %s %s' % (first_name_en, middle_name_en, last_name_en), username)
 
         return """
         <html>
