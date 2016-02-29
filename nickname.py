@@ -1,10 +1,13 @@
 from flask import (
     jsonify,
+    render_template,
+    redirect,
 )
 
 from db import (
     db,
     NickRecom,
+    Nickname,
 )
 from user import (
     get_logged_in_username,
@@ -17,6 +20,9 @@ def add_routes(app):
     app.route('/nickname/')(ManageMyNicknames)
     app.route('/test/nick/recomm/<nick>/<target>/')(RecommendNickname)
     app.route('/test/nick/recomm/')(RecommendedNicknamesForMe)
+    app.route('/test/mynick/', methods=["GET"])(ManageMyNicknames)
+    app.route('/test/mynick/delete/<idx>/', methods=["POST"])(DelMyNick)
+    app.route('/test/mynick/add/<idx>/', methods=["POST"])(AddRecommNick)
 
 
 # TODO : 자신이 자신 추천하면 안되요 안되.
@@ -70,4 +76,74 @@ def ManageMyNicknames():
       - 그러면 추천DB를 돌면서, 해당 닉네임을 추천한 것들을 다 지워야함.
       - recommender 채우기
     """
-    return """."""
+    username = get_logged_in_username()
+    if not username:
+        return '로그인 해주세요!!'
+
+    found = Nickname.query.filter(
+        Nickname.username == username,
+    ).all()
+
+    found_recomm = NickRecom.query.filter(
+        NickRecom.username == username,
+    ).all()
+
+    if not (found or found_recomm):
+        return "추천받은 닉네임 혹은 내 닉네임이 없습니다!!"
+    return render_template(
+        "nickname.html",
+        found=found,
+        found_recomm=found_recomm,
+    )
+
+
+def DelMyNick(idx):
+    found = Nickname.query.filter(
+        Nickname.idx == int(idx),
+    ).first()
+
+    username = get_logged_in_username()
+    if not found.username == username:
+        return 'fuck off', 400
+
+    db.session.delete(found)
+    db.session.commit()
+    return redirect("/test/mynick/")
+
+
+# TODO:나중에 추천받은 닉네임들이 중복되는 경우 하나만 출력하게 한 후 idx말고 nick으로 받아올 것.
+def AddRecommNick(idx):
+    found_recomm = NickRecom.query.filter(
+        NickRecom.idx == idx,
+    ).first()
+
+    username = get_logged_in_username()
+    if not found_recomm.username == username:
+        return 'ㅗㅗ', 400
+
+    nick = found_recomm.nick
+
+    found = NickRecom.query.filter(
+        NickRecom.username == username,
+        NickRecom.nick == nick,
+    ).first()
+
+    add_nick = Nickname()
+    add_nick.username = username
+    add_nick.nick = nick
+    add_nick.recommender = found.recommender
+    db.session.add(add_nick)
+
+    found = NickRecom.query.filter(
+        NickRecom.username == username,
+        NickRecom.nick == nick,
+    ).all()
+
+    for i in found:
+        idx = i.idx
+        del_from_Recomm = NickRecom.query.filter(
+            NickRecom.idx == idx,
+        ).first()
+        db.session.delete(del_from_Recomm)
+    db.session.commit()
+    return redirect("/test/mynick/")
