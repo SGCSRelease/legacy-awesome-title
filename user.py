@@ -28,6 +28,9 @@ def add_routes(app):
 
 def register():
     """GET /register 회원가입폼 POST /register 실제회원가입."""
+    if get_logged_in_username():
+        return "이미 로그인되어있어요!", 400
+
     if request.method == "GET":
         return render_template("register.html")
     else:

@@ -1,5 +1,4 @@
 from flask import (
-    jsonify,
     render_template,
     redirect,
     request,
@@ -36,13 +35,22 @@ def RecommendNickname():
         if not username:
             return '로그인이 안되어 있습니다!!!!', 400
         return render_template("recommnick.html")
-    
+
     else:
         target = request.form['target']
+        nick = request.form['nick']
         if not check_username(target, is_internal=True):
             return '존재하지 않는 유저에게 추천하려고 하였습니다.', 400
+
+        found = Nickname.query.filter(
+            Nickname.username == target,
+            Nickname.nick == nick,
+        ).first()
+        if found:
+            return '이미 해당유저가 사용중인 별명입니다.', 400
+
         new = NickRecom()
-        new.nick = request.form['nick']
+        new.nick = nick
         new.recommender = username
         new.username = target
         db.session.add(new)
@@ -76,10 +84,19 @@ def ManageMyNicknames():
 
     if not (found or found_recomm):
         return "추천받은 닉네임 혹은 내 닉네임이 없습니다!!"
+
+    recomm = {}
+    recomm['nick'] = []
+    recomm['idx'] = []
+    for nick in found_recomm:
+        if nick.nick not in recomm['nick']:
+            recomm['nick'].append(nick.nick)
+            recomm['idx'].append(nick.idx)
+
     return render_template(
         "nickname.html",
         found=found,
-        found_recomm=found_recomm,
+        recomm=recomm,
     )
 
 
@@ -124,6 +141,7 @@ def ManageRecommNick(idx):
     RemoveRecommNick(nick)
     db.session.commit()
     return redirect("/test/mynick/")
+
 
 def RemoveRecommNick(nick):
     # Issue #7 추천받은 닉네임을 DB에서 삭제합니다.

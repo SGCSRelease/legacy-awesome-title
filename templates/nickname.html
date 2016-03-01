@@ -11,11 +11,11 @@
 <br>
 
 추천받은 닉네임 : <br>
-{% for nick in found_recomm %}
+{% for i in range(0,recomm['nick'].__len__()) %}
 <div>
 	<!-- TODO : 추천받은 닉네임들이 중복되면 하나만 출력할 수 있도록 수정 -->
-	<form method="POST" action="/test/mynick/manage/{{ nick.idx }}/">
-	  {{ nick.nick }}
+	<form method="POST" action="/test/mynick/manage/{{ recomm['idx'][i] }}/">
+	  {{ recomm['nick'][i] }}
 		<input type="submit" name=use value="사용"/>
 		<input type="submit" name=reject value="거부"/>
 	</form>
