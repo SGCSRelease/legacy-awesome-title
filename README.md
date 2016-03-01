@@ -1,9 +1,24 @@
-# AwesomeTitle (http://title.reluv.me)
+#Project Name : AwesomeTitle (http://title.reluv.me)
 릴리즈의, 릴리즈에 의한, 릴리즈를 위한 **별명/업적 관리 사비스**
 
-- [개발하는법](https://github.com/minhoryang/AwesomeTitle/blob/master/DEVELOPMENT.md)
+- 이 서비스는 RELEASE 인들의 친목도모와 프로젝트 소그룹 및 업적관리를 목표합니다.
+- 후배님을 위한 개발 가이드라인 => [개발하는법](https://github.com/minhoryang/AwesomeTitle/blob/master/DEVELOPMENT.md)
 
 -----
+##현재까지 구현한 기능
+1. 회원가입 [Issue #1](https://github.com/minhoryang/AwesomeTitle/issues/1)
+  - ID 중복체크 [Issue #4](https://github.com/minhoryang/AwesomeTitle/issues/4)
+2. 로그인 [Issue #12](https://github.com/minhoryang/AwesomeTitle/issues/12)
+3. 프로필 사진 업로드 [Issue #11](https://github.com/minhoryang/AwesomeTitle/issues/11)
+4. 별명 관리 [Issue #7](https://github.com/minhoryang/AwesomeTitle/issues/7)
+  - 별명 추천받기 [Issue #9](https://github.com/minhoryang/AwesomeTitle/issues/9) 
+5. 릴리즈 사람 찾기 [Issue #5](https://github.com/minhoryang/AwesomeTitle/issues/5)
+
+##개발 중인 기능
+1. 별명관리 UI
+2. 
+
+##앞으로 구현할 기능 
 ## 릴리즈 사람들을 찾을 수 있어요! [#3](https://github.com/minhoryang/AwesomeTitle/issues/3)
 아래 URL들은 다 같은 페이지를 보여줄 겁니다. 어떻게? [#5](https://github.com/minhoryang/AwesomeTitle/issues/5)
 
