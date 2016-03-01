@@ -25,6 +25,7 @@ def add_routes(app):
     app.route('/login/', methods=["GET", "POST"])(login)
     app.route('/logout/')(logout)
     app.route('/<link>/manage/password/')(change_password)
+    app.route('/<link>/manage/leave/')(withdraw_member)
 
 
 def register():
@@ -167,3 +168,16 @@ def get_logged_in_username():
 
 def change_password(link):
     return
+
+
+def withdraw_member(link):
+    """ issue #44 회원탈퇴 """
+    found = User.query.filter(
+            User.username == link,
+    ).first()
+    
+    db.session.delete(found)
+    db.session.commit()
+    session.pop('username', None)
+
+    return redirect('/')

@@ -63,10 +63,13 @@
                 비밀번호 수정 (공사중)
               </li>
             </a>
-            </a>
-						<a class="nav-link disabled"><!-- href="/{{ username }}/manage/mails/"> -->
+            {% if menu == "leave" %}
+		    <a class="nav-link active" href="/{{ username }}/manage/leave/">
+            {% else %}
+            <a class="nav-link" href="/{{ username }}/manage/leave/">
+            {% endif %}
               <li class="nav-item">
-                회원탈퇴 (공사중)
+                회원탈퇴
               </li>
             </a>
 
