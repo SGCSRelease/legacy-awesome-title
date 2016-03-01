@@ -1,6 +1,6 @@
 from flask import (
     Flask,
-    render_template,
+    redirect,
 )
 
 import config
@@ -17,6 +17,7 @@ from user import (
     get_logged_in_username,
 )
 from url import add_routes as add_url_routes
+from url import goto
 
 app = Flask(__name__)
 
@@ -33,23 +34,12 @@ add_photo_routes(app)
 add_url_routes(app)
 
 
-# TODO : 릴리즈페이지를 보여주도록 수정!
 @app.route("/")
 def index():
     perhaps_logged_in_username = get_logged_in_username(is_boolean=False)
     if perhaps_logged_in_username:
-        return render_template(
-                "main.html",
-                naeyoung='',
-                loggedin=True,
-                username=perhaps_logged_in_username,
-        )
-    return render_template(
-            "main.html",
-            naeyoung='로그인안하셨어요 /login 가 보세요',
-            loggedin=False,
-    )
-
+        return redirect("/%s/" % perhaps_logged_in_username)
+    return goto("release")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

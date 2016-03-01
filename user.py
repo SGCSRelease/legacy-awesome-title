@@ -89,26 +89,16 @@ def register():
         db.session.commit()
 
         # TODO: Oh... God...
-        addURL('%s %s' % (first_name_kr, last_name_kr), username)
-        addURL('%s %s' % (last_name_kr, first_name_kr), username)
         addURL('%s%s' % (first_name_kr, last_name_kr), username)
         addURL('%s%s' % (last_name_kr, first_name_kr), username)
-        addURL('%s %s' % (first_name_en, last_name_en), username)
-        addURL('%s %s' % (last_name_en, first_name_en), username)
         addURL('%s%s' % (first_name_en, last_name_en), username)
         addURL('%s%s' % (last_name_en, first_name_en), username)
-        addURL('%s %s %s' % (first_name_en, middle_name_en, last_name_en), username)
-
-        return """
-        <html>
-        <head>
-        <meta http-equiv="refresh" content="3; url=/"></meta>
-        </head>
-        <body>
-        성공하였습니다! 3초 후에 메인화면으로 갑니다!
-        </body>
-        </html>
-        """
+        addURL('%s%s%s' % (
+            first_name_en,
+            middle_name_en,
+            last_name_en
+        ), username)
+        return redirect("/")
 
 
 def check_username(username, is_internal=False):
@@ -152,17 +142,7 @@ def login():
 def logout():
     """issue #12 로그아웃"""
     session.pop('username', None)
-    return """
-        <html>
-            <head>
-                <meta http-equiv="refresh" content="2; url=/"></meta>
-            </head>
-            <body>
-                로그아웃 합니다! 2초 후 메인페이지로 이동합니다.
-            </body>
-        </html>
-        """
-    # return redirect('/')
+    return redirect('/')
 
 
 def get_logged_in_username(is_boolean=False):

@@ -3,7 +3,6 @@ from flask import (
     url_for,
     request,
     redirect,
-    session,
 )
 
 from db import (
