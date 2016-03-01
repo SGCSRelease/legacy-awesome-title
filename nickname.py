@@ -18,25 +18,19 @@ from user import (
 def add_routes(app):
     # TODO : Change URL
     app.route('/nickname/')(ManageMyNicknames)
-    app.route('/test/nick/recomm/', methods=["GET", "POST"])(RecommendNickname)
+    app.route('/api/nickname/recommend/', methods=["POST"])(RecommendNickname)
     app.route('/test/mynick/', methods=["GET"])(ManageMyNicknames)
     app.route('/test/mynick/delete/<idx>/', methods=["POST"])(DelMyNick)
     app.route('/test/mynick/manage/<idx>/', methods=["POST"])(ManageRecommNick)
 
 
-# TODO : 자신이 자신 추천하면 안되요 안되.
 def RecommendNickname():
     """Issue #9, A라는 사용자가 B라는 사용자에게 nick이라는 별명을 추천하는 함수입니다.
     하지만 정민교(크하하하하)가 로그인 되었는지 알려주는 함수를 만들었기 때문에!
     A라는 사용자의 아이디를 매번 URL로 요청받을 필요가 없어졌습니다.
     """
     username = get_logged_in_username(is_boolean=False)
-    if request.method == "GET":
-        if not username:
-            return '로그인이 안되어 있습니다!!!!', 400
-        return render_template("recommnick.html")
-
-    else:
+    if request.method == "POST":
         target = request.form['target']
         nick = request.form['nick']
         if not check_username(target, is_internal=True):

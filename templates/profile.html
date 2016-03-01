@@ -1,5 +1,14 @@
 {% extends "_main.html" %}
 {% block content %}
     {% include "_profile.html" %}
+    {% if not is_me %}
+    <div class="center">
+        <form action="/api/nickname/recommend/" method="POST">
+            <input type=text class='nick' id=nick name=nick maxlength="50" placeholder="새 별명" />
+            <input type=hidden class='target' id=target name=target maxlength="50" value="{{ user.username }}"/>
+            <input type=submit value="추천하기!" />
+        </form>
+    </div>
+    {% endif %}
 {% endblock %}
 
