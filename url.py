@@ -82,6 +82,7 @@ def userpage(user):
             user=user,
             photo=my_photo,
             nicknames=my_nicknames,
+            loggedin=get_logged_in_username(is_boolean=True),
     )
 
 
@@ -101,6 +102,7 @@ def usermanagepage(user):
             user=user,
             photo=my_photo,
             nicknames=my_nicknames,
+            loggedin=get_logged_in_username(is_boolean=True),
     )
 
 

@@ -42,9 +42,16 @@
           <li class="nav-item active">
             <a class="nav-link" href="/login/">로그인</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout/">로그아웃</a>
-          </li>
+					<!--로그인한 적이 없으면 로그아웃 하지 않게 만들어야합니다! 버튼 비활성화도 해야하구요. -->
+					{% if loggedin %}
+	          <li class="nav-item active">
+  	          <a class="nav-link" href="/logout/">로그아웃</a>
+						</li>
+					{% else %}
+						<li class="nav-item">
+							<a class="nav-link">로그아웃</a>
+						</li>
+					{% endif %}
           <li class="nav-item">
             <a class="nav-link" href="https://github.com/minhoryang/AwesomeTitle/issues">버그신고</a>
           </li>
