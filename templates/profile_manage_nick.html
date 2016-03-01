@@ -1,0 +1,26 @@
+{% extends "_profile_manage.html" %}
+{% block manage_content %}
+내 닉네임 : <br> 
+{% for nick in found %}
+<div>
+	<!-- TODO : 링크를 통해 실행하지 말고 jquery를 이용해 함수를 바로 호출할수 있게 만들기!  -->
+	<form method="POST" action="/api/nickname/delete/{{ nick.idx }}/">
+		{{ nick.nick }}
+		<input type="submit" value="삭제"/>
+	</form>
+</div>
+{% endfor %}
+<br>
+
+추천받은 닉네임 : <br>
+{% for i in range(0,recomm['nick'].__len__()) %}
+<div>
+	<!-- TODO : 추천받은 닉네임들이 중복되면 하나만 출력할 수 있도록 수정 -->
+	<form method="POST" action="/api/nickname/manage/{{ recomm['idx'][i] }}/">
+	  {{ recomm['nick'][i] }}
+		<input type="submit" name=use value="사용"/>
+		<input type="submit" name=reject value="거부"/>
+	</form>
+</div>
+{% endfor %}
+{% endblock %}

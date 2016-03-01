@@ -17,11 +17,10 @@ from user import (
 
 def add_routes(app):
     # TODO : Change URL
-    app.route('/nickname/')(ManageMyNicknames)
+    app.route('/<link>/manage/nicknames/')(ManageMyNicknames)
     app.route('/api/nickname/recommend/', methods=["POST"])(RecommendNickname)
-    app.route('/test/mynick/', methods=["GET"])(ManageMyNicknames)
-    app.route('/test/mynick/delete/<idx>/', methods=["POST"])(DelMyNick)
-    app.route('/test/mynick/manage/<idx>/', methods=["POST"])(ManageRecommNick)
+    app.route('/api/nickname/delete/<idx>/', methods=["POST"])(DelMyNick)
+    app.route('/api/nickname/manage/<idx>/', methods=["POST"])(ManageRecommNick)
 
 
 def RecommendNickname():
@@ -52,7 +51,7 @@ def RecommendNickname():
         return '추천되었습니다!'
 
 
-def ManageMyNicknames():
+def ManageMyNicknames(link):
     """
     Issue #7 내가 추천받은 닉네임들과 사용중인 닉네임들을 관리합니다.
     1. 내 닉네임들을 보여줌
@@ -88,7 +87,10 @@ def ManageMyNicknames():
             recomm['idx'].append(nick.idx)
 
     return render_template(
-        "nickname.html",
+        "profile_manage_nick.html",
+        username=username,
+        menu='nicknames',
+        loggedin=get_logged_in_username(is_boolean=True),
         found=found,
         recomm=recomm,
     )
@@ -106,7 +108,7 @@ def DelMyNick(idx):
 
     db.session.delete(found)
     db.session.commit()
-    return redirect("/test/mynick/")
+    return redirect("/%s/manage/nicknames/" % (username,))
 
 
 # TODO:나중에 추천받은 닉네임들이 중복되는 경우 하나만 출력하게 한 후 idx말고 nick으로 받아올 것.
@@ -134,7 +136,7 @@ def ManageRecommNick(idx):
 
     RemoveRecommNick(nick)
     db.session.commit()
-    return redirect("/test/mynick/")
+    return redirect("/%s/manage/nicknames/" % (username,))
 
 
 def RemoveRecommNick(nick):

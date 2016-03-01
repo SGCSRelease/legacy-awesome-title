@@ -28,7 +28,11 @@
                 사진 업로드
               </li>
             </a>
-            <a class="nav-link disabled" href="/{{ username }}/manage/nicknames/">
+						{% if menu == "nicknames" %}
+            <a class="nav-link active" href="/{{ username }}/manage/nicknames/">
+						{% else %}
+						<a class="nav-link" href="/{{username}}/manage/nicknames/">
+						{% endif %}
               <li class="nav-item">
                 별명 (추천) 관리
               </li>
