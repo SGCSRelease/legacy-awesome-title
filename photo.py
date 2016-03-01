@@ -6,6 +6,7 @@ from flask import (
     redirect,
     send_from_directory,
     url_for,
+    render_template,
 )
 
 from db import (
@@ -16,27 +17,27 @@ from user import get_logged_in_username
 
 
 def add_routes(app):
-    app.route('/upload/', methods=["GET", "POST"])(photo_upload)
+    app.route('/<link>/manage/photo/', methods=["GET", "POST"])(photo_upload)
     app.route('/uploaded_photo/<filename>/')(uploaded_photo)
 
 
-def photo_upload():
+def photo_upload(link):
     """Issue #11, jmg) 사진을 업로드해 서버에 저장하는 함수입니다.
     /upload GET/POST
     """
     username = get_logged_in_username()
     if not username:
         return "로그인이 되어있지 않습니다.", 400
+    if not link == username:
+        return "자신이 아닙니다!", 400
 
     # 파일을 업로드
     if request.method == "GET":
-        # TODO: template/upload.html
-        return """
-        <FORM METHOD=POST ENCTYPE="multipart/form-data" ACTION="/upload/">
-            File to upload: <INPUT TYPE=FILE NAME="upfile" accept="image/*"><BR>
-            <INPUT TYPE=SUBMIT VALUE="Submit">
-        </FORM>
-        """
+        return render_template(
+                "profile_manage_photo.html",
+                username=username,
+                menu='photo',
+        )
 
     # 파일을 업로드 후 저장
     else:
@@ -67,7 +68,7 @@ def photo_upload():
             db.session.add(found)
             db.session.commit()
 
-        return redirect(url_for('uploaded_photo', filename=filename))
+        return redirect("/%s/manage/" % (username, ))
 
 
 # TODO(정민교): 로그인 안하고도 볼 수 있는데 이게 맞나요?

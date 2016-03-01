@@ -3,6 +3,7 @@ from flask import (
     url_for,
     request,
     redirect,
+    session,
 )
 
 from db import (
@@ -66,6 +67,15 @@ def addURL(link, username):
     return "등록됐습니다."
 
 
+def get_logged_in_username():
+    """User.get_logged_in_username이랑 같아요.
+    
+    근데 User의 것을 임포트 하다가는 Import Loop가 생겨서 문제가 생깁니다.
+    이슈를 만들어야 할까요?
+    """
+    return session.get('username')
+
+
 def userpage(user):
     my_photo = Photo.query.filter(
         Photo.username == user.username,
@@ -74,18 +84,28 @@ def userpage(user):
         my_photo = url_for('uploaded_photo', filename=my_photo.photo)
     else:
         my_photo = None
+
     my_nicknames = Nickname.query.filter(
         Nickname.username == user.username,
     ).all()
+
+    is_me = False
+    if user.username == get_logged_in_username():
+        is_me = True
+
     return render_template(
             "profile.html",
             user=user,
             photo=my_photo,
             nicknames=my_nicknames,
+            is_me=is_me,
     )
 
 
 def usermanagepage(user):
+    if user.username != get_logged_in_username():
+        return redirect('/')
+
     my_photo = Photo.query.filter(
         Photo.username == user.username,
     ).first()
@@ -97,10 +117,12 @@ def usermanagepage(user):
         Nickname.username == user.username,
     ).all()
     return render_template(
-            "profile.html",
+            "profile_manage.html",
             user=user,
             photo=my_photo,
             nicknames=my_nicknames,
+            username=user.username,
+            menu='profile',
     )
 
 

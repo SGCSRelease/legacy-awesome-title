@@ -1,0 +1,10 @@
+{% extends "_profile_manage.html" %}
+{% block manage_content %}
+        <FORM METHOD=POST ENCTYPE="multipart/form-data">
+            File to upload: <INPUT TYPE=FILE NAME="upfile" accept="image/*"><BR>
+            <INPUT TYPE=SUBMIT VALUE="Submit">
+        </FORM>
+        <h3>
+            정사각형의 사진을 올려주시면 예뻐요.
+        </h3>
+{% endblock %}
