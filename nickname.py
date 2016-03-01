@@ -1,5 +1,4 @@
 from flask import (
-    jsonify,
     render_template,
     redirect,
     request,
@@ -31,18 +30,27 @@ def RecommendNickname():
     하지만 정민교(크하하하하)가 로그인 되었는지 알려주는 함수를 만들었기 때문에!
     A라는 사용자의 아이디를 매번 URL로 요청받을 필요가 없어졌습니다.
     """
-    username = get_logged_in_username()
+    username = get_logged_in_username(is_boolean=False)
     if request.method == "GET":
         if not username:
             return '로그인이 안되어 있습니다!!!!', 400
         return render_template("recommnick.html")
-    
+
     else:
         target = request.form['target']
+        nick = request.form['nick']
         if not check_username(target, is_internal=True):
             return '존재하지 않는 유저에게 추천하려고 하였습니다.', 400
+
+        found = Nickname.query.filter(
+            Nickname.username == target,
+            Nickname.nick == nick,
+        ).first()
+        if found:
+            return '이미 해당유저가 사용중인 별명입니다.', 400
+
         new = NickRecom()
-        new.nick = request.form['nick']
+        new.nick = nick
         new.recommender = username
         new.username = target
         db.session.add(new)
@@ -62,7 +70,7 @@ def ManageMyNicknames():
       - 그러면 추천DB를 돌면서, 해당 닉네임을 추천한 것들을 다 지워야함.
       - recommender 채우기
     """
-    username = get_logged_in_username()
+    username = get_logged_in_username(is_boolean=False)
     if not username:
         return '로그인 해주세요!!'
 
@@ -76,10 +84,19 @@ def ManageMyNicknames():
 
     if not (found or found_recomm):
         return "추천받은 닉네임 혹은 내 닉네임이 없습니다!!"
+
+    recomm = {}
+    recomm['nick'] = []
+    recomm['idx'] = []
+    for nick in found_recomm:
+        if nick.nick not in recomm['nick']:
+            recomm['nick'].append(nick.nick)
+            recomm['idx'].append(nick.idx)
+
     return render_template(
         "nickname.html",
         found=found,
-        found_recomm=found_recomm,
+        recomm=recomm,
     )
 
 
@@ -89,7 +106,7 @@ def DelMyNick(idx):
         Nickname.idx == int(idx),
     ).first()
 
-    username = get_logged_in_username()
+    username = get_logged_in_username(is_boolean=False)
     if not found.username == username:
         return 'fuck off', 400
 
@@ -105,7 +122,7 @@ def ManageRecommNick(idx):
         NickRecom.idx == idx,
     ).first()
 
-    username = get_logged_in_username()
+    username = get_logged_in_username(is_boolean=False)
     if not found_recomm.username == username:
         return 'ㅗㅗ', 400
 
@@ -125,10 +142,11 @@ def ManageRecommNick(idx):
     db.session.commit()
     return redirect("/test/mynick/")
 
+
 def RemoveRecommNick(nick):
     # Issue #7 추천받은 닉네임을 DB에서 삭제합니다.
     found = NickRecom.query.filter(
-        NickRecom.username == get_logged_in_username(),
+        NickRecom.username == get_logged_in_username(is_boolean=False),
         NickRecom.nick == nick,
     ).all()
 

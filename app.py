@@ -33,17 +33,20 @@ add_photo_routes(app)
 add_url_routes(app)
 
 
+# TODO : 릴리즈페이지를 보여주도록 수정!
 @app.route("/")
 def index():
-    perhaps_logged_in_username = get_logged_in_username()
+    perhaps_logged_in_username = get_logged_in_username(is_boolean=False)
     if perhaps_logged_in_username:
         return render_template(
                 "main.html",
-                naeyoung='안녕하세요 %s님!' % (perhaps_logged_in_username,),
+                naeyoung='',
+                loggedin=True,
         )
     return render_template(
             "main.html",
             naeyoung='로그인안하셨어요 /login 가 보세요',
+            loggedin=False,
     )
 
 

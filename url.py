@@ -67,13 +67,10 @@ def addURL(link, username):
     return "등록됐습니다."
 
 
-def get_logged_in_username():
-    """User.get_logged_in_username이랑 같아요.
-    
-    근데 User의 것을 임포트 하다가는 Import Loop가 생겨서 문제가 생깁니다.
-    이슈를 만들어야 할까요?
-    """
-    return session.get('username')
+def get_logged_in_username(*args, **kwargs):
+    """User.get_logged_in_username이랑 같아요."""
+    from user import get_logged_in_username as _get_logged_in_username
+    return _get_logged_in_username(*args, **kwargs)
 
 
 def userpage(user):
@@ -99,6 +96,7 @@ def userpage(user):
             photo=my_photo,
             nicknames=my_nicknames,
             is_me=is_me,
+            loggedin=get_logged_in_username(is_boolean=True),
     )
 
 
@@ -123,6 +121,7 @@ def usermanagepage(user):
             nicknames=my_nicknames,
             username=user.username,
             menu='profile',
+            loggedin=get_logged_in_username(is_boolean=True),
     )
 
 

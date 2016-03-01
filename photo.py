@@ -25,7 +25,7 @@ def photo_upload(link):
     """Issue #11, jmg) 사진을 업로드해 서버에 저장하는 함수입니다.
     /upload GET/POST
     """
-    username = get_logged_in_username()
+    username = get_logged_in_username(is_boolean=False)
     if not username:
         return "로그인이 되어있지 않습니다.", 400
     if not link == username:
@@ -37,6 +37,7 @@ def photo_upload(link):
                 "profile_manage_photo.html",
                 username=username,
                 menu='photo',
+                loggedin=get_logged_in_username(is_boolean=True),
         )
 
     # 파일을 업로드 후 저장

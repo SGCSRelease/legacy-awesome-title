@@ -36,15 +36,18 @@
       <nav class="navbar navbar-light bg-faded">
         <a class="navbar-brand" href="http://title.reluv.me/">릴리즈 업적관리 사비스</a>
         <ul class="nav navbar-nav">
+	{% if loggedin %}
+	  <li class="nav-item active">
+  	    <a class="nav-link" href="/logout/">로그아웃</a>
+	  </li>
+        {% else %}
           <li class="nav-item active">
             <a class="nav-link" href="/register/">회원가입</a>
           </li>
           <li class="nav-item active">
             <a class="nav-link" href="/login/">로그인</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout/">로그아웃</a>
-          </li>
+	{% endif %}
           <li class="nav-item">
             <a class="nav-link" href="https://github.com/minhoryang/AwesomeTitle/issues">버그신고</a>
           </li>
