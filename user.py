@@ -24,11 +24,12 @@ def add_routes(app):
     app.route("/check_username/<username>/")(check_username)
     app.route('/login/', methods=["GET", "POST"])(login)
     app.route('/logout/')(logout)
+    app.route('/<link>/manage/password/')(change_password)
 
 
 def register():
     """GET /register 회원가입폼 POST /register 실제회원가입."""
-    if get_logged_in_username(is_boolean=False):
+    if get_logged_in_username():
         return "이미 로그인되어있어요!", 400
 
     if request.method == "GET":
@@ -145,7 +146,7 @@ def logout():
     return redirect('/')
 
 
-def get_logged_in_username(is_boolean=False):
+def get_logged_in_username():
     """issue #12 로그인 됬는지 확인하여 Username을 리턴합니다 (없으면 None).
 
     사실 아래를 짯습니다.
@@ -161,8 +162,8 @@ def get_logged_in_username(is_boolean=False):
 
     한번 더 바꾸면 아래처럼 됩니다.
     """
-    if is_boolean:
-        if session.get('username'):
-            return True
-        return False
     return session.get('username')  # 없으면 None이 출력됨.
+
+
+def change_password(link):
+    return

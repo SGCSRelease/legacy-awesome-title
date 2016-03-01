@@ -28,7 +28,7 @@ def RecommendNickname():
     하지만 정민교(크하하하하)가 로그인 되었는지 알려주는 함수를 만들었기 때문에!
     A라는 사용자의 아이디를 매번 URL로 요청받을 필요가 없어졌습니다.
     """
-    username = get_logged_in_username(is_boolean=False)
+    username = get_logged_in_username()
     if request.method == "POST":
         target = request.form['target']
         nick = request.form['nick']
@@ -63,7 +63,7 @@ def ManageMyNicknames(link):
       - 그러면 추천DB를 돌면서, 해당 닉네임을 추천한 것들을 다 지워야함.
       - recommender 채우기
     """
-    username = get_logged_in_username(is_boolean=False)
+    username = get_logged_in_username()
     if not username:
         return '로그인 해주세요!!'
 
@@ -90,7 +90,6 @@ def ManageMyNicknames(link):
         "profile_manage_nick.html",
         username=username,
         menu='nicknames',
-        loggedin=get_logged_in_username(is_boolean=True),
         found=found,
         recomm=recomm,
     )
@@ -102,7 +101,7 @@ def DelMyNick(idx):
         Nickname.idx == int(idx),
     ).first()
 
-    username = get_logged_in_username(is_boolean=False)
+    username = get_logged_in_username()
     if not found.username == username:
         return 'fuck off', 400
 
@@ -118,7 +117,7 @@ def ManageRecommNick(idx):
         NickRecom.idx == idx,
     ).first()
 
-    username = get_logged_in_username(is_boolean=False)
+    username = get_logged_in_username()
     if not found_recomm.username == username:
         return 'ㅗㅗ', 400
 
@@ -142,7 +141,7 @@ def ManageRecommNick(idx):
 def RemoveRecommNick(nick):
     # Issue #7 추천받은 닉네임을 DB에서 삭제합니다.
     found = NickRecom.query.filter(
-        NickRecom.username == get_logged_in_username(is_boolean=False),
+        NickRecom.username == get_logged_in_username(),
         NickRecom.nick == nick,
     ).all()
 

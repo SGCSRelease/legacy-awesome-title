@@ -95,7 +95,6 @@ def userpage(user):
             photo=my_photo,
             nicknames=my_nicknames,
             is_me=is_me,
-            loggedin=get_logged_in_username(is_boolean=True),
             username=get_logged_in_username(),
     )
 
@@ -121,7 +120,6 @@ def usermanagepage(user):
             nicknames=my_nicknames,
             username=user.username,
             menu='profile',
-            loggedin=get_logged_in_username(is_boolean=True),
     )
 
 

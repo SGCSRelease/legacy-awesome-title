@@ -14,7 +14,7 @@
                 내 프로필
               </li>
             </a>
-            <a class="nav-link disabled" href="/{{ username }}/manage/names/">
+						<a class="nav-link disabled"><!-- href="/{{ username }}/manage/names/">-->
               <li class="nav-item">
                 이름 관리 (공사중)
               </li>
@@ -37,17 +37,34 @@
                 별명 (추천) 관리
               </li>
             </a>
-            <a class="nav-link disabled" href="/{{ username }}/manage/phones/">
+						<a class="nav-link disabled"><!-- href="/{{ username }}/manage/phones/"> -->
               <li class="nav-item">
                 휴대폰 관리 (공사중)
               </li>
             </a>
-            <a class="nav-link disabled" href="/{{ username }}/manage/mails/">
+						<a class="nav-link disabled"><!-- href="/{{ username }}/manage/mails/"> -->
               <li class="nav-item">
                 이메일 관리 (공사중)
               </li>
             </a>
-            <a class="nav-link" target="_blank" href="https://github.com/minhoryang/AwesomeTitle/issues">
+						<!--
+            {% if menu == "password" %}
+            <a class="nav-link active" href="/{{ username }}/manage/password/">
+						{% else %}
+						<a class="nav-link" href="/{{username}}/manage/password/">
+						{% endif %}
+						  <li class="nav-item">
+								비밀번호 수정
+							</li>
+						</a>
+						-->
+            <a class="nav-link disabled"><!-- href="/{{ username }}/manage/password/"> -->
+              <li class="nav-item">
+                비밀번호 수정 (공사중)
+              </li>
+            </a>
+
+						<a class="nav-link" target="_blank" href="https://github.com/minhoryang/AwesomeTitle/issues">
               <li class="nav-item">
                 버그 신고
               </li>

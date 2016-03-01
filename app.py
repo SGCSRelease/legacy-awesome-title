@@ -36,7 +36,7 @@ add_url_routes(app)
 
 @app.route("/")
 def index():
-    perhaps_logged_in_username = get_logged_in_username(is_boolean=False)
+    perhaps_logged_in_username = get_logged_in_username()
     if perhaps_logged_in_username:
         return redirect("/%s/" % perhaps_logged_in_username)
     return goto("release")
