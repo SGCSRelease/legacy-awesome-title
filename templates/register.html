@@ -1,3 +1,5 @@
+{% extends "_main.html" %}
+{% block content %}
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <form action="/register/" method="POST">
     ID: <input type=text class='usr' id=usr name=usr maxlength="50" /><br>
@@ -11,6 +13,8 @@
     Student Number: <input type=text class='sn' id=sn name=sn maxlength="50" /><br>
     <input type=submit value="가입" />
 </form>
+{% endblock %}
+{% block script %}
 <script>
 $('.usr').change(
         function(){
@@ -64,4 +68,4 @@ $('.sn').change(
         }
         );
 </script>
-
+{% endblock %}

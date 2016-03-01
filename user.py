@@ -129,25 +129,7 @@ def check_username(username, is_internal=False):
 def login():
     """Issue #12, 로그인 /login"""
     if request.method == "GET":
-        if get_logged_in_username(is_boolean=False):
-            return """
-                <html>
-                    <head>
-                        <meta http-equiv="refresh" content="2; url=/"></meta>
-                    </head>
-                    <body>
-                        이미 로그인이 되어있습니다!!
-                    </body>
-                </html>
-            """
-
-        return """
-            <form method=POST action="/login/">
-                ID: <input type=text class='usr' id=usr name=usr /> <br>
-                PW: <input type=password class='pwd' id=pwd name=pwd /> <br>
-                <input type=submit />
-            </form>
-            """
+        return render_template("login.html")
     else:
         found = check_username(request.form['usr'], is_internal=True)
         if not found:
