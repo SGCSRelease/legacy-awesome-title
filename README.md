@@ -4,7 +4,6 @@
 - 이 서비스는 RELEASE 인들의
   1. **친목**
   2. **업적 관리**
-  3. **프로젝트 소모임 관리**
 
   를 목표합니다!
 - 후배님을 위한 개발 가이드라인 => [개발하는법](https://github.com/minhoryang/AwesomeTitle/blob/master/DEVELOPMENT.md)
@@ -12,103 +11,41 @@
 -----
 #1. 친목
 ### 1) 구현 완료한 기능
-1. `회원가입` [Issue #1](https://github.com/minhoryang/AwesomeTitle/issues/1)
-  - ID 중복체크 [Issue #4](https://github.com/minhoryang/AwesomeTitle/issues/4)
-2. `로그인` [Issue #12](https://github.com/minhoryang/AwesomeTitle/issues/12)
-3. `프로필 사진 업로드` [Issue #11](https://github.com/minhoryang/AwesomeTitle/issues/11)
-4. `별명 관리` [Issue #7](https://github.com/minhoryang/AwesomeTitle/issues/7)
+1. `회원가입` [#1](https://github.com/minhoryang/AwesomeTitle/issues/1)
+  - ID 중복체크 [#4](https://github.com/minhoryang/AwesomeTitle/issues/4)
+2. `로그인` [#12](https://github.com/minhoryang/AwesomeTitle/issues/12)
+3. `프로필 사진 업로드` [#11](https://github.com/minhoryang/AwesomeTitle/issues/11)
+4. `별명 관리` [#7](https://github.com/minhoryang/AwesomeTitle/issues/7)
   - 직접 _닉네임을 등록_하거나 _친구들이 별명을 추천_ 해줄 수 있습니다.
-    - 별명 추천받기 [Issue #9](https://github.com/minhoryang/AwesomeTitle/issues/9) 
-5. `릴리즈 사람 찾기` [Issue #3](https://github.com/minhoryang/AwesomeTitle/issues/3)
-  - 동일한 페이지는 한국어 URL과 영어 URL 모두 접근 가능합니다.[Issue #5](https://github.com/minhoryang/AwesomeTitle/issues/5)
+    - 별명 추천받기 [#9](https://github.com/minhoryang/AwesomeTitle/issues/9) 
+5. `릴리즈 사람 찾기` [#3](https://github.com/minhoryang/AwesomeTitle/issues/3)
+  - 동일한 페이지는 한국어 URL과 영어 URL 모두 접근 가능합니다.[#5](https://github.com/minhoryang/AwesomeTitle/issues/5)
     - _EX) http://title.reluv.me/양민호 **와** http://title.reluv.me/minhoryang_ 는 모두 같은 페이지로 링크됩니다.
 
 ### 2) 현재 개발중인 기능 
 1. `별명관리 UI`
-2. `프로필 관리 기능`(별명, 사진)[Issue #32](https://github.com/minhoryang/AwesomeTitle/issues/32)
+  - 별명을 추천해주는 페이지를 만듭시다 [#33](https://github.com/minhoryang/AwesomeTitle/issues/33)
+  - 닉네임에 좋아요를 받고 싶어요 [#18](https://github.com/minhoryang/AwesomeTitle/issues/18)
+2. `프로필 관리 기능`(별명, 사진)[#32](https://github.com/minhoryang/AwesomeTitle/issues/32)
 
 ### 3) 앞으로 구현할 기능
 1. `프로필 관리 기능`
-  1. `이메일` [Issue #6](https://github.com/minhoryang/AwesomeTitle/issues/6)
-  2. `휴대폰` [Issue #8](https://github.com/minhoryang/AwesomeTitle/issues/8)
-3. `소그룹 및 업적 관리` [Issue #29](https://github.com/minhoryang/AwesomeTitle/issues/29)
+  1. `이메일` [#6](https://github.com/minhoryang/AwesomeTitle/issues/6)
+  2. `휴대폰` [#8](https://github.com/minhoryang/AwesomeTitle/issues/8)
+  3. `프로필 사진이 짜부라집니다...` [#35](https://github.com/minhoryang/AwesomeTitle/issues/35)
+2. `회원가입과 로그인이 따로 놀아요` [#24](https://github.com/minhoryang/AwesomeTitle/issues/24)
+  1. 가입할 때 입력할게 너무 많아요 [#21](https://github.com/minhoryang/AwesomeTitle/issues/21)
+3. `첫 페이지를 아름답게 만들자`
+  1. `첫 페이지를 예쁘게 만들고 싶어요ㅠㅅㅠ` [#26](https://github.com/minhoryang/AwesomeTitle/issues/26)
+  2. `생일자 추천을 첫 페이지에서 해주죠` [#31](https://github.com/minhoryang/AwesomeTitle/issues/31)
+  3. `업적 랭킹 등을 통계로 보여줍시다` [#30](https://github.com/minhoryang/AwesomeTitle/issues/30)
+4. `검색창에 친구 이름을 자동완성 해주세요` [#27](https://github.com/minhoryang/AwesomeTitle/issues/27)
+5. `버그 신고기능을 편하게 하기` [#36](https://github.com/minhoryang/AwesomeTitle/issues/36)
+
 -----
 #2. 업적 관리
 ### 1) 구현 완료한 기능
 ### 2) 현재 개발중인 기능 
-### 3) 앞으로 구현할 기능 
------
-#3. 프로젝트 소모임 관리
-### 1) 구현 완료한 기능 
-### 2) 현재 개발중인 기능 
-### 3) 앞으로 구현할 기능 
+### 3) 앞으로 구현할 기능
+1. `업적 기능` [#29](https://github.com/minhoryang/AwesomeTitle/issues/29)
 
-
-
-
-
-#### Q. 이름이 겹칠 수 있지 않나요?
-와... 이 문제 어떻게 해결하죠? **[TODO]**
-
-#### Q. 영어이름 오타는 어떡하죠?
-검색 엔진을 붙여야겠네요 ㅠㅠ
-
-### 자주쓰는 아이디
-- http://title.reluv.me/minhoryang
-- http://title.reluv.me/gnayrohnim
-- http://title.reluv.me/angryonhim
-
-우리 사이트에 `회원가입했던 아이디` + `자신이 자주 쓰는 아이디를 추가`할 수 있습니다.
-
-#### Q. 선점하면 어떡하죠?
-A. 뭐 어떡합니까 ;ㅅ;ㅠㅠ
-
-#### Q. 저걸로 다 로그인 할 수 있도록 해주세요!
-
-### 별명(닉네임) [#7](https://github.com/minhoryang/AwesomeTitle/issues/7)
-**이게 메인입니다.**
-자신이 평상시에 쓰는 `닉네임을 등록`할 수 있고, 다른 `친구들이 별명을 추천`해줄 수 있습니다. `추천받은 별명이 마음에 드는 경우, 관리자 페이지에서 추가`할 수 있습니다!
-
-- http://title.reluv.me/서버노예
-
-#### 별명 추천 [#9](https://github.com/minhoryang/AwesomeTitle/issues/9)
-
-### 이메일 [#6](https://github.com/minhoryang/AwesomeTitle/issues/6)
-자신이 사용하는 `메일을 추가`할 수 있어요!
-`주로 사용하는 메일`도 지정할 수 있어요.
-
-- http://title.reluv.me/minhoryang@gmail.com
-
-### 휴대폰 번호 [#8](https://github.com/minhoryang/AwesomeTitle/issues/8)
-- http://title.reluv.me/01062473590
-- http://title.reluv.me/62473590
-- http://title.reluv.me/010-6247-3590
-- http://title.reluv.me/6247-3590
-
------
-## 릴리즈 내에서 그룹을 나눌 수 있어요!
-
-### 소그룹
-
-### 업적
-
-### Q. 소그룹이나 업적에는 별명을 붙일 수 없나요?
-
------
-## 회원가입 /newbie [#1](https://github.com/minhoryang/AwesomeTitle/issues/1)
-
-## 기능 /api
-### /api/register [#1](https://github.com/minhoryang/AwesomeTitle/issues/1)
-### /api/login
-### /api/check_id [#4](https://github.com/minhoryang/AwesomeTitle/issues/4)
-### /api/check_hakbun [#4](https://github.com/minhoryang/AwesomeTitle/issues/4)
-### /api/admin/...
-
------
-## 관리 페이지
-### /<사람>/admin
-### /<그룹>/admin
-
------
-## Q. 너무 많은 개인정보를 공개하는거 아닌가요?
-### 로그인을 해야 볼 수 있는 정보를 선택하고 싶어요.
