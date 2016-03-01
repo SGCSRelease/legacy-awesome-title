@@ -22,7 +22,6 @@ def add_routes(app):
     app.route('/api/nickname/delete/<idx>/', methods=["POST"])(DelMyNick)
     app.route('/api/nickname/manage/<idx>/', methods=["POST"])(ManageRecommNick)
 
-
 def RecommendNickname():
     """Issue #9, A라는 사용자가 B라는 사용자에게 nick이라는 별명을 추천하는 함수입니다.
     하지만 정민교(크하하하하)가 로그인 되었는지 알려주는 함수를 만들었기 때문에!
@@ -48,7 +47,14 @@ def RecommendNickname():
         new.username = target
         db.session.add(new)
         db.session.commit()
-        return '추천되었습니다!'
+        return """
+<html>
+<head>
+<META http-equiv="refresh" content="1;URL=/%s/">
+</head>
+<body>추천되었습니다!</body>
+</html>
+""" % (request.form['target'],)
 
 
 def ManageMyNicknames(link):
