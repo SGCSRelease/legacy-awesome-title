@@ -97,6 +97,7 @@ def userpage(user):
             nicknames=my_nicknames,
             is_me=is_me,
             loggedin=get_logged_in_username(is_boolean=True),
+            username=get_logged_in_username(),
     )
 
 

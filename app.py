@@ -42,6 +42,7 @@ def index():
                 "main.html",
                 naeyoung='',
                 loggedin=True,
+                username=perhaps_logged_in_username,
         )
     return render_template(
             "main.html",
