@@ -30,15 +30,15 @@
 
 ### 3) 앞으로 구현할 기능
 1. `프로필 관리 기능`
-  1. `이메일` [#6](https://github.com/minhoryang/AwesomeTitle/issues/6)
-  2. `휴대폰` [#8](https://github.com/minhoryang/AwesomeTitle/issues/8)
-  3. `프로필 사진이 짜부라집니다...` [#35](https://github.com/minhoryang/AwesomeTitle/issues/35)
+  1. 이메일 [#6](https://github.com/minhoryang/AwesomeTitle/issues/6)
+  2. 휴대폰 [#8](https://github.com/minhoryang/AwesomeTitle/issues/8)
+  3. 프로필 사진이 짜부라집니다... [#35](https://github.com/minhoryang/AwesomeTitle/issues/35)
 2. `회원가입과 로그인이 따로 놀아요` [#24](https://github.com/minhoryang/AwesomeTitle/issues/24)
   1. 가입할 때 입력할게 너무 많아요 [#21](https://github.com/minhoryang/AwesomeTitle/issues/21)
-3. `첫 페이지를 아름답게 만들자`
-  1. `첫 페이지를 예쁘게 만들고 싶어요ㅠㅅㅠ` [#26](https://github.com/minhoryang/AwesomeTitle/issues/26)
-  2. `생일자 추천을 첫 페이지에서 해주죠` [#31](https://github.com/minhoryang/AwesomeTitle/issues/31)
-  3. `업적 랭킹 등을 통계로 보여줍시다` [#30](https://github.com/minhoryang/AwesomeTitle/issues/30)
+3. `첫 페이지 꾸미기`
+  1. 첫 페이지를 예쁘게 만들고 싶어요ㅠㅅㅠ [#26](https://github.com/minhoryang/AwesomeTitle/issues/26)
+  2. 생일자 추천을 첫 페이지에서 해주죠 [#31](https://github.com/minhoryang/AwesomeTitle/issues/31)
+  3. 업적 랭킹 등을 통계로 보여줍시다 [#30](https://github.com/minhoryang/AwesomeTitle/issues/30)
 4. `검색창에 친구 이름을 자동완성 해주세요` [#27](https://github.com/minhoryang/AwesomeTitle/issues/27)
 5. `버그 신고기능을 편하게 하기` [#36](https://github.com/minhoryang/AwesomeTitle/issues/36)
 
