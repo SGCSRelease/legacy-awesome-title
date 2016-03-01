@@ -5,3 +5,5 @@ flask-sqlalchemy
 pymysql
 flask-bcrypt
 flake8
+gunicorn
+eventlet
