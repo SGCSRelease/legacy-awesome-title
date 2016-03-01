@@ -80,10 +80,7 @@ def ManageMyNicknames(link):
     found_recomm = NickRecom.query.filter(
         NickRecom.username == username,
     ).all()
-
-    if not (found or found_recomm):
-        return "추천받은 닉네임 혹은 내 닉네임이 없습니다!!"
-
+    
     recomm = {}
     recomm['nick'] = []
     recomm['idx'] = []
