@@ -128,7 +128,13 @@ def question():
         return redirect("/%s/" % (request.form['who'],))
     elif 'random' in request.form:
         import random
-        rand = random.randrange(0, db.session.query(User).count())
-        row = db.session.query(User)[rand]
+        tot = db.session.query(User).count()
+        idx = random.randrange(0, tot)
+        row = db.session.query(User)[idx]
+        if row.username is request.form['current_page_username']:
+            if idx is 0:
+                row = db.session.query(User)[tot-1]
+            else:
+                row = db.session.query(User)[idx-1]
         return redirect("/%s/" % (row.username,))
     return redirect("/")
