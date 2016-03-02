@@ -43,7 +43,11 @@ def goto(link, is_manage=False):
         else:
             return userpage(this_user)
     else:
-        return "존재하지 않는 페이지입니다.", 404
+        return render_template(
+                "_error.html",
+                _error__msg="존재하지 않는 페이지입니다.",
+                top_menu_nav__logged_in_username=get_logged_in_username(),
+        ), 404
 
 
 def gotomanage(link):
