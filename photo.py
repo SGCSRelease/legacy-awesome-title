@@ -35,7 +35,6 @@ def photo_upload(link):
         return render_template(
                 "manager.html",
                 manager__right_html_for_menu="_includable/manager/photo.html",
-                manager_menu__current="photo",
         )
 
     # 파일을 업로드 후 저장

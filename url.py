@@ -114,7 +114,6 @@ def usermanagepage(user):
     return render_template(
             "manager.html",
             manager__right_html_for_menu="_includable/profile.html",
-            manager_menu__current="profile",
             profile__is_in_manager=True,
             profile__photo_url=my_photo,
             profile__user_class=user,
