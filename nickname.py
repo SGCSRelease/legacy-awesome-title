@@ -33,14 +33,20 @@ def RecommendNickname():
         target = request.form['target']
         nick = request.form['nick']
         if not check_username(target, is_internal=True):
-            return '존재하지 않는 유저에게 추천하려고 하였습니다.', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg='존재하지 않는 유저에게 추천하려고 하였습니다.',
+            ), 400
 
         found = Nickname.query.filter(
             Nickname.username == target,
             Nickname.nick == nick,
         ).first()
         if found:
-            return '이미 해당유저가 사용중인 별명입니다.', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg='이미 해당유저가 사용중인 별명입니다.',
+            ), 400
 
         new = NickRecom()
         new.nick = nick
@@ -72,7 +78,10 @@ def ManageMyNicknames(link):
     """
     username = get_logged_in_username()
     if not username:
-        return '로그인 해주세요!!'
+        return render_template(
+                "_error.html",
+                _error__msg='로그인 해주세요!!',
+        ), 400
 
     found = Nickname.query.filter(
         Nickname.username == username,
@@ -91,11 +100,10 @@ def ManageMyNicknames(link):
             recomm['idx'].append(nick.idx)
 
     return render_template(
-        "profile_manage_nick.html",
-        username=username,
-        menu='nicknames',
-        found=found,
-        recomm=recomm,
+        "manager.html",
+        manager__right_html_for_menu="_includes/manager/nicknames.html",
+        manager__nickname__my_nickname_classes=found,
+        manager__nickname__recommended_nicknames_for_me=recomm,
     )
 
 
@@ -107,7 +115,10 @@ def DelMyNick(idx):
 
     username = get_logged_in_username()
     if not found.username == username:
-        return 'fuck off', 400
+        return render_template(
+                "_error.html",
+                _error__msg="fuck off",
+        ), 400
 
     db.session.delete(found)
     db.session.commit()
@@ -123,7 +134,10 @@ def ManageRecommNick(idx):
 
     username = get_logged_in_username()
     if not found_recomm.username == username:
-        return 'ㅗㅗ', 400
+        return render_template(
+                "_error.html",
+                _error__msg="ㅗㅗ",
+        ), 400
 
     nick = found_recomm.nick
     if request.form.get('use', None):
@@ -156,4 +170,3 @@ def RemoveRecommNick(nick):
         ).first()
         db.session.delete(del_from_Recomm)
     db.session.commit()
-    return

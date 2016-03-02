@@ -41,5 +41,18 @@ def index():
         return redirect("/%s/" % perhaps_logged_in_username)
     return goto("release")
 
+
+@app.context_processor
+def _set_global_variable_for_templates():
+    """render_template()에 변수를 넘기지 않고도 사용할 수 있어요!
+
+    Flask의 render_template()는 사실 Jinja2라는 Template Engine을 이용해 제공됩니다.
+    근데 여기에 전역변수를 선언할 수 있다네요. WOW!
+    """
+    return {
+            "get_logged_in_username": get_logged_in_username(),
+    }
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
