@@ -22,6 +22,7 @@ def add_routes(app):
     app.route('/api/nickname/delete/<idx>/', methods=["POST"])(DelMyNick)
     app.route('/api/nickname/manage/<idx>/', methods=["POST"])(ManageRecommNick)
 
+
 def RecommendNickname():
     """Issue #9, A라는 사용자가 B라는 사용자에게 nick이라는 별명을 추천하는 함수입니다.
     하지만 정민교(크하하하하)가 로그인 되었는지 알려주는 함수를 만들었기 때문에!
@@ -80,7 +81,7 @@ def ManageMyNicknames(link):
     found_recomm = NickRecom.query.filter(
         NickRecom.username == username,
     ).all()
-    
+
     recomm = {}
     recomm['nick'] = []
     recomm['idx'] = []
