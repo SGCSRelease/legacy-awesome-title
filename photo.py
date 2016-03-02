@@ -26,9 +26,15 @@ def photo_upload(link):
     """
     username = get_logged_in_username()
     if not username:
-        return "로그인이 되어있지 않습니다.", 400
+        return render_template(
+                "_error.html",
+                _error__msg="로그인이 되어있지 않습니다.",
+        ), 400
     if not link == username:
-        return "자신이 아닙니다!", 400
+        return render_template(
+                "_error.html",
+                _error__msg="자신이 아닙니다!",
+        ), 400
 
     # 파일을 업로드
     if request.method == "GET":
@@ -41,7 +47,10 @@ def photo_upload(link):
     else:
         file = request.files['upfile']
         if not file:
-            return "이미지를 업로드하지 않았습니다.", 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="이미지를 업로드하지 않았습니다.",
+            ), 400
         filename = username + os.path.splitext(file.filename)[1]
 
         # 폴더가 없다면 만들어줍니다.

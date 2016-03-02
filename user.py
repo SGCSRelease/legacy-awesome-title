@@ -30,48 +30,81 @@ def add_routes(app):
 def register():
     """GET /register 회원가입폼 POST /register 실제회원가입."""
     if get_logged_in_username():
-        return "이미 로그인되어있어요!", 400
+        return render_template(
+                "_error.html",
+                _error__msg="이미 로그인되어있어요!",
+        ), 400
 
     if request.method == "GET":
         return render_template("register.html")
     else:
         username = request.form['usr']
         if not username or len(username) > N:
-            return 'Failed', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - username이 맞지 않습니다.",
+            ), 400
         found = check_username(username, is_internal=True)
         if found:
-            return "Existing Username", 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - username이 겹칩니다.",
+            ), 400
 
         if not request.form['pwd']:
-            return 'Failed', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - password가 맞지 않습니다.",
+            ), 400
         if request.form['pwd'] != request.form['pwda']:
-            return 'Failed', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - password가 맞지 않습니다.",
+            ), 400
         password_hash = bcrypt.generate_password_hash(request.form['pwd'])
 
         first_name_kr = request.form['fnk']
         if not first_name_kr or len(first_name_kr) > N:
-            return 'Failed', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - first_name_kr이 맞지 않습니다.",
+            ), 400
 
         last_name_kr = request.form['lnk']
         if not last_name_kr or len(last_name_kr) > N:
-            return 'Failed', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - last_name_kr이 맞지 않습니다.",
+            ), 400
 
         first_name_en = request.form['fne']
         if not first_name_en or len(first_name_en) > N:
-            return 'Failed', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - first_name_en이 맞지 않습니다.",
+            ), 400
 
         middle_name_en = request.form['mne']
         if len(middle_name_en) > N:
-            return 'Failed', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - middle_name_en이 맞지 않습니다.",
+            ), 400
 
         last_name_en = request.form['lne']
         if not last_name_en or len(last_name_en) > N:
-            return 'Failed', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - last_name_en이 맞지 않습니다.",
+            ), 400
 
         try:
             student_number = int(request.form['sn'])
         except ValueError:
-            return 'Failed', 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="Failed - 학번이 맞지 않습니다.",
+            ), 400
 
         new_user = User()
         new_user.username = username

@@ -60,13 +60,13 @@ def addURL(link, username):
             URL.link == link,
     ).first()
     if found:
-        return "이미 생성된 링크입니다.", 400
+        return False
     newP = URL()
     newP.link = link
     newP.username = username
     db.session.add(newP)
     db.session.commit()
-    return "등록됐습니다."
+    return True
 
 
 def get_logged_in_username(*args, **kwargs):
