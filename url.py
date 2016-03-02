@@ -46,7 +46,6 @@ def goto(link, is_manage=False):
         return render_template(
                 "_error.html",
                 _error__msg="존재하지 않는 페이지입니다.",
-                top_menu_nav__logged_in_username=get_logged_in_username(),
         ), 404
 
 
@@ -95,8 +94,6 @@ def userpage(user):
             profile__photo_url=my_photo,
             profile__user_class=user,
             profile__user_nickname_classes=my_nicknames,
-            profile__logged_in_username=get_logged_in_username(),
-            top_menu_nav__logged_in_username=get_logged_in_username(),
     )
 
 
@@ -118,13 +115,10 @@ def usermanagepage(user):
             "manager.html",
             manager__right_html_for_menu="_includable/profile.html",
             manager_menu__current="profile",
-            manager_menu__username=get_logged_in_username(),
             profile__is_in_manager=True,
             profile__photo_url=my_photo,
             profile__user_class=user,
             profile__user_nickname_classes=my_nicknames,
-            profile__logged_in_username=get_logged_in_username(),
-            top_menu_nav__logged_in_username=get_logged_in_username(),
     )
 
 

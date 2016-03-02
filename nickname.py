@@ -94,10 +94,8 @@ def ManageMyNicknames(link):
         "manager.html",
         manager__right_html_for_menu="_includable/manager/nicknames.html",
         manager_menu__current="nicknames",
-        manager_menu__username=username,
         manager__nickname__my_nickname_classes=found,
         manager__nickname__recommended_nicknames_for_me=recomm,
-        top_menu_nav__logged_in_username=get_logged_in_username(),
     )
 
 

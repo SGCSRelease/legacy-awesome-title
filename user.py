@@ -35,7 +35,6 @@ def register():
     if request.method == "GET":
         return render_template(
                 "register.html",
-                top_menu_nav__logged_in_username=None,
         )
     else:
         username = request.form['usr']
@@ -125,7 +124,6 @@ def login():
     if request.method == "GET":
         return render_template(
                 "login.html",
-                top_menu_nav__logged_in_username=None,
         )
     else:
         found = check_username(request.form['usr'], is_internal=True)
