@@ -1,71 +1,73 @@
-{% extends "_main.html" %}
-{% block content %}
-<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
-<form action="/register/" method="POST">
-    ID: <input type=text class='usr' id=usr name=usr maxlength="50" /><br>
-    PW: <input type=password class='pwd' id=pwd name=pwd /><br>
-    PW Again: <input type=password class='pwda' id=pwda name=pwda /><br>
-    성(KO): <input type=text class='lnk' id=lnk name=lnk maxlength="50"/><br>
-    이름(KO): <input type=text class='fnk' id=fnk name=fnk maxlength="50"/><br>
-    First Name(EN): <input type=text class='fne' id=fne name=fne maxlength="50" /><br>
-    Middle Name(EN): <input type=text class='mne' id=mne name=mne maxlength="50" /><br>
-    Last Name(EN): <input type=text class='lne' id=lne name=lne maxlength="50" /><br>
-    Student Number: <input type=text class='sn' id=sn name=sn maxlength="50" /><br>
-    <input type=submit value="가입" />
-</form>
+{% extends "_extendable/_index.html" %}
+{% block _index__container %}
+    {# ?!?!?!?!?!?!?!?!?!??!?!? #}
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    {# ?!?!?!?!?!?!?!?!?!??!?!? #}
+    <form action="/register/" method="POST">
+        ID: <input type=text class='usr' id=usr name=usr maxlength="50" /><br>
+        PW: <input type=password class='pwd' id=pwd name=pwd /><br>
+        PW Again: <input type=password class='pwda' id=pwda name=pwda /><br>
+        성(KO): <input type=text class='lnk' id=lnk name=lnk maxlength="50"/><br>
+        이름(KO): <input type=text class='fnk' id=fnk name=fnk maxlength="50"/><br>
+        First Name(EN): <input type=text class='fne' id=fne name=fne maxlength="50" /><br>
+        Middle Name(EN): <input type=text class='mne' id=mne name=mne maxlength="50" /><br>
+        Last Name(EN): <input type=text class='lne' id=lne name=lne maxlength="50" /><br>
+        Student Number: <input type=text class='sn' id=sn name=sn maxlength="50" /><br>
+        <input type=submit value="가입" />
+    </form>
 {% endblock %}
-{% block script %}
-<script>
-$('.usr').change(
+{% block _index__script %}
+    <script>
+    $('.usr').change(
         function(){
-        var check_id = "/check_username/" + $('.usr').val();
-        $.get(
-            check_id,
-            function (data){
-            alert("쓰셔도 좋습니다.");
-            }
+            var check_id = "/check_username/" + $('.usr').val();
+            $.get(
+                check_id,
+                function (data){
+                    alert("쓰셔도 좋습니다.");
+                }
             ).fail(
                 function (data){
-                alert("겹치는 ID가 있습니다.");
+                    alert("겹치는 ID가 있습니다.");
                 }
-                );
+            );
         }
-        );
+    );
 
-var changed_pwda = false;
-$('.pwd').change(
+    var changed_pwda = false;
+    $('.pwd').change(
         function(){
-        if ( $('.pwd').val() != $('.pwda').val() )
-        if(changed_pwda)
-        alert("PW가 다릅니다.");
+            if ( $('.pwd').val() != $('.pwda').val() )
+                if(changed_pwda)
+                    alert("PW가 다릅니다.");
         }
-        );
+    );
 
-$('.pwda').change(
+    $('.pwda').change(
         function(){
-        changed_pwda = true;
-        if ( $('.pwd').val() != $('.pwda').val() ) alert("PW가 다릅니다.");
+            changed_pwda = true;
+            if ( $('.pwd').val() != $('.pwda').val() ) alert("PW가 다릅니다.");
         }
-        );
+    );
 
-$('.fnk').change(
+    $('.fnk').change(
         function(){ if ( $('.fnk').val() == "" ) alert("빈 칸입니다."); }
-        );
-$('.lnk').change(
+    );
+    $('.lnk').change(
         function(){ if ( $('.lnk').val() == "" ) alert("빈 칸입니다."); }
-        );
-$('.fne').change(
+    );
+    $('.fne').change(
         function(){ if ( $('.fne').val() == "" ) alert("빈 칸입니다."); }
-        );
-$('.lne').change(
+    );
+    $('.lne').change(
         function(){ if ( $('.lne').val() == "" ) alert("빈 칸입니다."); }
-        );
-$('.sn').change(
+    );
+    $('.sn').change(
         function(){
-        var num = $('.sn').val();
-        if ( num == "") alert("빈 칸입니다.");
-        else if( num != parseInt(num,10) ) alert("숫자가 아닙니다.")
+            var num = $('.sn').val();
+            if ( num == "") alert("빈 칸입니다.");
+            else if( num != parseInt(num,10) ) alert("숫자가 아닙니다.")
         }
-        );
-</script>
+    );
+    </script>
 {% endblock %}

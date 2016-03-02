@@ -33,7 +33,10 @@ def register():
         return "이미 로그인되어있어요!", 400
 
     if request.method == "GET":
-        return render_template("register.html")
+        return render_template(
+                "register.html",
+                top_menu_nav__logged_in_username=None,
+        )
     else:
         username = request.form['usr']
         if not username or len(username) > N:
@@ -120,7 +123,10 @@ def check_username(username, is_internal=False):
 def login():
     """Issue #12, 로그인 /login"""
     if request.method == "GET":
-        return render_template("login.html")
+        return render_template(
+                "login.html",
+                top_menu_nav__logged_in_username=None,
+        )
     else:
         found = check_username(request.form['usr'], is_internal=True)
         if not found:

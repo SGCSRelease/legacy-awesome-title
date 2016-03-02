@@ -1,0 +1,16 @@
+{% extends "_extendable/_index.html" %}
+{% block _index__container %}
+    <div class="row">
+        <!-- 왼쪽 -->
+        <div class="col-xs-6 col-md-4">
+            {% include "_includable/manager_menu.html" %}
+        </div>
+
+        <!-- 오른쪽 -->
+        <div class="col-xs-12 col-sm-6 col-md-8">
+            {% if manager__right_html_for_menu %}
+                {% include manager__right_html_for_menu %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

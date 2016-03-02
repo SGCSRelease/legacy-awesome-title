@@ -91,11 +91,11 @@ def userpage(user):
 
     return render_template(
             "profile.html",
-            user=user,
-            photo=my_photo,
-            nicknames=my_nicknames,
-            is_me=is_me,
-            username=get_logged_in_username(),
+            profile__is_my_profile=is_me,
+            profile__photo_url=my_photo,
+            profile__user_class=user,
+            profile__user_nickname_classes=my_nicknames,
+            top_menu_nav__logged_in_username=get_logged_in_username(),
     )
 
 
@@ -114,12 +114,15 @@ def usermanagepage(user):
         Nickname.username == user.username,
     ).all()
     return render_template(
-            "profile_manage.html",
-            user=user,
-            photo=my_photo,
-            nicknames=my_nicknames,
-            username=user.username,
-            menu='profile',
+            "manager.html",
+            manager__right_html_for_menu="_includable/profile.html",
+            manager_menu__current="profile",
+            manager_menu__username=get_logged_in_username(),
+            profile__is_my_profile=False,
+            profile__photo_url=my_photo,
+            profile__user_class=user,
+            profile__user_nickname_classes=my_nicknames,
+            top_menu_nav__logged_in_username=get_logged_in_username(),
     )
 
 

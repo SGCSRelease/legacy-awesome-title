@@ -33,9 +33,11 @@ def photo_upload(link):
     # 파일을 업로드
     if request.method == "GET":
         return render_template(
-                "profile_manage_photo.html",
-                username=username,
-                menu='photo',
+                "manager.html",
+                manager__right_html_for_menu="_includable/manager/photo.html",
+                manager_menu__current="photo",
+                manager_menu__username=username,
+                top_menu_nav__logged_in_username=get_logged_in_username(),
         )
 
     # 파일을 업로드 후 저장
