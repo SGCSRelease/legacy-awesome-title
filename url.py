@@ -89,13 +89,9 @@ def userpage(user):
         Nickname.username == user.username,
     ).all()
 
-    is_me = False
-    if user.username == get_logged_in_username():
-        is_me = True
-
     return render_template(
             "profile.html",
-            profile__is_my_profile=is_me,
+            profile__is_in_manager=False,
             profile__photo_url=my_photo,
             profile__user_class=user,
             profile__user_nickname_classes=my_nicknames,
@@ -123,7 +119,7 @@ def usermanagepage(user):
             manager__right_html_for_menu="_includable/profile.html",
             manager_menu__current="profile",
             manager_menu__username=get_logged_in_username(),
-            profile__is_my_profile=False,
+            profile__is_in_manager=True,
             profile__photo_url=my_photo,
             profile__user_class=user,
             profile__user_nickname_classes=my_nicknames,
