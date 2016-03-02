@@ -99,6 +99,7 @@ def userpage(user):
             profile__photo_url=my_photo,
             profile__user_class=user,
             profile__user_nickname_classes=my_nicknames,
+            profile__logged_in_username=get_logged_in_username(),
             top_menu_nav__logged_in_username=get_logged_in_username(),
     )
 
@@ -126,6 +127,7 @@ def usermanagepage(user):
             profile__photo_url=my_photo,
             profile__user_class=user,
             profile__user_nickname_classes=my_nicknames,
+            profile__logged_in_username=get_logged_in_username(),
             top_menu_nav__logged_in_username=get_logged_in_username(),
     )
 
