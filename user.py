@@ -48,24 +48,8 @@ def register():
             return 'Failed', 400
         password_hash = bcrypt.generate_password_hash(request.form['pwd'])
 
-        first_name_kr = request.form['fnk']
-        if not first_name_kr or len(first_name_kr) > N:
-            return 'Failed', 400
-
-        last_name_kr = request.form['lnk']
-        if not last_name_kr or len(last_name_kr) > N:
-            return 'Failed', 400
-
-        first_name_en = request.form['fne']
-        if not first_name_en or len(first_name_en) > N:
-            return 'Failed', 400
-
-        middle_name_en = request.form['mne']
-        if len(middle_name_en) > N:
-            return 'Failed', 400
-
-        last_name_en = request.form['lne']
-        if not last_name_en or len(last_name_en) > N:
+        realname = request.form['realname']
+        if not realname or len(realname) > N:
             return 'Failed', 400
 
         try:
@@ -76,11 +60,7 @@ def register():
         new_user = User()
         new_user.username = username
         new_user.password_hash = password_hash
-        new_user.first_name_kr = first_name_kr
-        new_user.last_name_kr = last_name_kr
-        new_user.first_name_en = first_name_en
-        new_user.middle_name_en = middle_name_en
-        new_user.last_name_en = last_name_en
+        new_user.realname = realname
         new_user.student_number = student_number
 
         # XXX: 로그인한적도없는데 last_login을 넣었으므로, 회원가입하면 자동로그인ㅋㅋ
@@ -89,16 +69,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        # TODO: Oh... God...
-        addURL('%s%s' % (first_name_kr, last_name_kr), username)
-        addURL('%s%s' % (last_name_kr, first_name_kr), username)
-        addURL('%s%s' % (first_name_en, last_name_en), username)
-        addURL('%s%s' % (last_name_en, first_name_en), username)
-        addURL('%s%s%s' % (
-            first_name_en,
-            middle_name_en,
-            last_name_en
-        ), username)
+        addURL(realname, username)
         return redirect("/")
 
 

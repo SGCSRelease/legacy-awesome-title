@@ -5,11 +5,7 @@
     ID: <input type=text class='usr' id=usr name=usr maxlength="50" /><br>
     PW: <input type=password class='pwd' id=pwd name=pwd /><br>
     PW Again: <input type=password class='pwda' id=pwda name=pwda /><br>
-    성(KO): <input type=text class='lnk' id=lnk name=lnk maxlength="50"/><br>
-    이름(KO): <input type=text class='fnk' id=fnk name=fnk maxlength="50"/><br>
-    First Name(EN): <input type=text class='fne' id=fne name=fne maxlength="50" /><br>
-    Middle Name(EN): <input type=text class='mne' id=mne name=mne maxlength="50" /><br>
-    Last Name(EN): <input type=text class='lne' id=lne name=lne maxlength="50" /><br>
+    이름: <input type=text class='realname' id=realname name=realname maxlength="50"/><br>
     Student Number: <input type=text class='sn' id=sn name=sn maxlength="50" /><br>
     <input type=submit value="가입" />
 </form>
@@ -48,17 +44,8 @@ $('.pwda').change(
         }
         );
 
-$('.fnk').change(
-        function(){ if ( $('.fnk').val() == "" ) alert("빈 칸입니다."); }
-        );
-$('.lnk').change(
-        function(){ if ( $('.lnk').val() == "" ) alert("빈 칸입니다."); }
-        );
-$('.fne').change(
-        function(){ if ( $('.fne').val() == "" ) alert("빈 칸입니다."); }
-        );
-$('.lne').change(
-        function(){ if ( $('.lne').val() == "" ) alert("빈 칸입니다."); }
+$('.realname').change(
+        function(){ if ( $('.realname').val() == "" ) alert("빈 칸입니다."); }
         );
 $('.sn').change(
         function(){
