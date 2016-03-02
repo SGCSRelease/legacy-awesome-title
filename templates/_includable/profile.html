@@ -1,5 +1,5 @@
 {% if not profile__is_in_manager %}
-    {% if profile__user_class.username == profile__logged_in_username %}
+    {% if profile__user_class.username == get_logged_in_username %}
         <div style="text-align: right">
             <form method="GET" action="manage/">
                 <button type="submit" class="btn btn-danger-outline">수정</button>
@@ -42,8 +42,8 @@
         {% endfor %}
     </h3>
     <!-- more here -->
-    {% if profile__logged_in_username %}
-        {% if profile__user_class.username != profile__logged_in_username %}
+    {% if get_logged_in_username %}
+        {% if profile__user_class.username != get_logged_in_username %}
             {% if not profile__is_in_manager %}
                 <form action="/api/nickname/recommend/" method="POST">
                     <input type=text class='nick' id=nick name=nick maxlength="50" placeholder="새 별명" />

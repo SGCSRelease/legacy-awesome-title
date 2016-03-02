@@ -51,9 +51,6 @@ def _set_global_variable_for_templates():
     """
     return {
             "get_logged_in_username": get_logged_in_username(),
-            "top_menu_nav__logged_in_username": get_logged_in_username(),
-            "manager_menu__username": get_logged_in_username(),
-            "profile__logged_in_username": get_logged_in_username(),
     }
 
 

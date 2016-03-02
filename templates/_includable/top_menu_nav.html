@@ -2,12 +2,12 @@
     <nav class="navbar navbar-light bg-faded">
         <a class="navbar-brand" href="/">릴리즈 업적관리 사비스</a>
         <ul class="nav navbar-nav">
-            {% if top_menu_nav__logged_in_username %}
+            {% if get_logged_in_username %}
                 <li class="nav-item active">
                     <a class="nav-link" href="/logout/">로그아웃</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/{{ top_menu_nav__logged_in_username }}/">내페이지</a>
+                    <a class="nav-link" href="/{{ get_logged_in_username }}/">내페이지</a>
                 </li>
             {% else %}
                 <li class="nav-item active">
