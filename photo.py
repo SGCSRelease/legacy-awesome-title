@@ -41,6 +41,8 @@ def photo_upload(link):
     # 파일을 업로드 후 저장
     else:
         file = request.files['upfile']
+        if not file:
+            return "이미지를 업로드하지 않았습니다.", 400
         filename = username + os.path.splitext(file.filename)[1]
 
         # 폴더가 없다면 만들어줍니다.
