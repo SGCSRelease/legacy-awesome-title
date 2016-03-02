@@ -58,7 +58,7 @@
 **3.메인화면(첫페이지) 디자인**
 - [ ] 생일인 사람 표시기능[#31](https://github.com/minhoryang/AwesomeTitle/issues/31)
 
------
+------
 
 # <업적 관리>
 **0.업적이 뭘까**
