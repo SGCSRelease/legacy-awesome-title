@@ -92,7 +92,7 @@ def ManageMyNicknames(link):
 
     return render_template(
         "manager.html",
-        manager__right_html_for_menu="_includable/manager/nicknames.html",
+        manager__right_html_for_menu="_includes/manager/nicknames.html",
         manager__nickname__my_nickname_classes=found,
         manager__nickname__recommended_nicknames_for_me=recomm,
     )

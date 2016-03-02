@@ -1,4 +1,4 @@
-{% extends "_extendable/_index.html" %}
+{% extends "_extends/_index.html" %}
 {% block _index__container %}
     <div class="row">
         <!-- 왼쪽 -->
@@ -7,7 +7,7 @@
                 {# 여기 인덴트좀 지켜주세요!!!! 
                    리뷰할 때 확실히 볼꺼에요!!!! - minhoryang #}
 
-                {% if manager__right_html_for_menu == "_includable/profile.html" %}
+                {% if manager__right_html_for_menu == "_includes/profile.html" %}
                     <a class="nav-link active" href="/{{ get_logged_in_username }}/manage/" >
                 {% else %}
                     <a class="nav-link" href="/{{ get_logged_in_username }}/manage/" >
@@ -17,7 +17,7 @@
                     </li>
                 </a>
 
-                {% if manager__right_html_for_menu == "_includable/manager/photo.html" %}
+                {% if manager__right_html_for_menu == "_includes/manager/photo.html" %}
                     <a class="nav-link active" href="/{{ get_logged_in_username }}/manage/photo/">
                 {% else %}
                     <a class="nav-link" href="/{{ get_logged_in_username }}/manage/photo/">
@@ -27,7 +27,7 @@
                     </li>
                 </a>
 
-                {% if manager__right_html_for_menu == "_includable/manager/nicknames.html" %}
+                {% if manager__right_html_for_menu == "_includes/manager/nicknames.html" %}
                     <a class="nav-link active" href="/{{ get_logged_in_username }}/manage/nicknames/">
                 {% else %}
                     <a class="nav-link" href="/{{get_logged_in_username}}/manage/nicknames/">

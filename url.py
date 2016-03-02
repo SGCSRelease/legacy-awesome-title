@@ -113,7 +113,7 @@ def usermanagepage(user):
     ).all()
     return render_template(
             "manager.html",
-            manager__right_html_for_menu="_includable/profile.html",
+            manager__right_html_for_menu="_includes/profile.html",
             profile__is_in_manager=True,
             profile__photo_url=my_photo,
             profile__user_class=user,

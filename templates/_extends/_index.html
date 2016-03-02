@@ -1,4 +1,4 @@
-{% extends "_extendable/__bootstrap.html" %}
+{% extends "_extends/__bootstrap.html" %}
 {% block __bootstrap__style %}
     <style>
     @media (min-width: 544px)
@@ -21,7 +21,7 @@
     {% endblock %}
 {% endblock %}
 {% block __bootstrap__body %}
-    {% include "_includable/top_menu_nav.html" %}
+    {% include "_includes/top_menu_nav.html" %}
     <div class="container enough-space-from-nav">
         {% block _index__container %}
         {% endblock %} 
