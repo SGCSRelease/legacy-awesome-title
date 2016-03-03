@@ -116,13 +116,19 @@ def login():
     else:
         found = check_username(request.form['usr'], is_internal=True)
         if not found:
-            return "로그인 입력정보가 잘못되었습니다.", 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="로그인 입력정보가 잘못되었습니다.",
+            ), 400
 
         if not bcrypt.check_password_hash(
                 found.password_hash,
                 request.form['pwd']
         ):
-            return "로그인 입력정보가 잘못되었습니다.", 400
+            return render_template(
+                    "_error.html",
+                    _error__msg="로그인 입력정보가 잘못되었습니다.",
+            ), 400
 
         username = request.form['usr']
         found.last_login = datetime.now()
