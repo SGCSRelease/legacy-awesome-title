@@ -11,8 +11,14 @@ from flask.ext.bcrypt import Bcrypt
 from db import (
     db,
     User,
+    URL,
+    Photo,
+    Nickname,
+    NickRecom,
     N,
 )
+    
+
 from url import addURL
 
 
@@ -26,7 +32,7 @@ def add_routes(app):
     app.route('/logout/')(logout)
     app.route('/api/check_pwd/', methods=["POST"])(check_password)
     app.route('/manage/password/', methods=["GET", "POST"])(change_password)
-    app.route('/<link>/manage/leave/')(withdraw_member)
+    app.route('/<link>/manage/withdrawal/')(withdraw_member)
 
 
 def register():
@@ -224,12 +230,56 @@ def change_password():
 
 def withdraw_member(link):
     """ issue #44 회원탈퇴 """
+
+    username = get_logged_in_username()
+
     found = User.query.filter(
-            User.username == link,
+            User.username == username,
     ).first()
     
     db.session.delete(found)
-    db.session.commit()
-    session.pop('username', None)
+    
+    while True:
+        found = URL.query.filter(
+               URL.username == username,
+        ).first()
 
+        if found:
+            db.session.delete(found)
+        else:
+            break;
+   
+    while True:
+        found = Photo.query.filter(
+                Photo.username == username,
+        ).first()
+
+        if found:
+            db.session.delete(found)
+        else:
+            break;
+
+    while True:
+        found = NickRecom.query.filter(
+                NickRecom.username == username,
+        ).first()
+
+        if found:
+            db.session.delete(found)
+        else:
+            break;
+
+    while True:
+        found = Nickname.query.filter(
+                Nickname.username == username,
+        ).first()
+
+        if found:
+            db.session.delete(found)
+        else:
+            break;
+
+    db.session.commit()
+
+    session.pop('username', None)
     return redirect('/')
