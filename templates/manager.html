@@ -55,9 +55,19 @@
                     </li>
                 </a>
 
+                {% if manager__right_html_for_menu == "_includes/manager/withdrawal.html" %}
+                    <a class="nav-link active" href="/{{ get_logged_in_username }}/manage/withdrawal/">
+                {% else %}
+                    <a class="nav-link" href="/{{get_logged_in_username}}/manage/withdrawal/">
+                {% endif %}
+                    <li class="nav-item">
+                    회원탈퇴
+                    </li>
+                </a>
+
                 <a class="nav-link" target="_blank" href="https://github.com/minhoryang/AwesomeTitle/issues">
                     <li class="nav-item">
-                    버그 신고
+                    버그신고
                     </li>
                 </a>
 
