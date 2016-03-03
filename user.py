@@ -18,6 +18,7 @@ from db import (
     N,
 )
     
+from os import remove
 
 from url import addURL
 
@@ -189,15 +190,14 @@ def withdraw_member(link):
         else:
             break;
    
-    while True:
-        found = Photo.query.filter(
-                Photo.username == username,
-        ).first()
-
-        if found:
-            db.session.delete(found)
-        else:
-            break;
+    found = Photo.query.filter(
+            Photo.username == username,
+    ).first()
+    filename = found.filename
+    if found:
+        db.session.delete(found)
+    
+    os.remove("./DOWNLOADED/" % filename)
 
     while True:
         found = NickRecom.query.filter(
