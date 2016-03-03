@@ -1,0 +1,31 @@
+<header>
+    <nav class="navbar navbar-light bg-faded">
+        <a class="navbar-brand" href="/">릴리즈 업적관리 사비스</a>
+        <ul class="nav navbar-nav">
+            {% if get_logged_in_username %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/logout/">로그아웃</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/{{ get_logged_in_username }}/">내페이지</a>
+                </li>
+            {% else %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/register/">회원가입</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/login/">로그인</a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" target="_blank" href="https://github.com/minhoryang/AwesomeTitle/issues">버그신고</a>
+            </li>
+        </ul>
+        <form class="form-inline pull-xs-right -hidden-sm-down" method="POST" action="/question/">
+            <input class="form-control" type="text" placeholder="다른 친구" name="who">
+            <button class="btn btn-success-outline" type="submit" name="question">궁금해</button>
+            <button class="btn btn-warning-outline" type="submit" name="random">랜덤!</button>
+        </form>
+    </nav>
+    <!-- TODO: Logout Please?! -->
+</header>

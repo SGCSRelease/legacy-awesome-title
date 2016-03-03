@@ -1,0 +1,33 @@
+{% extends "_extends/__bootstrap.html" %}
+{% block __bootstrap__style %}
+    <style>
+    @media (min-width: 544px)
+    .enough-space-from-nav {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+        margin-bottom: 3rem;
+    }
+
+    .enough-space-from-nav {
+        padding: 2rem .9375rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .center {
+        text-align: center;
+    }
+    </style>
+    {% block _index__style %}
+    {% endblock %}
+{% endblock %}
+{% block __bootstrap__body %}
+    {% include "_includes/top_menu_nav.html" %}
+    <div class="container enough-space-from-nav">
+        {% block _index__container %}
+        {% endblock %} 
+    </div>
+{% endblock %}
+{% block __bootstrap__script %}
+    {% block _index__script %}
+    {% endblock %}
+{% endblock %}

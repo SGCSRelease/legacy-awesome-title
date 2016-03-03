@@ -43,7 +43,10 @@ def goto(link, is_manage=False):
         else:
             return userpage(this_user)
     else:
-        return "존재하지 않는 페이지입니다.", 404
+        return render_template(
+                "_error.html",
+                _error__msg="존재하지 않는 페이지입니다.",
+        ), 404
 
 
 def gotomanage(link):
@@ -57,13 +60,13 @@ def addURL(link, username):
             URL.link == link,
     ).first()
     if found:
-        return "이미 생성된 링크입니다.", 400
+        return False
     newP = URL()
     newP.link = link
     newP.username = username
     db.session.add(newP)
     db.session.commit()
-    return "등록됐습니다."
+    return True
 
 
 def get_logged_in_username(*args, **kwargs):
@@ -85,17 +88,12 @@ def userpage(user):
         Nickname.username == user.username,
     ).all()
 
-    is_me = False
-    if user.username == get_logged_in_username():
-        is_me = True
-
     return render_template(
             "profile.html",
-            user=user,
-            photo=my_photo,
-            nicknames=my_nicknames,
-            is_me=is_me,
-            username=get_logged_in_username(),
+            profile__is_in_manager=False,
+            profile__photo_url=my_photo,
+            profile__user_class=user,
+            profile__user_nickname_classes=my_nicknames,
     )
 
 
@@ -114,12 +112,12 @@ def usermanagepage(user):
         Nickname.username == user.username,
     ).all()
     return render_template(
-            "profile_manage.html",
-            user=user,
-            photo=my_photo,
-            nicknames=my_nicknames,
-            username=user.username,
-            menu='profile',
+            "manager.html",
+            manager__right_html_for_menu="_includes/profile.html",
+            profile__is_in_manager=True,
+            profile__photo_url=my_photo,
+            profile__user_class=user,
+            profile__user_nickname_classes=my_nicknames,
     )
 
 
