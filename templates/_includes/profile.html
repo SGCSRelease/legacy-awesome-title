@@ -1,0 +1,56 @@
+{% if not profile__is_in_manager %}
+    {% if profile__user_class.username == get_logged_in_username %}
+        <div style="text-align: right">
+            <form method="GET" action="manage/">
+                <button type="submit" class="btn btn-danger-outline">수정</button>
+            </form>
+        </div>
+    {% endif %}
+{% endif %}
+<div class="center">
+    <a href="#">
+        {% if profile__photo_url %}
+            <img style="
+            width:200px;
+            height:200px;
+            display:block;
+            border-radius:50%;
+            background-position-y: center;
+            background-position-x: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin: 0 auto;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:url({{ profile__photo_url }})">
+        {% else %}
+            <img src="/static/default.png" class="img-circle center-block">
+        {% endif %}
+    </a>
+    <br><!-- REALLY?!-->
+    <h1>
+        {{ profile__user_class.realname }}
+    </h1>
+    <!-- Where is H2 -->
+    <h3>
+        {% for nickname in profile__user_nickname_classes %}
+            <div class="row">
+                {{ nickname.nick }}
+            </div>
+        {% endfor %}
+    </h3>
+    <!-- more here -->
+    {% if get_logged_in_username %}
+        {% if profile__user_class.username != get_logged_in_username %}
+            {% if not profile__is_in_manager %}
+                <form action="/api/nickname/recommend/" method="POST">
+                    <input type=text class='nick' id=nick name=nick maxlength="50" placeholder="새 별명" />
+                    <input type=hidden class='target' id=target name=target maxlength="50" value="{{ profile__user_class.username }}"/>
+                    <input type=submit value="추천하기!" />
+                </form>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>

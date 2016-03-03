@@ -1,0 +1,23 @@
+내 닉네임 : <br> 
+{% for one_of_my_nick_class in manager__nickname__my_nickname_classes %}
+    <div>
+        <!-- TODO : 링크를 통해 실행하지 말고 jquery를 이용해 함수를 바로 호출할수 있게 만들기!  -->
+        <form method="POST" action="/api/nickname/delete/{{ one_of_my_nick_class.idx }}/">
+            {{ one_of_my_nick_class.nick }}
+            <input type="submit" value="삭제"/>
+        </form>
+    </div>
+{% endfor %}
+<br>
+
+추천받은 닉네임 : <br>
+{% for idx in range(0, manager__nickname__recommended_nicknames_for_me['nick'].__len__()) %}
+    <div>
+        <!-- TODO : 추천받은 닉네임들이 중복되면 하나만 출력할 수 있도록 수정 -->
+        <form method="POST" action="/api/nickname/manage/{{ manager__nickname__recommended_nicknames_for_me['idx'][idx] }}/">
+            {{ manager__nickname__recommended_nicknames_for_me['nick'][idx] }}
+            <input type="submit" name=use value="사용"/>
+            <input type="submit" name=reject value="거부"/>
+        </form>
+    </div>
+{% endfor %}

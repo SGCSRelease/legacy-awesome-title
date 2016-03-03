@@ -11,13 +11,10 @@ N = 50
 
 
 class User(db.Model):
+    __tablename__ = "user"
     username = db.Column(db.String(N), primary_key=True)
     password_hash = db.Column(db.String(N + 10), nullable=False)
-    first_name_kr = db.Column(db.String(N), nullable=False)
-    last_name_kr = db.Column(db.String(N), nullable=False)
-    first_name_en = db.Column(db.String(N), nullable=False)
-    middle_name_en = db.Column(db.String(N))
-    last_name_en = db.Column(db.String(N), nullable=False)
+    realname = db.Column(db.String(N), nullable=False)
     student_number = db.Column(db.Integer, nullable=False)
     last_login = db.Column(db.DateTime, nullable=False)
 

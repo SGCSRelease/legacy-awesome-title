@@ -1,8 +1,8 @@
-{% extends "_main.html" %}
-{% block content %}
-<form method=POST action="/login/">
-		ID: <input type=text class='usr' id=usr name=usr /> <br>
-		PW: <input type=password class='pwd' id=pwd name=pwd /> <br>
-		<input type=submit />
-</form>
+{% extends "_extends/_index.html" %}
+{% block _index__container %}
+    <form method=POST action="/login/">
+        ID: <input type=text class='usr' id=usr name=usr /> <br>
+        PW: <input type=password class='pwd' id=pwd name=pwd /> <br>
+        <input type=submit />
+    </form>
 {% endblock %}
