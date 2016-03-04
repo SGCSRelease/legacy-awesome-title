@@ -1,10 +1,11 @@
 from datetime import datetime
 
 from flask import (
+    current_app,
     render_template,
-    session,
     request,
     redirect,
+    session,
 )
 from flask.ext.bcrypt import Bcrypt
 
@@ -203,7 +204,11 @@ def withdraw_member(link):
     if found:
         db.session.delete(found)
         filename = found.photo
-        os.remove("./DOWNLOADED/%s" % filename)
+        os.remove("%s%s" % (
+            current_app.config['UPLOAD_FOLDER'], 
+            filename,
+            )
+        )
 
     while True:
         found = NickRecom.query.filter(
