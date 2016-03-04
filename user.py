@@ -200,12 +200,10 @@ def withdraw_member(link):
             Photo.username == username,
     ).first()
 
-    filename = found.photo
-
     if found:
         db.session.delete(found)
-    
-    os.remove("./DOWNLOADED/%s" % filename)
+        filename = found.photo
+        os.remove("./DOWNLOADED/%s" % filename)
 
     while True:
         found = NickRecom.query.filter(
