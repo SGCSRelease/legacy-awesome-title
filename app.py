@@ -10,6 +10,7 @@ from db import (
     migrate,
 )
 from nickname import add_routes as add_nickname_routes
+from nickname import has_new_nicknames
 from photo import add_routes as add_photo_routes
 from user import add_routes as add_user_routes
 from user import (
@@ -51,6 +52,7 @@ def _set_global_variable_for_templates():
     """
     return {
             "get_logged_in_username": get_logged_in_username(),
+            "has_new_nicknames": has_new_nicknames,
     }
 
 
