@@ -16,7 +16,7 @@ from db import (
 )
 from user import get_logged_in_username
 
-image_extentions = ('rgb', 'gif', 'pbm', 'pgm', 'ppm', 'tiff', 'rast', 'xbm', 'jpg', 'jpeg', 'bmp', 'png')
+image_extentions = ( 'gif', 'jpg', 'jpeg', 'png')
 
 def add_routes(app):
     app.route('/<link>/manage/photo/', methods=["GET", "POST"])(photo_upload)
