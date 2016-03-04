@@ -51,12 +51,12 @@ def photo_upload(link):
                     "_error.html",
                     _error__msg="이미지를 업로드하지 않았습니다.",
             ), 400
+
         filename = username + os.path.splitext(file.filename)[1]
 
         # 폴더가 없다면 만들어줍니다.
         if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
             os.makedirs(current_app.config['UPLOAD_FOLDER'])
-        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
         found = Photo.query.filter(
                 Photo.username == username,
@@ -67,16 +67,16 @@ def photo_upload(link):
             new_photo = Photo()
             new_photo.username = username
             new_photo.photo = filename
-
             db.session.add(new_photo)
-            db.session.commit()
 
         # Photo db에 저장이 되어있으면 db의 photo부분을 수정
         else:
+            os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], found.photo))
             found.photo = filename
             db.session.add(found)
-            db.session.commit()
-
+        
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        db.session.commit()
         return redirect("/%s/manage/" % (username, ))
 
 
