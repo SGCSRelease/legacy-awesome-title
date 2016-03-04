@@ -6,7 +6,7 @@
   2. **업적 관리**
 
   를 목표합니다!
-- 후배님을 위한 개발 가이드라인 => [개발하는법](https://github.com/minhoryang/AwesomeTitle/blob/master/DEVELOPMENT.md)
+- 후배님을 위한 개발 가이드라인 => [개발하는법](https://github.com/minhoryang/AwesomeTitle/wiki/%EA%B0%9C%EB%B0%9C%ED%95%98%EB%8A%94%EB%B2%95)
 
 -----
 #이 프로젝트와 이해관계에 있는 세 집단은 다음과 같습니다.
