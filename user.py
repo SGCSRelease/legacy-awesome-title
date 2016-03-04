@@ -70,7 +70,7 @@ def register():
                     _error__msg="Failed - 이름이 맞지 않습니다.",
             ), 400
 
-        if len(request.form['sn']) != 8:  # 학번제한 8자 
+        if len(request.form['sn']) != 8:  # 학번제한 8자
             return render_template(
                     "_error.html",
                     _error__msg="Failed - 학번은 여덟 자여야 합니다.",
@@ -85,7 +85,7 @@ def register():
             ), 400
 
         # 2000학번~현재 년도 학번까지 제한
-        thisyear = (datetime.now().year)*10000
+        thisyear = (datetime.now().year+1)*10000
         if student_number < 20000000 or student_number > thisyear:
             return render_template(
                     "_error.html",
