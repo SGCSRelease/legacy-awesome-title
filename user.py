@@ -241,37 +241,31 @@ def withdraw_member(link):
 
     # URL DB 삭제
     found = URL.query.filter(
-        URL.username == username,
-    ).all()
-    for url in found:
-        db.session.delete(url)
-    
-    # Photo DB 삭제
-    found = URL.query.filter(
-        URL.username == username,
+           URL.username == username,
     ).all()
     for url in found:
         db.session.delete(url)
 
+    # Photo DB 삭제
     found = Photo.query.filter(
             Photo.username == username,
     ).first()
     if found:
-        filename = found.photo
         db.session.delete(found)
         os.remove(os.path.join(
             current_app.config['UPLOAD_FOLDER'],
-            filename,
+            found.photo,
             )
         )
 
     # NickRecom DB 삭제
     found = NickRecom.query.filter(
-        NickRecom.username == username,
+            NickRecom.username == username,
     ).all()
     for nickrecomm in found:
         db.session.delete(nickrecomm)
 
+    # Nickname DB 삭제
     found = Nickname.query.filter(
         Nickname.username == username,
     ).all()
