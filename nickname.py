@@ -170,3 +170,10 @@ def RemoveRecommNick(nick):
         ).first()
         db.session.delete(del_from_Recomm)
     db.session.commit()
+
+
+def has_new_nicknames():
+    found = NickRecom.query.filter(
+        NickRecom.username == get_logged_in_username(),
+    ).first()
+    return True if found else False
