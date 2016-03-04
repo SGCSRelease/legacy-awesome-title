@@ -1,5 +1,7 @@
 import os
 
+import imghdr
+
 from flask import (
     current_app,
     request,
@@ -14,6 +16,7 @@ from db import (
 )
 from user import get_logged_in_username
 
+image_extentions = ( 'gif', 'jpg', 'jpeg', 'png')
 
 def add_routes(app):
     app.route('/<link>/manage/photo/', methods=["GET", "POST"])(photo_upload)
@@ -50,7 +53,13 @@ def photo_upload(link):
         if not file:
             return render_template(
                     "_error.html",
-                    _error__msg="이미지를 업로드하지 않았습니다.",
+                    _error__msg="파일을 업로드하지 않았습니다.",
+            ), 400
+        
+        if not imghdr.what(file) in image_extentions:
+            return render_template(
+                    "_error.html",
+                    _error__msg="이미지 파일이 아닙니다.",
             ), 400
 
         filename = username + os.path.splitext(file.filename)[1]
