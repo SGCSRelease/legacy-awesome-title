@@ -232,8 +232,12 @@ def change_password():
 
 def withdraw_member(link):
     """ issue #44 회원탈퇴 """
-    # User DB 삭제
+
     username = get_logged_in_username()
+    if link != username:
+        return '누가 당신을 싫어하나봐요 ^^', 400
+
+    # User DB 삭제
     found = User.query.filter(
             User.username == username,
     ).first()
