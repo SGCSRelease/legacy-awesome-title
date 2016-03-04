@@ -232,18 +232,22 @@ def change_password():
 
 def withdraw_member(link):
     """ issue #44 회원탈퇴 """
+
+    # User DB 삭제
     username = get_logged_in_username()
     found = User.query.filter(
             User.username == username,
     ).first()
     db.session.delete(found)
 
+    # URL DB 삭제
     found = URL.query.filter(
         URL.username == username,
     ).all()
     for url in found:
         db.session.delete(url)
-
+    
+    # Photo DB 삭제
     found = Photo.query.filter(
             Photo.username == username,
     ).first()
@@ -256,6 +260,7 @@ def withdraw_member(link):
             )
         )
 
+    # NickRecom DB 삭제
     found = NickRecom.query.filter(
         NickRecom.username == username,
     ).all()
@@ -268,6 +273,9 @@ def withdraw_member(link):
     for nickname in found:
         db.session.delete(nickname)
 
+    # DB commit
     db.session.commit()
+
+    # Logout
     session.pop('username', None)
     return redirect('/')
