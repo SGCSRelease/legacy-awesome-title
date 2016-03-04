@@ -18,7 +18,7 @@ from user import get_logged_in_username
 def add_routes(app):
     app.route('/<link>/manage/photo/', methods=["GET", "POST"])(photo_upload)
     app.route('/uploaded_photo/<filename>/')(uploaded_photo)
-
+    app.route('/delete_photo/', methods=["POST"])(delete_photo)
 
 def photo_upload(link):
     """Issue #11, jmg) 사진을 업로드해 서버에 저장하는 함수입니다.
@@ -78,6 +78,35 @@ def photo_upload(link):
             db.session.commit()
 
         return redirect("/%s/manage/" % (username, ))
+
+def delete_photo():
+    username = get_logged_in_username()
+    if not username:
+        return render_template(
+                "_error.html",
+                _error__msg="당신 계정으로 들어가시죠?",
+                ), 400
+
+    found = Photo.query.filter(
+        Photo.username == username,
+    ).first()
+
+    if not found:
+         return render_template(
+                "_error.html",
+                _error__msg="삭제할 사진이 없어요!",
+                ), 400
+
+    filename = found.photo
+
+    db.session.delete(found)
+    db.session.commit()
+    os.remove("%s%s" % (
+        current_app.config['UPLOAD_FOLDER'],
+        filename,
+        )
+    )
+    return redirect("/%s/manage/" % (username, ))
 
 
 # TODO(정민교): 로그인 안하고도 볼 수 있는데 이게 맞나요?
