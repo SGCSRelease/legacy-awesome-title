@@ -178,59 +178,42 @@ def change_password(link):
 
 def withdraw_member(link):
     """ issue #44 회원탈퇴 """
-
     username = get_logged_in_username()
-
     found = User.query.filter(
             User.username == username,
     ).first()
-    
     db.session.delete(found)
-    
-    while True:
-        found = URL.query.filter(
-               URL.username == username,
-        ).first()
 
-        if found:
-            db.session.delete(found)
-        else:
-            break;
-   
+    found = URL.query.filter(
+        URL.username == username,
+    ).all()
+    for url in found:
+        db.session.delete(url)
+
     found = Photo.query.filter(
             Photo.username == username,
     ).first()
-
     if found:
-        db.session.delete(found)
         filename = found.photo
-        os.remove("%s%s" % (
-            current_app.config['UPLOAD_FOLDER'], 
+        db.session.delete(found)
+        os.remove(os.path.join(
+            current_app.config['UPLOAD_FOLDER'],
             filename,
             )
         )
 
-    while True:
-        found = NickRecom.query.filter(
-                NickRecom.username == username,
-        ).first()
+    found = NickRecom.query.filter(
+        NickRecom.username == username,
+    ).all()
+    for nickrecomm in found:
+        db.session.delete(nickrecomm)
 
-        if found:
-            db.session.delete(found)
-        else:
-            break;
-
-    while True:
-        found = Nickname.query.filter(
-                Nickname.username == username,
-        ).first()
-
-        if found:
-            db.session.delete(found)
-        else:
-            break;
+    found = Nickname.query.filter(
+        Nickname.username == username,
+    ).all()
+    for nickname in found:
+        db.session.delete(nickname)
 
     db.session.commit()
-
     session.pop('username', None)
     return redirect('/')

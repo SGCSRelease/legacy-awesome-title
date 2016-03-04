@@ -55,4 +55,4 @@ def _set_global_variable_for_templates():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=7000)
+    app.run(debug=True, host="0.0.0.0")
