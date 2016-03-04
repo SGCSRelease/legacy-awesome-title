@@ -37,7 +37,7 @@
             $.get(
                 check_id,
                 function (data){
-                    $('.usr').tooltip('dispose');
+                    $('.usr').tooltip('hide');
                 }
             ).fail(
                 function (data){
@@ -45,7 +45,6 @@
                     $('.usr').tooltip('show');
                 }
             );
-
         }
     );
 
@@ -57,7 +56,7 @@
                 $('.pwda').tooltip('show');
             }
             else {
-                $('.pwda').tooltip('dispose');
+                $('.pwda').tooltip('hide');
             }
 
         }
@@ -71,7 +70,7 @@
                 $('.pwda').tooltip('show');
             }
             else {
-                $('.pwda').tooltip('dispose');
+                $('.pwda').tooltip('hide');
             }
         }
     );
@@ -83,7 +82,7 @@
                 $('.realname').tooltip('show');
             }
             else {
-                $('.realname').tooltip('dispose');
+                $('.realname').tooltip('hide');
             }
         }
     );
@@ -99,7 +98,7 @@
                 $('.sn').tooltip('show');
             }
             else {
-                $('.sn').tooltip('dispose');
+                $('.sn').tooltip('hide');
             }
         }
     );
