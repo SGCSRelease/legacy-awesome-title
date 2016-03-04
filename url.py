@@ -94,6 +94,7 @@ def userpage(user):
             profile__photo_url=my_photo,
             profile__user_class=user,
             profile__user_nickname_classes=my_nicknames,
+            top_menu_nav__current_page_username=user.username,
     )
 
 
@@ -118,6 +119,7 @@ def usermanagepage(user):
             profile__photo_url=my_photo,
             profile__user_class=user,
             profile__user_nickname_classes=my_nicknames,
+            top_menu_nav__current_page_username=user.username,
     )
 
 
@@ -129,7 +131,7 @@ def question():
         tot = db.session.query(User).count()
         idx = random.randrange(0, tot)
         row = db.session.query(User)[idx]
-        if row.username is request.form['current_page_username']:
+        if row.username == request.form.get('current_page_username'):
             if idx is 0:
                 row = db.session.query(User)[tot-1]
             else:
