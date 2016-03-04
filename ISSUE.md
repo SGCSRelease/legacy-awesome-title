@@ -6,13 +6,13 @@
 
 ##<내 페이지 관리>
 **0. 회원가입 시 이름받기**
-- [ ] **_(회의)_** 이름 어떻게 받을지 확실하게 정합니다 [#21](https://github.com/minhoryang/AwesomeTitle/issues/21) 
+- [x] **_(회의)_** 이름 어떻게 받을지 확실하게 정합니다 [#21](https://github.com/minhoryang/AwesomeTitle/issues/21) 
 
 **1.사진**
 - [x]  사진 초기 업로드
 - [x] 사진 변경
 - [ ] 기본 이미지로 변경
-- [ ] 사진이 정사각형이 아니면 찌그러지는 버그 수정 [#35](https://github.com/minhoryang/AwesomeTitle/issues/35)
+- [x] 사진이 정사각형이 아니면 찌그러지는 버그 수정 [#35](https://github.com/minhoryang/AwesomeTitle/issues/35)
 
 **2.아이디**
 - [ ] 아이디 찾기
