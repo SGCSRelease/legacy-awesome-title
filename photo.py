@@ -20,6 +20,7 @@ def add_routes(app):
     app.route('/uploaded_photo/<filename>/')(uploaded_photo)
     app.route('/delete_photo/', methods=["POST"])(delete_photo)
 
+
 def photo_upload(link):
     """Issue #11, jmg) 사진을 업로드해 서버에 저장하는 함수입니다.
     /upload GET/POST
@@ -79,6 +80,7 @@ def photo_upload(link):
 
         return redirect("/%s/manage/" % (username, ))
 
+
 def delete_photo():
     username = get_logged_in_username()
     if not username:
@@ -92,7 +94,7 @@ def delete_photo():
     ).first()
 
     if not found:
-         return render_template(
+        return render_template(
                 "_error.html",
                 _error__msg="삭제할 사진이 없어요!",
                 ), 400
