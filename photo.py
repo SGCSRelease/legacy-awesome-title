@@ -101,9 +101,10 @@ def delete_photo():
 
     db.session.delete(found)
     db.session.commit()
-    os.remove("%s%s" % (
-        current_app.config['UPLOAD_FOLDER'],
-        filename,
+    os.remove(
+        os.path.join(
+            current_app.config['UPLOAD_FOLDER'],
+            filename,
         )
     )
     return redirect("/%s/manage/" % (username, ))
