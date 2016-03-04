@@ -1,12 +1,32 @@
 {% extends "_extends/_index.html" %}
 {% block _index__container %}
-    <form action="/register/" method="POST">
-        ID: <input type=text class='usr' id=usr name=usr maxlength="50" /><br>
-        PW: <input type=password class='pwd' id=pwd name=pwd /><br>
-        PW Again: <input type=password class='pwda' id=pwda name=pwda /><br>
-    이름: <input type=text class='realname' id=realname name=realname maxlength="50"/><br>
-        Student Number: <input type=text class='sn' id=sn name=sn maxlength="50" /><br>
-        <input type=submit value="가입" />
+    <form method="POST" action="/register/">
+        <fieldset class="form-group">
+            <label>아이디</label>
+            <input type="text" class="form-control usr" name="usr" maxlength="50" placeholder="아이디를 입력해주세요">
+            <small class="text-muted">한글/영어 50자 이하 사용 가능합니다. 변경할 수 없으니 잘 고민해서 작성해주세요.</small>
+        </fieldset>
+        <fieldset class="form-group">
+            <label>비밀번호</label>
+            <input type="password" class="form-control pwd" name="pwd" placeholder="비밀번호를 입력해주세요">
+            <small class="text-muted">한글/영어/기호 및 길이 제한 없습니다.</small>
+        </fieldset>
+        <fieldset class="form-group">
+            <label>비밀번호 한 번 더!</label>
+            <input type="password" class="form-control pwda" name="pwda" placeholder="비밀번호를 다시 입력해주세요">
+            <small class="text-muted">위와 동일한 비밀번호를 적어주세요.</small>
+        </fieldset>
+        <fieldset class="form-group">
+            <label>이름</label>
+            <input type="text" class="form-control realname" name="realname" placeholder="당신의 이름을 적어주세요">
+            <small class="text-muted">한글/영어 50자 이하 사용 가능합니다.</small>
+        </fieldset>
+        <fieldset class="form-group">
+            <label>학번</label>
+            <input type="text" class="form-control sn" name="sn" maxlength="8" placeholder="당신의 학번을 적어주세요">
+            <small class="text-muted">8자리 숫자만 사용 가능합니다.</small>
+        </fieldset>
+        <button type="submit" class="btn btn-primary">가입</button>
     </form>
 {% endblock %}
 {% block _index__script %}
