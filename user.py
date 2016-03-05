@@ -1,18 +1,26 @@
 from datetime import datetime
 
 from flask import (
+    current_app,
     render_template,
-    session,
     request,
     redirect,
+    session,
 )
 from flask.ext.bcrypt import Bcrypt
 
 from db import (
     db,
     User,
+    URL,
+    Photo,
+    Nickname,
+    NickRecom,
     N,
 )
+
+import os
+
 from url import addURL
 
 
@@ -25,6 +33,7 @@ def add_routes(app):
     app.route('/login/', methods=["GET", "POST"])(login)
     app.route('/logout/')(logout)
     app.route('/<link>/manage/password/')(change_password)
+    app.route('/<link>/manage/withdrawal/')(withdraw_member)
 
 
 def register():
@@ -190,3 +199,57 @@ def get_logged_in_username():
 
 def change_password(link):
     return
+
+
+def withdraw_member(link):
+    """ issue #44 회원탈퇴 """
+
+    username = get_logged_in_username()
+    if link != username:
+        return '누가 당신을 싫어하나봐요 ^^', 400
+
+    # User DB 삭제
+    found = User.query.filter(
+            User.username == username,
+    ).first()
+    db.session.delete(found)
+    
+    # URL DB 삭제
+    found = URL.query.filter(
+           URL.username == username,
+    ).all()
+    for url in found:
+        db.session.delete(url)
+
+    # Photo DB 삭제
+    found = Photo.query.filter(
+            Photo.username == username,
+    ).first()
+    if found:
+        db.session.delete(found)
+        os.remove(os.path.join(
+            current_app.config['UPLOAD_FOLDER'],
+            found.photo,
+            )
+        )
+
+    # NickRecom DB 삭제
+    found = NickRecom.query.filter(
+            NickRecom.username == username,
+    ).all()
+    for nickrecomm in found:
+        db.session.delete(nickrecomm)
+
+    # Nickname DB 삭제
+    found = Nickname.query.filter(
+        Nickname.username == username,
+    ).all()
+    for nickname in found:
+        db.session.delete(nickname)
+
+    # DB commit
+    db.session.commit()
+
+    # Logout
+    session.pop('username', None)
+    return redirect('/')
