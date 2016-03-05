@@ -1,0 +1,6 @@
+from os import urandom
+
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{{ username }}:{{ password }}@{{ server }}/{{ database }}?charset=utf8mb4'
+SECRET_KEY = urandom(24)
+UPLOAD_FOLDER = '{{ folder }}'

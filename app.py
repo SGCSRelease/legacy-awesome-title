@@ -3,7 +3,6 @@ from flask import (
     redirect,
 )
 
-import config
 from db import (
     admin,
     db,
@@ -22,7 +21,13 @@ from url import goto
 
 app = Flask(__name__)
 
-app.config.from_object(config)
+try:
+    import config
+    app.config.from_object(config)
+except ImportError as e:
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    if __name__ == "__main__":
+        raise Exception("Please run `python manage.py config` first.")
 
 admin.init_app(app)
 bcrypt.init_app(app)
