@@ -207,10 +207,10 @@ def change_password():
     if request.method == "GET":
         return render_template("change_pwd.html")
     else:
-        if '/manage/password' not in request.referrer:
-            return redirect('/manage/password')
+        if '/manage/password/' not in request.referrer:
+            return redirect('/manage/password/')
         if not request.form['new_pwd'] == request.form['new_pwda']:
-            return redirect('/manage/password')
+            return redirect('/manage/password/')
         password_hash = bcrypt.generate_password_hash(request.form['new_pwd'])
         username = get_logged_in_username()
 
