@@ -193,7 +193,7 @@ def check_password():
     username = get_logged_in_username()
     password = request.form['val']
     found = check_username(username, is_internal=True)
-    
+
     if not bcrypt.check_password_hash(
                 found.password_hash,
                 password
@@ -207,13 +207,15 @@ def change_password():
     if request.method == "GET":
         return render_template("change_pwd.html")
     else:
+        if '/manage/password' not in request.referrer:
+            return redirect('/manage/password')
         if not request.form['new_pwd'] == request.form['new_pwda']:
             return redirect('/manage/password')
         password_hash = bcrypt.generate_password_hash(request.form['new_pwd'])
         username = get_logged_in_username()
-        
+
         found = check_username(username, is_internal=True)
         found.password_hash = password_hash
         db.session.commit()
-    
+
     return redirect('/%s/' % username)
