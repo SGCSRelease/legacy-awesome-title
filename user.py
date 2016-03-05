@@ -24,7 +24,8 @@ def add_routes(app):
     app.route("/check_username/<username>/")(check_username)
     app.route('/login/', methods=["GET", "POST"])(login)
     app.route('/logout/')(logout)
-    app.route('/<link>/manage/password/')(change_password)
+    app.route('/api/check_pwd/', methods=["POST"])(check_password)
+    app.route('/manage/password/', methods=["GET", "POST"])(change_password)
 
 
 def register():
@@ -188,5 +189,31 @@ def get_logged_in_username():
     return session.get('username')  # 없으면 None이 출력됨.
 
 
-def change_password(link):
-    return
+def check_password():
+    username = get_logged_in_username()
+    password = request.form['val']
+    found = check_username(username, is_internal=True)
+    
+    if not bcrypt.check_password_hash(
+                found.password_hash,
+                password
+    ):
+        return "oops", 400
+    else:
+        return "yeah"
+
+
+def change_password():
+    if request.method == "GET":
+        return render_template("change_pwd.html")
+    else:
+        if not request.form['new_pwd'] == request.form['new_pwda']:
+            return redirect('/manage/password')
+        password_hash = bcrypt.generate_password_hash(request.form['new_pwd'])
+        username = get_logged_in_username()
+        
+        found = check_username(username, is_internal=True)
+        found.password_hash = password_hash
+        db.session.commit()
+    
+    return redirect('/%s/' % username)

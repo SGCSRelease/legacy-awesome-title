@@ -1,0 +1,72 @@
+{% extends "_extends/_index.html" %}
+{% block _index__container %}
+    <fieldset class="form-group">
+        <label>기존 비밀번호 입력 후 [ENTER]</label>
+        <input type="password" class="form-control pwd" placeholder="기존 비밀번호를 입력해주세요" data-trigger="manual">
+    </fieldset>
+    <form class="pwd_form" method="POST" action="/manage/password/" style="display: none;">
+        <fieldset class="form-group">
+            <label>새로운 비밀번호</label>
+            <input type="password" class="form-control npwd" name="new_pwd" placeholder="새로운 비밀번호를 입력해주세요">
+        </fieldset>
+        <fieldset class="pwd_form">
+            <label>새로운 비밀번호 재입력</label>
+            <input type="password" class="form-control npwda" name="new_pwda" placeholder="새로운 비밀번호를 다시 입력해주세요." data-trigger="manual">
+        </fieldset>
+        <button type="submit" class="btn btn-primary">제출</button>
+    </form>
+{% endblock %}
+{% block _index__script %}
+    <script>
+        $('.pwd').change(
+                function(){
+                    var val = $('.pwd').val();
+                    // 맞았는지 틀렸는지 물어봄.
+                    $.post(
+                        "/api/check_pwd/",
+                        {
+                            'val': val
+                        },
+                        function (){
+                    // 맞으면 추가 + 메세지 숨기기.
+                            $('.pwd').tooltip('hide');
+                            $('.pwd_form').show();
+                        }
+                    ).fail(
+                        function (){
+                    // 틀리면 삭제 + 메세지를 아래처럼 보여줍시다.
+                            $('.pwd').attr('title', "패스워드 불일치");
+                            $('.pwd').tooltip('show');
+                            $('.that_form').hide();
+                        }
+                    );
+                }
+        );
+
+        var changed_npwda = false;
+        $('.npwd').change(
+            function(){
+                if ($('.npwd').val() != $('.npwda').val() && changed_npwda) {
+                    $('.npwda').attr('title', '비밀번호가 서로 다릅니다.');
+                    $('.npwda').tooltip('show');
+                }
+                else {
+                    $('.npwda').tooltip('hide');
+                }
+            }
+        );
+        
+        $('.npwda').change(
+            function(){
+                changed_npwda = true;
+                if ($('.npwd').val() != $('.npwda').val() ) {
+                    $('.npwda').attr('title', '비밀번호가 서로 다릅니다.');
+                    $('.npwda').tooltip('show');
+                }
+                else {
+                    $('.npwda').tooltip('hide');
+                }
+            }
+        );
+    </script>
+{% endblock %}
