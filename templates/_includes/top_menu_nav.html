@@ -8,7 +8,7 @@
                 </li>
                 <li class="nav-item active">
                     {% if has_new_nicknames() %}
-                    <a class="nav-link new-nickname-alert" href="/{{ get_logged_in_username }}/" data-content="추천받은 닉네임이 있대욧!" data-placement="bottom">
+                        <a class="nav-link new-nickname-alert" href="/{{ get_logged_in_username }}/" data-content="추천받은 닉네임이 있대욧!" data-placement="bottom">
                     {% else %}
                         <a class="nav-link" href="/{{ get_logged_in_username }}/">
                     {% endif %}
