@@ -241,8 +241,8 @@ def withdraw_manager(logged_in_user):
 
     return render_template(
             "manager.html",
-           manager__right_html_for_menu="_includes/manager/withdrawal.html",
-           currently_logged_in_user=username,
+            manager__right_html_for_menu="_includes/manager/withdrawal.html",
+            currently_logged_in_user=username,
     )
 
 def delete_user():
