@@ -34,7 +34,8 @@ def add_routes(app):
     app.route('/logout/')(logout)
     app.route('/api/check_pwd/', methods=["POST"])(check_password)
     app.route('/manage/password/', methods=["GET", "POST"])(change_password)
-    app.route('/<link>/manage/withdrawal/')(withdraw_member)
+    app.route('/<logged_in_user>/manage/withdraw/')(withdraw_manager)
+    app.route('/api/user/delete/', methods=["POST"])(delete_user)
 
 
 def register():
@@ -230,12 +231,23 @@ def change_password():
     return redirect('/%s/' % username)
 
 
-def withdraw_member(link):
+def withdraw_manager(logged_in_user):
     """ issue #44 회원탈퇴 """
 
     username = get_logged_in_username()
-    if link != username:
+
+    if logged_in_user != username:
         return '누가 당신을 싫어하나봐요 ^^', 400
+
+    return render_template(
+            "manager.html",
+           manager__right_html_for_menu="_includes/manager/withdrawal.html",
+           currently_logged_in_user=username,
+    )
+
+def delete_user():
+
+    username = get_logged_in_username()
 
     # User DB 삭제
     found = User.query.filter(
