@@ -5,6 +5,7 @@
   1. **친목**
   2. **업적 관리**
 
-  를 목표합니다!
+를 목표로 합니다!
+
 -----
-자세한 기능은 Wiki를 참조하세요! [AwesomeTitle Wiki](https://github.com/minhoryang/AwesomeTitle/wiki)
+개발에 동참하고 싶거나, 자세히 알고 싶다면! Wiki를 참고하세요! [AwesomeTitle Wiki로](https://github.com/minhoryang/AwesomeTitle/wiki)
