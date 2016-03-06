@@ -1,3 +1,5 @@
+from os import urandom
+
 from flask_script import (
         Manager,
         prompt,
@@ -40,6 +42,7 @@ def config(
         database = prompt("MySQL DB Database", default=database)
     if folder is _folder:
         folder = prompt("Image Upload Folder", default=folder)
+    secret_key = urandom(24)
     with open("config.py.tmpl") as tmpl:
         Template(
                 tmpl.read()
@@ -49,6 +52,7 @@ def config(
             server=server,
             database=database,
             folder=folder,
+            secret_key=secret_key,
         ).dump("config.py")
 
 
