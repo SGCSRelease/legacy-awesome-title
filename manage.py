@@ -71,6 +71,7 @@ def config(
             database=database,
             folder=folder,
             secret_key=secret_key,
+            use_mysql=use_mysql,
         ).dump("config.py")
 
 
