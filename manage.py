@@ -3,6 +3,7 @@ from os import urandom
 from flask_script import (
         Manager,
         prompt,
+        prompt_bool,
         prompt_pass,
 )
 from flask_migrate import MigrateCommand
@@ -20,6 +21,7 @@ _folder = './DOWNLOADED/'
 
 @manager.command
 def config(
+        mysql=None,
         username=_default,
         password=None,
         server=_server,
@@ -32,14 +34,30 @@ def config(
     automatically.
     """
     # TODO : Is Existed config.py?
-    if username is _default:
-        username = prompt("MySQL DB Username", default=username)
-    if not password:
-        password = prompt_pass("MySQL DB Password")
-    if server is _server:
-        server = prompt("MySQL DB Server", default=server)
-    if database is _default:
-        database = prompt("MySQL DB Database", default=database)
+    # XXX : Check '-m' or '--mysql' options entered.
+    if mysql is None:
+        use_mysql = prompt_bool("Use MySQL?", default=True)
+    else:
+        if mysql == "True":
+            use_mysql = True
+        elif mysql == "False":
+            use_mysql = False
+        else:
+            raise Exception("`-m` or `--mysql` option needed `True` or `False`.")
+    if use_mysql is True:
+        # XXX : Check '-u' or '--username' options entered.
+        if username is _default:
+            username = prompt("MySQL DB Username", default=username)
+        # XXX : Check '-p' or '--password' options entered.
+        if not password:
+            password = prompt_pass("MySQL DB Password")
+        # XXX : Check '-s' or '--server' options entered.
+        if server is _server:
+            server = prompt("MySQL DB Server", default=server)
+        # XXX : Check '-d' or '--database' options entered.
+        if database is _default:
+            database = prompt("MySQL DB Database", default=database)
+    # XXX : Check '-f' or '--folder' options entered.
     if folder is _folder:
         folder = prompt("Image Upload Folder", default=folder)
     secret_key = urandom(24)
