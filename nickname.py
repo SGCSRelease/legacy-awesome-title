@@ -32,6 +32,12 @@ def RecommendNickname():
     if request.method == "POST":
         target = request.form['target']
         nick = request.form['nick']
+        """Issue #71, 별명의 길이가 0일 경우 에러페이지로 이동."""
+        if not len(nick):
+            return render_template(
+                    "_error.html",
+                    _error__msg='별명이 없습니다.',
+            ), 400
         if not check_username(target, is_internal=True):
             return render_template(
                     "_error.html",
