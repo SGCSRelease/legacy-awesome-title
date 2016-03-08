@@ -49,5 +49,6 @@ class Photo(db.Model):
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(URL, db.session))
+admin.add_view(ModelView(Nickname, db.session))
 admin.add_view(ModelView(NickRecom, db.session))
 admin.add_view(ModelView(Photo, db.session))
