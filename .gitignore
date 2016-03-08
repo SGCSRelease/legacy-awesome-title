@@ -1,7 +1,6 @@
 .python-version
-DOWNLOADED/
-config.py
-*.db
+AwesomeTitleServer/config.py
+datas/
 
 
 

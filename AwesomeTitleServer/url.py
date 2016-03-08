@@ -5,7 +5,7 @@ from flask import (
     redirect,
 )
 
-from db import (
+from .db import (
     db,
     URL,
     User,
@@ -71,7 +71,7 @@ def addURL(link, username):
 
 def get_logged_in_username(*args, **kwargs):
     """User.get_logged_in_username이랑 같아요."""
-    from user import get_logged_in_username as _get_logged_in_username
+    from .user import get_logged_in_username as _get_logged_in_username
     return _get_logged_in_username(*args, **kwargs)
 
 

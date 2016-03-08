@@ -10,11 +10,11 @@ from flask import (
     render_template,
 )
 
-from db import (
+from .db import (
     db,
     Photo,
 )
-from user import get_logged_in_username
+from .user import get_logged_in_username
 
 image_extentions = ( 'gif', 'jpg', 'jpeg', 'png')
 

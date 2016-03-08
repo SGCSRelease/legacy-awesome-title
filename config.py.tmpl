@@ -1,4 +1,0 @@
-SQLALCHEMY_TRACK_MODIFICATIONS = True
-SQLALCHEMY_DATABASE_URI = {% if use_mysql %}'mysql+pymysql://{{ username }}:{{ password }}@{{ server }}/{{ database }}?charset=utf8mb4'{% else %}'sqlite:///./test.db'{% endif %}
-SECRET_KEY = {{ secret_key }}
-UPLOAD_FOLDER = '{{ folder }}'
