@@ -25,12 +25,20 @@ def upgrade():
     sa.Column('recommender', sa.String(length=50), nullable=True),
     sa.PrimaryKeyConstraint('idx')
     )
+    # XXX : Add->Drop doesn't carry the data inside of columns!
     #op.add_column('nickrecom', sa.Column('recommender', sa.String(length=50), nullable=True))
     #op.add_column('nickrecom', sa.Column('username', sa.String(length=50), nullable=True))
     #op.drop_column('nickrecom', 'toB')
     #op.drop_column('nickrecom', 'fromA')
-    op.alter_column('nickrecom', 'fromA', new_column_name='recommender', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
-    op.alter_column('nickrecom', 'toB', new_column_name='username', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
+
+    # XXX : Alter_column does!
+    #op.alter_column('nickrecom', 'fromA', new_column_name='recommender', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
+    #op.alter_column('nickrecom', 'toB', new_column_name='username', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
+
+    # XXX : Batch DB
+    with op.batch_alter_table('nickrecom', schema=None) as batch_op:
+        batch_op.alter_column('fromA', new_column_name='recommender', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
+        batch_op.alter_column('toB', new_column_name='username', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
     ### end Alembic commands ###
 
 
@@ -40,7 +48,8 @@ def downgrade():
     #op.add_column('nickrecom', sa.Column('toB', mysql.VARCHAR(length=50), nullable=True))
     #op.drop_column('nickrecom', 'username')
     #op.drop_column('nickrecom', 'recommender')
-    op.alter_column('nickrecom', 'recommender', new_column_name='fromA', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
-    op.alter_column('nickrecom', 'username', new_column_name='toB', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
+    with op.batch_alter_table('nickrecom', schema=None) as batch_op:
+        batch_op.alter_column('recommender', new_column_name='fromA', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
+        batch_op.alter_column('username', new_column_name='toB', existing_type=mysql.VARCHAR(length=50), existing_server_default="", existing_nullable=True)
     op.drop_table('nickname')
     ### end Alembic commands ###
