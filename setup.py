@@ -12,7 +12,7 @@ try:
         stdout=PIPE
     ).stdout.decode(encoding='UTF-8').strip()
 except IOError:
-    version = "latest"
+    version = "8.0.0"
 
 
 try:
@@ -33,5 +33,10 @@ setup(
     classifiers=[
         'Programming Language :: Python :: 3.5',
     ],
+    entry_points={
+        'console_scripts': [
+            'minhoryang = AwesomeTitleServer.__main__:main',
+        ]
+    }
 )
 

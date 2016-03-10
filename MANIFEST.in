@@ -1,2 +1,3 @@
 recursive-include AwesomeTitleServer/templates *
 recursive-include AwesomeTitleServer/static *
+recursive-include migrations/versions/ *

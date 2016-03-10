@@ -19,43 +19,50 @@ from .user import (
 from .url import add_routes as add_url_routes
 from .url import goto
 
-app = Flask(__name__)
 
-try:
-    from . import config
-    app.config.from_object(config)
-except ImportError as e:
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    if __name__ == "__main__":
-        raise Exception("Please run `python manage.py config` first.")
+def create_app(config=None):
+    app = Flask(__name__)
 
-admin.init_app(app)
-bcrypt.init_app(app)
-db.init_app(app)
-migrate.init_app(app, db)
+    try:
+        try:
+            from . import config
+        except ImportError:
+            import config
+        app.config.from_object(config)
+    except ImportError as e:
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+        if __name__ == "__main__":
+            raise Exception("Please run `python manage.py config` first.")
 
-add_user_routes(app)
-add_nickname_routes(app)
-add_photo_routes(app)
-add_url_routes(app)
+    admin.init_app(app)
+    bcrypt.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-
-@app.route("/")
-def index():
-    perhaps_logged_in_username = get_logged_in_username()
-    if perhaps_logged_in_username:
-        return redirect("/%s/" % perhaps_logged_in_username)
-    return goto("release")
+    add_user_routes(app)
+    add_nickname_routes(app)
+    add_photo_routes(app)
+    add_url_routes(app)
 
 
-@app.context_processor
-def _set_global_variable_for_templates():
-    """render_template()에 변수를 넘기지 않고도 사용할 수 있어요!
+    @app.route("/")
+    def index():
+        perhaps_logged_in_username = get_logged_in_username()
+        if perhaps_logged_in_username:
+            return redirect("/%s/" % perhaps_logged_in_username)
+        return goto("release")
 
-    Flask의 render_template()는 사실 Jinja2라는 Template Engine을 이용해 제공됩니다.
-    근데 여기에 전역변수를 선언할 수 있다네요. WOW!
-    """
-    return {
-            "get_logged_in_username": get_logged_in_username(),
-            "has_new_nicknames": has_new_nicknames,
-    }
+
+    @app.context_processor
+    def _set_global_variable_for_templates():
+        """render_template()에 변수를 넘기지 않고도 사용할 수 있어요!
+
+        Flask의 render_template()는 사실 Jinja2라는 Template Engine을 이용해 제공됩니다.
+        근데 여기에 전역변수를 선언할 수 있다네요. WOW!
+        """
+        return {
+                "get_logged_in_username": get_logged_in_username(),
+                "has_new_nicknames": has_new_nicknames,
+        }
+
+    return app

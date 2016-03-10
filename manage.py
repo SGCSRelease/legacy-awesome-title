@@ -12,15 +12,23 @@ from flask_script import (
 from flask_migrate import MigrateCommand
 from jinja2 import Template
 
-from AwesomeTitleServer import app
+try:
+    from AwesomeTitleServer import create_app
+except ImportError:
+    from . import create_app
 
 
-manager = Manager(app, with_default_commands=False)
+app = create_app()
+manager = Manager(app) #, with_default_commands=False)
 manager.add_command('db', MigrateCommand)
 _default = 'awesometitle'
 _server = 'localhost'
 _folder = 'datas/DOWNLOADED/'
 
+
+@manager.command
+def run():
+    app.run(debug=True)
 
 @manager.command
 def config(
@@ -39,6 +47,8 @@ def config(
     # TODO : Is Existed config.py?
 
     base = dirname(abspath(__file__))
+    if '.pex' in base:
+        base = '.'
 
     # XXX : Check '-m' or '--mysql' options entered.
     if mysql is None:
@@ -70,6 +80,9 @@ def config(
     if not exists(folder):
         makedirs(folder)
     secret_key = urandom(24)
+    output = "config.py"
+    if exists("AwesomeTitleServer"):
+        output = join("AwesomeTitleServer", output)
     with open("confs/config.py.tmpl") as tmpl:
         Template(
             tmpl.read()
@@ -82,8 +95,12 @@ def config(
             folder=folder,
             secret_key=secret_key,
             use_mysql=use_mysql,
-        ).dump("AwesomeTitleServer/config.py")
+        ).dump(output)
+
+
+def main():
+    manager.run()
 
 
 if __name__ == '__main__':
-    manager.run()
+    main()
