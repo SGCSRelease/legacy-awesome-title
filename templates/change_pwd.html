@@ -16,16 +16,21 @@
         <button type="submit" class="btn btn-primary">제출</button>
     </form>
 {% endblock %}
+{% block include_js %}
+    {{ super() }}
+    <script src='/static/js/sha512.js'></script>
+{% endblock %}
 {% block _index__script %}
     <script>
         $('.pwd').change(
                 function(){
                     var val = $('.pwd').val();
+                    var hashed_val = hex_sha512(val);
                     // 맞았는지 틀렸는지 물어봄.
                     $.post(
                         "/api/check_pwd/",
                         {
-                            'val': val
+                            'val': hashed_val
                         },
                         function (){
                     // 맞으면 추가 + 메세지 숨기기.
@@ -66,6 +71,14 @@
                 else {
                     $('.npwda').tooltip('hide');
                 }
+            }
+        );
+
+        $('.pwd_form').submit(
+            function(){
+                $('.npwd').val( hex_sha512($('.npwd').val()) );
+                $('.npwda').val( hex_sha512($('.npwda').val()) );
+                return true;
             }
         );
     </script>
