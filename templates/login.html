@@ -1,6 +1,6 @@
 {% extends "_extends/_index.html" %}
 {% block _index__container %}
-    <form method="POST" action="/login/">
+    <form id='login_form' method="POST" action="/login/">
         <fieldset class="form-group">
             <label>아이디</label>
             <input type="text" class="form-control usr" name="usr" placeholder="아이디를 입력해주세요">
@@ -11,4 +11,18 @@
         </fieldset>
         <button type="submit" class="btn btn-primary">제출</button>
     </form>
+{% endblock %}
+{% block include_js %}
+    {{ super() }}
+    <script src='/static/js/sha512.js'></script>
+{% endblock %}
+{% block _index__script %}
+    <script>
+        $('#login_form').submit(
+            function(){
+                $('.pwd').val( hex_sha512($('.pwd').val()) );
+                return true;
+            }
+        );
+    </script>
 {% endblock %}
