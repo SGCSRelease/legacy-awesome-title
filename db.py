@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_sqlalchemy import SQLAlchemy
@@ -47,8 +49,19 @@ class Photo(db.Model):
     photo = db.Column(db.String(N + 10))
 
 
+class ExternalAccount(db.Model):
+    __tablename__ = "externalaccount"
+    idx = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(N), nullable=False)
+    sitename = db.Column(db.String(N), nullable=False)
+    site_username = db.Column(db.String(N), nullable=False)
+    registered_time = db.Column(db.DateTime, default=datetime.now())
+    is_enabled = db.Column(db.Boolean, default=True)
+
+
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(URL, db.session))
 admin.add_view(ModelView(Nickname, db.session))
 admin.add_view(ModelView(NickRecom, db.session))
 admin.add_view(ModelView(Photo, db.session))
+admin.add_view(ModelView(ExternalAccount, db.session))

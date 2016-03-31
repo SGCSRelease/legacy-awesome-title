@@ -37,6 +37,16 @@
                     </li>
                 </a>
 
+								{% if manager__right_html_for_menu == "_includes/manager/externals.html" %}
+                    <a class="nav-link active" href="/{{ get_logged_in_username }}/manage/externals/">
+                {% else %}
+                    <a class="nav-link" href="/{{ get_logged_in_username }}/manage/externals/">
+                {% endif %}
+                    <li class="nav-item">
+                    외부 사이트 ID 관리
+                    </li>
+                </a>
+
                 <a class="nav-link disabled"><!-- href="/{{ get_logged_in_username }}/manage/phones/"> -->
                     <li class="nav-item">
                     휴대폰 관리 (공사중)
@@ -81,4 +91,9 @@
             {% endif %}
         </div>
     </div>
+{% endblock %}
+{% block _index__script %}
+		{% if manager__right_html_for_menu == "_includes/manager/externals.html" %}
+				{% include "_includes/manager/externals.js" %}
+		{% endif %}
 {% endblock %}

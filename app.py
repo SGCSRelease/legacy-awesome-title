@@ -18,6 +18,7 @@ from user import (
 )
 from url import add_routes as add_url_routes
 from url import goto
+from externals import add_routes as add_externals_routes
 
 app = Flask(__name__)
 
@@ -38,6 +39,7 @@ add_user_routes(app)
 add_nickname_routes(app)
 add_photo_routes(app)
 add_url_routes(app)
+add_externals_routes(app)
 
 
 @app.route("/")
