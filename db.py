@@ -49,20 +49,20 @@ class Photo(db.Model):
     photo = db.Column(db.String(N + 10))
 
 
-class Title(db.Model):  # TODO: Naming - Achievement, Mission, ...
+class Achievement(db.Model):
     """업적이 잠들어 있어요, zZZZ."""
 
-    __tablename__ = "title"
+    __tablename__ = "achievement"
     idx = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(N), unique=True)
 
     # TODO: logo_url = db.Column(db.String(N))
     #       XXX: 생각해보니까 Photo DB에 우리는 업적로고를 저장할 수 없어요.
 
-    description = db.Column(db.String(N))  # TODO: 충분해?
+    description = db.Column(db.String(N))  # XXX: 충분해?
 
     _categories = db.Column(db.String(N), default='[]')
-    # TODO: 충분해? (now, N=50)
+    # XXX: 충분해? (now, N=50)
     #       0 ~ 18을 저장할 때 (19개) -> 48 bytes.
     #       10 ~ 26은 (두자릿수, 16개) -> 49 bytes.
 
@@ -125,37 +125,37 @@ class Title(db.Model):  # TODO: Naming - Achievement, Mission, ...
         """테스트해봅시다.
 
         >>> from app import app
-        >>> from db import db, Title
+        >>> from db import db, Achievement
         >>> db.init_app(app)
         >>> db.app = app  # BUG?
 
         이렇게요.
-        >>> Title._testAddDelCategory(db)
+        >>> Achievement._testAddDelCategory(db)
 
         에러가 없다면 동작하는거 아닐까요?
         /admin 에서 확인해보세요!
         """
-        c1 = TitleCategory()
+        c1 = AchievementCategory()
         c1.name = 'Automatic'
         db.session.add(c1)
         db.session.commit()
 
-        c2 = TitleCategory()
+        c2 = AchievementCategory()
         c2.name = 'Manual'
         db.session.add(c2)
         db.session.commit()
 
-        t1 = Title()
+        t1 = Achievement()
         t1.name = "We Made It!"
         db.session.add(t1)
         db.session.commit()
 
-        t2 = Title()
+        t2 = Achievement()
         t2.name = "Title Is Awesome!"
         db.session.add(t2)
         db.session.commit()
 
-        t3 = Title()
+        t3 = Achievement()
         t3.name = "RELEASE ROCKS!!!!!"
         db.session.add(t3)
         db.session.commit()
@@ -191,10 +191,10 @@ class Title(db.Model):  # TODO: Naming - Achievement, Mission, ...
     # TODO: 초기화 해줄 때, 몇 개의 기본 업적을 넣어주어야 해요.
 
 
-class TitleCategory(db.Model):  # TODO: Naming - TitleType, ...
+class AchievementCategory(db.Model):
     """우리가 업적을 분류하는 방식."""
 
-    __tablename__ = "titlecategory"
+    __tablename__ = "achievementcategory"
     idx = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(N), unique=True)
     description = db.Column(db.String(N))
@@ -202,15 +202,34 @@ class TitleCategory(db.Model):  # TODO: Naming - TitleType, ...
     # TODO: 초기화 해줄 때, 몇 개의 기본 카테고리를 추가해 주어야 해요.
 
 
-# TODO: Naming - AcquiredAchievenemt, MissionComplete, MissionAccomplished
-class GotTitle(db.Model):
+class AcquiredAchievement(db.Model):
     """아니 업적을 얻으셨다구요?"""
 
-    __tablename__ = "gottitle"
+    __tablename__ = "acquiredachievement"
     idx = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(N))
-    title_idx = db.Column(db.Integer)
+    achievement_idx = db.Column(db.Integer)
     when = db.Column(db.DateTime, default=datetime.now)
+
+
+class AchievementStatusForManualApproval(db.Model):
+    """수동 승인식 업적을 신청하고 기다리는 사람들을 위한 DB."""
+
+    __tablename__ = "achievementstatusformanualapproval"
+    idx = db.Column(db.Integer, primary_key=True)
+    achievement_idx = db.Column(db.Integer, nullable=False)
+    waiting_username = db.Column(db.String(N), nullable=False)
+
+
+class AchievementStatusForAutomaticApproval(db.Model):
+    """자동 승인식 업적의 획득을 기다리는 사람들을 위한 DB."""
+
+    __tablename__ = "achievementstatusforautomaticapproval"
+    idx = db.Column(db.Integer, primary_key=True)
+    achievement_idx = db.Column(db.Integer, nullable=False)
+    target_username = db.Column(db.String(N), nullable=False)
+    target_progress_percent = db.Column(db.Integer, default=0)
+    target_status = db.Column(db.String(N), nullable=True)
 
 
 admin.add_view(ModelView(User, db.session))
@@ -218,6 +237,9 @@ admin.add_view(ModelView(URL, db.session))
 admin.add_view(ModelView(Nickname, db.session))
 admin.add_view(ModelView(NickRecom, db.session))
 admin.add_view(ModelView(Photo, db.session))
-admin.add_view(ModelView(Title, db.session))
-admin.add_view(ModelView(TitleCategory, db.session))
-admin.add_view(ModelView(GotTitle, db.session))
+admin.add_view(ModelView(Achievement, db.session))
+admin.add_view(ModelView(AchievementCategory, db.session))
+admin.add_view(ModelView(AcquiredAchievement, db.session))
+admin.add_view(ModelView(AchievementStatusForManualApproval, db.session))
+admin.add_view(ModelView(AchievementStatusForAutomaticApproval, db.session))
+
