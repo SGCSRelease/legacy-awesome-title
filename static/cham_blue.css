@@ -1,0 +1,8 @@
+body {
+    background: url("/static/cham_blue.png") fixed no-repeat bottom right;
+    background-color: #95BE5C;
+}
+
+.bg-faded {
+    background-color: #61A0D1;
+}

@@ -1,0 +1,8 @@
+body {
+    background: url("/static/dejava.png") fixed no-repeat bottom right;
+    background-color: #E0B366;
+}
+
+.bg-faded {
+    background-color: #E3C89F;
+}

@@ -1,3 +1,5 @@
+from random import choice
+
 from flask import (
     Flask,
     redirect,
@@ -58,6 +60,15 @@ def _set_global_variable_for_templates():
     return {
             "get_logged_in_username": get_logged_in_username(),
             "has_new_nicknames": has_new_nicknames,
+            "theme": choice([
+                'cham_blue.css',
+                'cham_red.css',
+                'dejava.css',
+                'tsingtao.css',
+                '',
+                '',
+                '',
+            ]),
     }
 
 
