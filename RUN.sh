@@ -1,1 +1,1 @@
-gunicorn -c __gunicorn__.py app:app
+gunicorn -c confs/__gunicorn__.py AwesomeTitleServer:app

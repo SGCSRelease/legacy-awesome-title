@@ -4,12 +4,12 @@ from flask import (
     request,
 )
 
-from db import (
+from .db import (
     db,
     NickRecom,
     Nickname,
 )
-from user import (
+from .user import (
     get_logged_in_username,
     check_username,
 )

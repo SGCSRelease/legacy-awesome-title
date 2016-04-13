@@ -1,4 +1,7 @@
-from os import urandom
+#!env python
+
+from os import urandom, makedirs
+from os.path import abspath, dirname, exists, join
 
 from flask_script import (
         Manager,
@@ -9,14 +12,14 @@ from flask_script import (
 from flask_migrate import MigrateCommand
 from jinja2 import Template
 
-from app import app  # app.py파일의 app변수를 가져온다.
+from AwesomeTitleServer import app
 
 
-manager = Manager(app)
+manager = Manager(app, with_default_commands=False)
 manager.add_command('db', MigrateCommand)
 _default = 'awesometitle'
 _server = 'localhost'
-_folder = './DOWNLOADED/'
+_folder = 'datas/DOWNLOADED/'
 
 
 @manager.command
@@ -34,6 +37,9 @@ def config(
     automatically.
     """
     # TODO : Is Existed config.py?
+
+    base = dirname(abspath(__file__))
+
     # XXX : Check '-m' or '--mysql' options entered.
     if mysql is None:
         use_mysql = prompt_bool("Use MySQL?", default=True)
@@ -43,7 +49,7 @@ def config(
         elif mysql == "False":
             use_mysql = False
         else:
-            raise Exception("`-m` or `--mysql` option needed `True` or `False`.")
+            raise Exception("`-m` or `--mysql` needed `True` or `False`.")
     if use_mysql is True:
         # XXX : Check '-u' or '--username' options entered.
         if username is _default:
@@ -60,11 +66,15 @@ def config(
     # XXX : Check '-f' or '--folder' options entered.
     if folder is _folder:
         folder = prompt("Image Upload Folder", default=folder)
+    folder = join(base, folder)
+    if not exists(folder):
+        makedirs(folder)
     secret_key = urandom(24)
-    with open("config.py.tmpl") as tmpl:
+    with open("confs/config.py.tmpl") as tmpl:
         Template(
-                tmpl.read()
+            tmpl.read()
         ).stream(
+            base=base,
             username=username,
             password=password,
             server=server,
@@ -72,7 +82,7 @@ def config(
             folder=folder,
             secret_key=secret_key,
             use_mysql=use_mysql,
-        ).dump("config.py")
+        ).dump("AwesomeTitleServer/config.py")
 
 
 if __name__ == '__main__':

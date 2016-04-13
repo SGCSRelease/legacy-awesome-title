@@ -9,7 +9,7 @@ from flask import (
 )
 from flask.ext.bcrypt import Bcrypt
 
-from db import (
+from .db import (
     db,
     User,
     URL,
@@ -21,7 +21,7 @@ from db import (
 
 import os
 
-from url import addURL
+from .url import addURL
 
 
 bcrypt = Bcrypt()
