@@ -59,7 +59,7 @@ class Achievement(db.Model):
     # TODO: logo_url = db.Column(db.String(N))
     #       XXX: 생각해보니까 Photo DB에 우리는 업적로고를 저장할 수 없어요.
 
-    description = db.Column(db.String(N))  # XXX: 충분해?
+    description = db.Column(db.String(2 * N))
 
     _categories = db.Column(db.String(N), default='[]')
     # XXX: 충분해? (now, N=50)
@@ -120,61 +120,6 @@ class Achievement(db.Model):
         finally:
             return eval(self._categories)
 
-    @staticmethod
-    def _testAddDelCategory(db):
-        """테스트해봅시다.
-
-        >>> from app import app
-        >>> from db import db, Achievement
-        >>> db.init_app(app)
-        >>> db.app = app  # BUG?
-
-        이렇게요.
-        >>> Achievement._testAddDelCategory(db)
-
-        에러가 없다면 동작하는거 아닐까요?
-        /admin 에서 확인해보세요!
-        """
-        c1 = AchievementCategory()
-        c1.name = 'Automatic'
-        db.session.add(c1)
-        db.session.commit()
-
-        c2 = AchievementCategory()
-        c2.name = 'Manual'
-        db.session.add(c2)
-        db.session.commit()
-
-        t1 = Achievement()
-        t1.name = "We Made It!"
-        db.session.add(t1)
-        db.session.commit()
-
-        t2 = Achievement()
-        t2.name = "Title Is Awesome!"
-        db.session.add(t2)
-        db.session.commit()
-
-        t3 = Achievement()
-        t3.name = "RELEASE ROCKS!!!!!"
-        db.session.add(t3)
-        db.session.commit()
-
-        t1.addCategory(c1.idx)
-        db.session.commit()
-
-        t2.addCategory(c2.idx)
-        db.session.commit()
-
-        t3.addCategory(c1.idx)
-        t3.addCategory(c2.idx)
-        db.session.commit()
-
-        t3.delCategory(c1.idx)
-        t3.delCategory(c2.idx)
-        db.session.commit()
-
-
     is_hidden = db.Column(db.Boolean, default=False)
     creators_issue_idx = db.Column(db.Integer, nullable=True)
     # XXX: 업적 제작자를 현명하게 저장하는 법을 찾아냈습니다!
@@ -188,7 +133,9 @@ class Achievement(db.Model):
     #       - 그리고 그 업적은 is_hidden=True 로 숨기구요.
     #       - 그 업적을 획득한 사람은, 이 업적을 만든거에요!
 
-    # TODO: 초기화 해줄 때, 몇 개의 기본 업적을 넣어주어야 해요.
+    checker_func = db.Column(db.String(50), default=False)
+    # XXX: 자동승인식 업적의 진행도를 확인해주는 함수거나,
+    #      자신이 획득 가능한 업적인지 True/False로 알려주는 함수입니다.
 
 
 class AchievementCategory(db.Model):
@@ -198,8 +145,6 @@ class AchievementCategory(db.Model):
     idx = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(N), unique=True)
     description = db.Column(db.String(N))
-
-    # TODO: 초기화 해줄 때, 몇 개의 기본 카테고리를 추가해 주어야 해요.
 
 
 class AcquiredAchievement(db.Model):
@@ -242,4 +187,3 @@ admin.add_view(ModelView(AchievementCategory, db.session))
 admin.add_view(ModelView(AcquiredAchievement, db.session))
 admin.add_view(ModelView(AchievementStatusForManualApproval, db.session))
 admin.add_view(ModelView(AchievementStatusForAutomaticApproval, db.session))
-
