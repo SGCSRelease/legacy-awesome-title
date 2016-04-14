@@ -47,8 +47,12 @@ class Photo(db.Model):
     photo = db.Column(db.String(N + 10))
 
 
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(URL, db.session))
-admin.add_view(ModelView(Nickname, db.session))
-admin.add_view(ModelView(NickRecom, db.session))
-admin.add_view(ModelView(Photo, db.session))
+class MyModelView(ModelView):
+    column_display_pk = True
+
+
+admin.add_view(MyModelView(User, db.session))
+admin.add_view(MyModelView(URL, db.session))
+admin.add_view(MyModelView(Nickname, db.session))
+admin.add_view(MyModelView(NickRecom, db.session))
+admin.add_view(MyModelView(Photo, db.session))
