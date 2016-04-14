@@ -179,13 +179,17 @@ class AchievementStatusForAutomaticApproval(db.Model):
     target_status = db.Column(db.String(N), nullable=True)
 
 
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(URL, db.session))
-admin.add_view(ModelView(Nickname, db.session))
-admin.add_view(ModelView(NickRecom, db.session))
-admin.add_view(ModelView(Photo, db.session))
-admin.add_view(ModelView(Achievement, db.session))
-admin.add_view(ModelView(AchievementCategory, db.session))
-admin.add_view(ModelView(AcquiredAchievement, db.session))
-admin.add_view(ModelView(AchievementStatusForManualApproval, db.session))
-admin.add_view(ModelView(AchievementStatusForAutomaticApproval, db.session))
+class MyModelView(ModelView):
+    column_display_pk = True
+
+
+admin.add_view(MyModelView(User, db.session))
+admin.add_view(MyModelView(URL, db.session))
+admin.add_view(MyModelView(Nickname, db.session))
+admin.add_view(MyModelView(NickRecom, db.session))
+admin.add_view(MyModelView(Photo, db.session))
+admin.add_view(MyModelView(Achievement, db.session))
+admin.add_view(MyModelView(AchievementCategory, db.session))
+admin.add_view(MyModelView(AcquiredAchievement, db.session))
+admin.add_view(MyModelView(AchievementStatusForManualApproval, db.session))
+admin.add_view(MyModelView(AchievementStatusForAutomaticApproval, db.session))
