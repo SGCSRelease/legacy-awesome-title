@@ -59,3 +59,9 @@ def _set_global_variable_for_templates():
             "get_logged_in_username": get_logged_in_username(),
             "has_new_nicknames": has_new_nicknames,
     }
+
+@app.before_first_request
+def _init_database():
+    from .Achievements.defaults import update_default_categories, update_default_achievement
+    update_default_categories()
+    update_default_achievement()

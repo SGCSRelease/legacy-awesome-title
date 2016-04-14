@@ -3,12 +3,12 @@
 from enum import Enum
 from functools import lru_cache
 
-from .db import (
+from ..db import (
     db,
     Achievement,
     AchievementCategory,
 )
-from funcs import (
+from .funcs import (
     FUNCTIONS,
     AddFunction,
 )
@@ -263,7 +263,7 @@ def update_default_categories():
 
 
 def update_default_achievement():
-    @lru_cache
+    @lru_cache(None)
     def _get_category_idx(category):
         found = AchievementCategory.query.filter(
                 AchievementCategory.name == category.name,
@@ -273,10 +273,10 @@ def update_default_achievement():
         raise Exception("Not Found")
             
 
-    for achievement in (
-            DefaultAchievements.__members__.values()
+    for _, achievement in (
+            DefaultAchievements.__members__.items()
     ):
-        name, description, categories, func = achievement
+        name, description, categories, func = achievement.value
         found = Achievement.query.filter(
                 Achievement.name == name,
         ).first()
@@ -286,7 +286,9 @@ def update_default_achievement():
         # TODO: found.logo_url = None
         found.description = description
         found._categories = str([_get_category_idx(c) for c in categories])
-        found.checker_func = func
+        found.checker_func = func if func else None
+        db.session.add(found)
+    db.session.commit()
 
 
 @AddFunction
