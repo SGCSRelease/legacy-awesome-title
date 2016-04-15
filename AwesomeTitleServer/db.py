@@ -145,6 +145,7 @@ class AchievementCategory(db.Model):
     __tablename__ = "achievementcategory"
     idx = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(N), unique=True)
+    display_name = db.Column(db.String(N))
     description = db.Column(db.String(N))
 
 

@@ -1,0 +1,102 @@
+{% extends "_extends/_index.html" %}
+
+
+{% macro tbody(idx, name, description, categories)%}
+<tr id="tbody{{ idx }}">
+    <td>{{ idx }}</th>
+    <th scope="row">{{ name }}</td>
+    <td>{{ description }}</td>
+    <td>{{ categories }}</td>
+    <td><button type="button" class="btn btn-warning btn-sm">보러가기</button></td>
+</tr>
+{% endmacro %}
+
+
+{% block _index__container %}
+
+{% set CLASS = ".Achievements.views" %}
+
+{% if not get_cookie(get_variable(CLASS, "COOKIE_NAME_FOR_HIDE_JUMBOTRON")) %}
+  <div class="jumbotron">
+    <h1 class="display-3">안녕! 업적!!</h1>
+    <p class="lead">업적은 다양한 아이콘으로 자신을 소개하는 색다른 방식이 될거에요.</p>
+    <p>릴리즈 생활이나 서강대 생활을 효율적으로 보여줄 수 있고, 더 재밌어 질 수도 있겠죠?</p>
+    <p>해커톤 팀을 모을 때도 이 사람이 사용하는 기술이 무엇인지 알 수 있어서 더 효율적으로 팀을 짤 수 있지 않을까요?</p>
+    <hr class="m-y-2">
+    <p class="lead">
+      <a class="btn btn-primary btn-lg jumbotron-button" href="#" role="button">숨기고 살펴보기!</a>
+    </p>
+  </div>
+{% endif %}
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" href="{{ url_for("Achievements") }}">업적 리스트!</a>
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">카테고리</a>
+    <div class="dropdown-menu">
+      {% for key, value in get_variable(CLASS, "get_default_category_dict()").items() %}
+      <a class="dropdown-item" id="category-{{ key }}">#{{ value }}</a>
+      {% endfor %}
+    </div>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled">새 업적을 만들고 싶어요</a>
+  </li>
+  <li class="pull-xs-right">
+    <input class="form-control form-control-sm" type="text" placeholder="업적 검색" disabled>
+  </li>
+</ul>
+
+<table class="table">
+  <thead class="thead-default">
+    <tr>
+      <th>#</th>
+      <th>이름</th>
+      <th>설명</th>
+      <th>카테고리</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for archivement in get_variable(CLASS, "get_archivements_list()") %}
+      {{ tbody(*archivement) }}
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+
+{% block _index__script %}
+
+<script type="text/html" id="tbody_template">{{
+    tbody(
+      "<idx />"|safe,
+      "<name />"|safe,
+      "<description />"|safe,
+      "<categories />"|safe,
+    )
+}}</script>
+
+<script>
+function tbody_template(idx, name, description, categories){
+    var tmpl = $($('#tbody_template').html());
+    $('tr', tmpl).attr('id', 'tbody' + idx);
+    $('idx', tmpl).replaceWith(idx);
+    $('name', tmpl).replaceWith(name);
+    $('description', tmpl).replaceWith(description);
+    $('categories', tmpl).replaceWith(categories);
+    return tmpl;
+}
+</script>
+
+<script>
+$('.jumbotron-button').click(function(){
+  $('.jumbotron').hide('fast');
+  $.get("{{ url_for('Hide_Jumbotron_for_Achievements') }}")
+});
+</script>
+
+{% endblock %}

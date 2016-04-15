@@ -18,6 +18,8 @@ from .user import (
 )
 from .url import add_routes as add_url_routes
 from .url import goto
+from .Achievements.views import add_routes as add_achievements_routes
+from .cookie import get_cookie
 
 app = Flask(__name__)
 
@@ -38,6 +40,7 @@ add_user_routes(app)
 add_nickname_routes(app)
 add_photo_routes(app)
 add_url_routes(app)
+add_achievements_routes(app)
 
 
 @app.route("/")
@@ -58,6 +61,8 @@ def _set_global_variable_for_templates():
     return {
             "get_logged_in_username": get_logged_in_username(),
             "has_new_nicknames": has_new_nicknames,
+            "get_cookie": get_cookie,
+            "get_variable": get_variable,
     }
 
 @app.before_first_request
@@ -65,3 +70,28 @@ def _init_database():
     from .Achievements.defaults import update_default_categories, update_default_achievement
     update_default_categories()
     update_default_achievement()
+
+
+def get_variable(_from, _import):
+    # TODO: still not safe -> WHITELIST!!!!! with DECORATOR!
+    if not _from or _from[0] != '.':
+        return None
+
+    _safety_scope_globals = {
+        '__package__': 'AwesomeTitleServer',
+    }
+    _safety_scope_locals = {}
+
+    # XXX: function call okay! -> NOT SAFE!!
+    real_import = _import[:_import.find('(')] if '(' in _import else _import
+
+    exec(
+        "from {} import {}".format(_from, real_import),
+        _safety_scope_globals,
+        _safety_scope_locals
+    )
+    return eval(
+            _import,
+            _safety_scope_globals,
+            _safety_scope_locals
+    )

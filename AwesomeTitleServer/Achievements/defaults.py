@@ -17,11 +17,27 @@ from .funcs import (
 class DefaultAchievementCategories(Enum):
     """미리 정의된 업적 분류."""
 
-    No_Limitation = "신청식 업적을 위한 카테고리입니다."
-    Manual_Approval = "수동 승인식 업적을 위한 카테고리입니다."
-    Automatic_Approval = "자동 승인식 업적을 위한 카테고리입니다."
-    Hidden_At_List = "숨겨진 업적들 입니다, 리스트에만 숨겨져있어요."
-    Hidden = "아예 안보여요. 프로필에도요. 제작자들을 보관하기 위해서 씁시다."
+    No_Limitation = (
+        "신청식",
+        "신청식 업적을 위한 카테고리입니다.",
+    )
+    Manual_Approval = (
+        "수동 승인식",
+        "수동 승인식 업적을 위한 카테고리입니다.",
+    )
+    Automatic_Approval = (
+        "자동 승인식",
+        "자동 승인식 업적을 위한 카테고리입니다.",
+    )
+    Hidden_At_List = (
+        "",
+        "숨겨진 업적들 입니다, 리스트에만 숨겨져있어요.",
+    )
+    Hidden = (
+        "",
+        "아예 안보여요. 프로필에도요. 제작자들을 보관하기 위해서 씁시다.",
+    )
+    # Hidden은 Hidden_At_List와 같이 씁시다.
 
 
 class DefaultAchievements(Enum):
@@ -256,23 +272,26 @@ def update_default_categories():
         if not found:
             found = AchievementCategory()
             found.name = new_category_name
-        found.description = new_category_item.value
+            found.display_name = new_category_item.value[0]
+            found.description = new_category_item.value[1]
         db.session.add(found)
     # TODO: Remove the others.
     db.session.commit()
 
 
-def update_default_achievement():
-    @lru_cache(None)
-    def _get_category_idx(category):
-        found = AchievementCategory.query.filter(
-                AchievementCategory.name == category.name,
-        ).first()
-        if found:
-            return found.idx
+@lru_cache(None)
+def get_category_idx(category, _raise=True):
+    found = AchievementCategory.query.filter(
+            AchievementCategory.name == category.name,
+    ).first()
+    if found:
+        return found.idx
+    if _raise:
         raise Exception("Not Found")
-            
+    return None
 
+
+def update_default_achievement():
     for _, achievement in (
             DefaultAchievements.__members__.items()
     ):
@@ -285,7 +304,7 @@ def update_default_achievement():
             found.name = name
         # TODO: found.logo_url = None
         found.description = description
-        found._categories = str([_get_category_idx(c) for c in categories])
+        found._categories = str([get_category_idx(c) for c in categories])
         found.checker_func = func if func else None
         db.session.add(found)
     db.session.commit()
