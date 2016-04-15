@@ -122,7 +122,6 @@ class Achievement(db.Model):
         finally:
             return eval(self._categories)
 
-    is_hidden = db.Column(db.Boolean, default=False)
     creators_issue_idx = db.Column(db.Integer, nullable=True)
     # XXX: 업적 제작자를 현명하게 저장하는 법을 찾아냈습니다!
     #      이것도 카테고리를 저장했던 것 처럼 한다면,
@@ -132,7 +131,7 @@ class Achievement(db.Model):
     #
     #      그래서!,
     #       - 우리는 업적을 제작했다는 업적! 을 만들겁니다.
-    #       - 그리고 그 업적은 is_hidden=True 로 숨기구요.
+    #       - 그리고 그 업적은 Category.Hidden으로 숨기구요.
     #       - 그 업적을 획득한 사람은, 이 업적을 만든거에요!
 
     checker_func = db.Column(db.String(50), default=False)
