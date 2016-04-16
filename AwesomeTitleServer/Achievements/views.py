@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from flask import render_template, jsonify
+from flask import render_template, request, jsonify
 
 from ..cookie import add_cookies
 from ..db import Achievement, AchievementCategory
@@ -15,11 +15,38 @@ COOKIE_NAME_FOR_HIDE_JUMBOTRON = "HIDE_JUMBOTRON"
 
 def add_routes(app):
     app.route("/achievements/")(Achievements)
-    app.route("/api/achivements/hide_jumbotron/")(Hide_Jumbotron_for_Achievements)
+    app.route("/achievements/<name>/")(Achievement_Detail)
+    app.route("/api/achievements/")(get_archivements_list)
+    app.route("/api/achievements/category/")(Search_Achievements_by_Category)
+    app.route("/api/achievements/hide_jumbotron/")(Hide_Jumbotron_for_Achievements)
 
 
 def Achievements():
     return render_template("achievements.html")
+
+
+def Achievement_Detail(name):
+    return None
+
+
+def Search_Achievements_by_Category():
+    category_idx = int(request.args['category_idx'])
+    ret = []
+    for achievement in Achievement.query.order_by(Achievement.idx.desc()).all():
+        if category_idx in achievement.getCategories():
+            ret.append(
+                    (
+                        achievement.idx,
+                        achievement.name,
+                        achievement.description,
+                        ','.join(
+                            [
+                                '#' + get_category_from_idx(c).display_name for c in achievement.getCategories()
+                            ]
+                        ),
+                    )
+            )
+    return jsonify({'return': ret})
 
 
 def Hide_Jumbotron_for_Achievements():
@@ -37,18 +64,9 @@ def get_default_category_dict():
     return categories
 
 
-
-def get_archivements_list():
-    @lru_cache(None)
-    def get_category_from_idx(idx):
-        # TODO: MOVE IT
-        found = AchievementCategory.query.get(idx)
-        if not found:
-            return None
-        return found
-
+def get_archivements_list(json=True):
     ret = []
-    for achievement in Achievement.query.all():
+    for achievement in Achievement.query.order_by(Achievement.idx.desc()).all():
         if get_category_idx(
             DefaultAchievementCategories.Hidden_At_List
         ) not in achievement.getCategories():
@@ -64,4 +82,15 @@ def get_archivements_list():
                         ),
                     )
             )
-    return ret 
+    if not json:
+        return ret
+    return jsonify({'return': ret})
+
+
+@lru_cache(None)
+def get_category_from_idx(idx):
+    # TODO: MOVE IT
+    found = AchievementCategory.query.get(idx)
+    if not found:
+        return None
+    return found

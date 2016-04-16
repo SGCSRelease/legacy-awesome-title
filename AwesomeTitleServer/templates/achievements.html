@@ -2,7 +2,7 @@
 
 
 {% macro tbody(idx, name, description, categories)%}
-<tr id="tbody{{ idx }}">
+<tr class="my_tbody" id="tbody{{ idx }}">
     <td>{{ idx }}</th>
     <th scope="row">{{ name }}</td>
     <td>{{ description }}</td>
@@ -31,13 +31,13 @@
 
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link active" href="{{ url_for("Achievements") }}">업적 리스트!</a>
+    <a class="nav-link active total" href="javascript:load_list()">업적 리스트!</a>
   </li>
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">카테고리</a>
+    <a class="nav-link dropdown-toggle category" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">카테고리</a>
     <div class="dropdown-menu">
       {% for key, value in get_variable(CLASS, "get_default_category_dict()").items() %}
-      <a class="dropdown-item" id="category-{{ key }}">#{{ value }}</a>
+      <a class="dropdown-item" href="javascript:load_list_by_category({{ key }}, '#{{ value }}')">#{{ value }}</a>
       {% endfor %}
     </div>
   </li>
@@ -60,7 +60,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for archivement in get_variable(CLASS, "get_archivements_list()") %}
+    {% for archivement in get_variable(CLASS, "get_archivements_list(json=False)") %}
       {{ tbody(*archivement) }}
     {% endfor %}
   </tbody>
@@ -97,6 +97,51 @@ $('.jumbotron-button').click(function(){
   $('.jumbotron').hide('fast');
   $.get("{{ url_for('Hide_Jumbotron_for_Achievements') }}")
 });
+
+function clear_list(callback){
+    var current_list = $('.my_tbody')
+    current_list.hide('slow', function(){
+        current_list.remove();
+    });
+}
+
+function insert_list(json){
+    $.each(json.return, function (_, achievement){
+        $('tbody').append(
+            tbody_template(
+                achievement[0],
+                achievement[1],
+                achievement[2],
+                achievement[3]
+            )
+        )
+    });
+}
+
+function load_list_by_category(category_idx, category_name){
+    $('.total').removeClass('active');
+    $('.category').addClass('active');
+    $('.category').text(category_name);
+    clear_list();
+    $.getJSON(
+        '{{ url_for("Search_Achievements_by_Category") }}',
+        {
+            'category_idx': category_idx,
+        },
+        insert_list
+    );
+}
+
+function load_list(){
+    $('.total').addClass('active');
+    $('.category').removeClass('active');
+    $('.category').text('카테고리');
+    clear_list();
+    $.getJSON(
+        '{{ url_for("get_archivements_list") }}',
+        insert_list
+    );
+}
 </script>
 
 {% endblock %}
