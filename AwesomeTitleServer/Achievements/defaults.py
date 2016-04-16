@@ -272,8 +272,8 @@ def update_default_categories():
         if not found:
             found = AchievementCategory()
             found.name = new_category_name
-            found.display_name = new_category_item.value[0]
-            found.description = new_category_item.value[1]
+        found.display_name = new_category_item.value[0]
+        found.description = new_category_item.value[1]
         db.session.add(found)
     # TODO: Remove the others.
     db.session.commit()
