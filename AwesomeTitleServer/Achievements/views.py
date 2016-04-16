@@ -18,11 +18,12 @@ def add_routes(app):
     app.route("/achievements/<name>/")(Achievement_Detail)
     app.route("/api/achievements/")(get_archivements_list)
     app.route("/api/achievements/category/")(Search_Achievements_by_Category)
+    app.route("/api/achievements/status/")(Search_Achievements_by_Status)
     app.route("/api/achievements/hide_jumbotron/")(Hide_Jumbotron_for_Achievements)
 
 
 def Achievements():
-    return render_template("achievements.html")
+    return render_template("achievements_list.html")
 
 
 def Achievement_Detail(name):
@@ -41,12 +42,16 @@ def Search_Achievements_by_Category():
                         achievement.description,
                         ','.join(
                             [
-                                '#' + get_category_from_idx(c).display_name for c in achievement.getCategories()
+                                '#' + AchievementCategory.query.get(c).display_name for c in achievement.getCategories()
                             ]
                         ),
                     )
             )
     return jsonify({'return': ret})
+
+
+def Search_Achievements_by_Status():
+    return jsonify({'return': []})  # TODO!
 
 
 def Hide_Jumbotron_for_Achievements():
@@ -77,7 +82,7 @@ def get_archivements_list(json=True):
                         achievement.description,
                         ','.join(
                             [
-                                '#' + get_category_from_idx(c).display_name for c in achievement.getCategories()
+                                '#' + AchievementCategory.query.get(c).display_name for c in achievement.getCategories()
                             ]
                         ),
                     )
@@ -85,12 +90,3 @@ def get_archivements_list(json=True):
     if not json:
         return ret
     return jsonify({'return': ret})
-
-
-@lru_cache(None)
-def get_category_from_idx(idx):
-    # TODO: MOVE IT
-    found = AchievementCategory.query.get(idx)
-    if not found:
-        return None
-    return found

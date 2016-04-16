@@ -39,6 +39,16 @@
       {% for key, value in get_variable(CLASS, "get_default_category_dict()").items() %}
       <a class="dropdown-item" href="javascript:load_list_by_category({{ key }}, '#{{ value }}')">#{{ value }}</a>
       {% endfor %}
+      <!--<div class="dropdown-divider"></div>-->
+    </div>
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle status" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">상태별</a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" disabled>완료</a>
+      <a class="dropdown-item" disabled>시도중</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" disabled>위시리스트?</a>
     </div>
   </li>
   <li class="nav-item">
@@ -98,7 +108,24 @@ $('.jumbotron-button').click(function(){
   $.get("{{ url_for('Hide_Jumbotron_for_Achievements') }}")
 });
 
-function clear_list(callback){
+var current_tab = '.total'
+function highlight_tab(next_tab, next_tab_rename){
+    $(current_tab).removeClass('active');
+    if (current_tab === '.category'){
+        $(current_tab).text('카테고리');
+    }else if (current_tab === '.status'){
+        $(current_tab).text('상태별');
+    }
+    $(next_tab).addClass('active');
+    if (next_tab === '.category'){
+        $(next_tab).text(next_tab_rename);
+    }else if (next_tab === '.status'){
+        $(next_tab).text(next_tab_rename);
+    }
+    current_tab = next_tab;
+}
+
+function clear_list(){
     var current_list = $('.my_tbody')
     current_list.hide('slow', function(){
         current_list.remove();
@@ -118,10 +145,11 @@ function insert_list(json){
     });
 }
 
+// function load_list_by_status(){
+// }
+
 function load_list_by_category(category_idx, category_name){
-    $('.total').removeClass('active');
-    $('.category').addClass('active');
-    $('.category').text(category_name);
+    highlight_tab('.category', category_name);
     clear_list();
     $.getJSON(
         '{{ url_for("Search_Achievements_by_Category") }}',
@@ -133,9 +161,7 @@ function load_list_by_category(category_idx, category_name){
 }
 
 function load_list(){
-    $('.total').addClass('active');
-    $('.category').removeClass('active');
-    $('.category').text('카테고리');
+    highlight_tab('.total');
     clear_list();
     $.getJSON(
         '{{ url_for("get_archivements_list") }}',
