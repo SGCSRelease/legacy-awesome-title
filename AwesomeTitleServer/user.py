@@ -7,7 +7,7 @@ from flask import (
     redirect,
     session,
 )
-from flask.ext.bcrypt import Bcrypt
+from flask_bcrypt import Bcrypt
 
 from .db import (
     db,
