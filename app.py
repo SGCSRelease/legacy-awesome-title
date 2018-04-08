@@ -1,5 +1,3 @@
-#!env python
-
 from os import urandom, makedirs
 from os.path import abspath, dirname, exists, join
 
