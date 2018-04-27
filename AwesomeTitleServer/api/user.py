@@ -15,7 +15,7 @@ from AwesomeTitleServer import db
 
 from AwesomeTitleServer.db import (
     User,
-    URL,
+    Url,
     Photo,
     Nickname,
     NickRecom,
@@ -56,8 +56,8 @@ def delete_user(username):
     db.session.delete(found)
 
     # Delete URL DB
-    found = URL.query.filter(
-        URL.username == username
+    found = Url.query.filter(
+        Url.username == username
     ).all()
     for url in found:
         db.session.delete(url)
@@ -92,6 +92,3 @@ def delete_user(username):
 
     session.pop('username', None)
     return redirect('/')
-
-
-
