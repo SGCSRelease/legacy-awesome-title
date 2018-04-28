@@ -7,7 +7,7 @@ from flask import (
 
 from .db import (
     db,
-    URL,
+    Url,
     User,
     Photo,
     Nickname,
@@ -31,8 +31,8 @@ def goto(link, is_manage=False):
         else:
             return userpage(found_at_User)
 
-    found = URL.query.filter(
-        URL.link == link,
+    found = Url.query.filter(
+        Url.link == link,
     ).first()
     if found:
         this_user = User.query.filter(
@@ -53,15 +53,15 @@ def gotomanage(link):
     return goto(link, is_manage=True)
 
 
-def addURL(link, username):
+def addUrl(link, username):
     """jmg) 아이디에 여러 링크를 연결하는 함수입니다."""
     # link 중복 check
-    found = URL.query.filter(
-            URL.link == link,
+    found = Url.query.filter(
+            Url.link == link,
     ).first()
     if found:
         return False
-    newP = URL()
+    newP = Url()
     newP.link = link
     newP.username = username
     db.session.add(newP)
