@@ -19,25 +19,39 @@ from .user import (
 from .url import add_routes as add_url_routes
 from .url import goto
 
-app = Flask(__name__)
 
-try:
-    from . import config
-    app.config.from_object(config)
-except ImportError as e:
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    if __name__ == "__main__":
-        raise Exception("Please run `python manage.py config` first.")
+def initialize_extensions(app):
+    admin.init_app(app)
+    bcrypt.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-admin.init_app(app)
-bcrypt.init_app(app)
-db.init_app(app)
-migrate.init_app(app, db)
 
-add_user_routes(app)
-add_nickname_routes(app)
-add_photo_routes(app)
-add_url_routes(app)
+def register_routes(app):
+    add_user_routes(app)
+    add_nickname_routes(app)
+    add_photo_routes(app)
+    add_url_routes(app)
+
+
+def create_app():
+    app = Flask(__name__)
+
+    try:
+        from . import config
+        app.config.from_object(config)
+    except ImportError as e:
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+        if __name__ == "__main__":
+            raise Exception("Please run `python manage.py config` first.")
+
+    initialize_extensions(app)
+    register_routes(app)
+
+    return app
+
+
+app = create_app()
 
 
 @app.route("/")
