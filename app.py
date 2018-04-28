@@ -1,10 +1,13 @@
+# Standard Library
 from os import urandom, makedirs
 from os.path import abspath, dirname, exists, join
 
+# Third-party Library
 import click
 from flask_migrate import Migrate
 from jinja2 import Template
 
+# Local application
 from AwesomeTitleServer import app, db
 
 

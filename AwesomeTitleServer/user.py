@@ -1,5 +1,8 @@
+# Standard Library
+import os
 from datetime import datetime
 
+# Third-party Library
 from flask import (
     current_app,
     render_template,
@@ -9,6 +12,7 @@ from flask import (
 )
 from flask_bcrypt import Bcrypt
 
+# Local Library
 from .db import (
     db,
     User,
@@ -18,9 +22,6 @@ from .db import (
     NickRecom,
     N,
 )
-
-import os
-
 from .url import addUrl
 
 

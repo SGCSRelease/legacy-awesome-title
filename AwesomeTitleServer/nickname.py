@@ -1,9 +1,11 @@
+# Third-party Library
 from flask import (
     render_template,
     redirect,
     request,
 )
 
+# Local application
 from .db import (
     db,
     NickRecom,

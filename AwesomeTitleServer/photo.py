@@ -1,7 +1,8 @@
+# Standard Library
 import os
-
 import imghdr
 
+# Third-party Library
 from flask import (
     current_app,
     request,
@@ -10,6 +11,7 @@ from flask import (
     render_template,
 )
 
+# Local application
 from .db import (
     db,
     Photo,
