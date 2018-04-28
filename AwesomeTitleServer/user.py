@@ -12,7 +12,7 @@ from flask_bcrypt import Bcrypt
 from .db import (
     db,
     User,
-    URL,
+    Url,
     Photo,
     Nickname,
     NickRecom,
@@ -21,7 +21,7 @@ from .db import (
 
 import os
 
-from .url import addURL
+from .url import addUrl
 
 
 bcrypt = Bcrypt()
@@ -126,7 +126,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        addURL(realname, username)
+        addUrl(realname, username)
         return redirect("/")
 
 
@@ -256,8 +256,8 @@ def delete_user():
     db.session.delete(found)
 
     # URL DB 삭제
-    found = URL.query.filter(
-           URL.username == username,
+    found = Url.query.filter(
+           Url.username == username,
     ).all()
     for url in found:
         db.session.delete(url)

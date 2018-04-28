@@ -30,7 +30,7 @@ class User(db.Model):
 
 
 
-class URL(db.Model):
+class Url(db.Model):
     __tablename__ = "URL"
     link = db.Column(db.String(N), primary_key=True)
     username = db.Column(db.String(N))
@@ -82,7 +82,7 @@ class MyModelView(ModelView):
 
 
 admin.add_view(MyModelView(User, db.session))
-admin.add_view(MyModelView(URL, db.session))
+admin.add_view(MyModelView(Url, db.session))
 admin.add_view(MyModelView(Nickname, db.session))
 admin.add_view(MyModelView(NickRecom, db.session))
 admin.add_view(MyModelView(Photo, db.session))
