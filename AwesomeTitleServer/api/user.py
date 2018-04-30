@@ -11,9 +11,8 @@ from flask import (
 
 # local applications
 from AwesomeTitleServer.auth import bp
-from AwesomeTitleServer import db
-
 from AwesomeTitleServer.db import (
+    db,
     User,
     Url,
     Photo,
