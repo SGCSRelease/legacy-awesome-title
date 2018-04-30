@@ -18,6 +18,8 @@ from .user import (
 )
 from .url import add_routes as add_url_routes
 from .url import goto
+from .api import bp as api_bp
+
 
 app = Flask(__name__)
 
@@ -38,6 +40,8 @@ add_user_routes(app)
 add_nickname_routes(app)
 add_photo_routes(app)
 add_url_routes(app)
+
+app.register_blueprint(api_bp, url_prefix='/api')
 
 
 @app.route("/")
