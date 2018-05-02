@@ -21,22 +21,22 @@ from AwesomeTitleServer.db import (
 )
 
 
-@bp.route('/user/<username>', method=['GET'])
+@bp.route('/user/<username>', methods=['GET'])
 def get_user(username):
     return jsonify(User.query.get_or_404(username).to_dict())
 
 
-@bp.route('/user/<username>', method=['POST'])
+@bp.route('/user/<username>', methods=['POST'])
 def create_user(username):
     pass
 
 
-@bp.route('/user/<username>', method=['PUT'])
+@bp.route('/user/<username>', methods=['PUT'])
 def update_user(username):
     pass
 
 
-@bp.route('/user/<username>', method=['DELETE'])
+@bp.route('/user/<username>', methods=['DELETE'])
 def delete_user(username):
     '''
     REST API
