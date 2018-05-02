@@ -10,7 +10,7 @@ from flask import (
 )
 
 # local applications
-from AwesomeTitleServer.auth import bp
+from AwesomeTitleServer.api import bp
 from AwesomeTitleServer.db import (
     db,
     User,
