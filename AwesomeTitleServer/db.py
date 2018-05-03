@@ -1,3 +1,4 @@
+# Third-party Library
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_sqlalchemy import SQLAlchemy
@@ -27,7 +28,6 @@ class User(db.Model):
             'student_number': self.student_number,
             'last_login': self.last_login.isoformat() + 'Z'
         }
-
 
 
 class Url(db.Model):

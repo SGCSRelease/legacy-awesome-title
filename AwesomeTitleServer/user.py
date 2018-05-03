@@ -1,5 +1,8 @@
+# Standard Library
+import os
 from datetime import datetime
 
+# Third-party Library
 from flask import (
     current_app,
     render_template,
@@ -9,6 +12,7 @@ from flask import (
 )
 from flask_bcrypt import Bcrypt
 
+# Local Library
 from .db import (
     db,
     User,
@@ -18,9 +22,6 @@ from .db import (
     NickRecom,
     N,
 )
-
-import os
-
 from .url import addUrl
 
 
@@ -30,8 +31,6 @@ bcrypt = Bcrypt()
 def add_routes(app):
     app.route("/register/", methods=["GET", "POST"])(register)
     app.route("/check_username/<username>/")(check_username)
-    app.route('/login/', methods=["GET", "POST"])(login)
-    app.route('/logout/')(logout)
     app.route('/api/check_pwd/', methods=["POST"])(check_password)
     app.route('/manage/password/', methods=["GET", "POST"])(change_password)
     app.route('/<logged_in_user>/manage/withdraw/')(withdraw_manager)
@@ -42,8 +41,8 @@ def register():
     """GET /register 회원가입폼 POST /register 실제회원가입."""
     if get_logged_in_username():
         return render_template(
-                "_error.html",
-                _error__msg="이미 로그인되어있어요!",
+            "_error.html",
+            _error__msg="이미 로그인되어있어요!",
         ), 400
 
     if request.method == "GET":
@@ -52,66 +51,66 @@ def register():
         username = request.form['usr']
         if not username or len(username) > N:
             return render_template(
-                    "_error.html",
-                    _error__msg="Failed - username이 맞지 않습니다.",
+                "_error.html",
+                _error__msg="Failed - username이 맞지 않습니다.",
             ), 400
         found = check_username(username, is_internal=True)
         if found:
             return render_template(
-                    "_error.html",
-                    _error__msg="Failed - username이 겹칩니다.",
+                "_error.html",
+                _error__msg="Failed - username이 겹칩니다.",
             ), 400
 
         if not request.form['pwd']:
             return render_template(
-                    "_error.html",
-                    _error__msg="Failed - password가 맞지 않습니다.",
+                "_error.html",
+                _error__msg="Failed - password가 맞지 않습니다.",
             ), 400
         if request.form['pwd'] != request.form['pwda']:
             return render_template(
-                    "_error.html",
-                    _error__msg="Failed - password가 맞지 않습니다.",
+                "_error.html",
+                _error__msg="Failed - password가 맞지 않습니다.",
             ), 400
         password_hash = bcrypt.generate_password_hash(request.form['pwd'])
 
         realname = request.form['realname']
         if not realname or len(realname) > N:
             return render_template(
-                    "_error.html",
-                    _error__msg="Failed - 이름이 맞지 않습니다.",
+                "_error.html",
+                _error__msg="Failed - 이름이 맞지 않습니다.",
             ), 400
 
         if len(request.form['sn']) != 8:  # 학번제한 8자
             return render_template(
-                    "_error.html",
-                    _error__msg="Failed - 학번은 여덟 자여야 합니다.",
+                "_error.html",
+                _error__msg="Failed - 학번은 여덟 자여야 합니다.",
             ), 400
 
         try:
             student_number = int(request.form['sn'])
         except ValueError:
             return render_template(
-                    "_error.html",
-                    _error__msg="Failed - 학번이 맞지 않습니다.",
+                "_error.html",
+                _error__msg="Failed - 학번이 맞지 않습니다.",
             ), 400
 
         # 2000학번~현재 년도 학번까지 제한
         thisyear = (datetime.now().year+1)*10000
         if student_number < 20000000 or student_number > thisyear:
             return render_template(
-                    "_error.html",
-                    _error__msg="Failed - 학번이 맞지 않습니다.",
+                "_error.html",
+                _error__msg="Failed - 학번이 맞지 않습니다.",
             ), 400
 
         # 이미 가입한 학번 체크
         found = User.query.filter(
-                User.student_number == student_number,
+            User.student_number == student_number,
         ).first()
 
         if found:
             return render_template(
-                    "_error.html",
-                    _error__msg="이미 가입한 학번입니다.",
+                "_error.html",
+                _error__msg="이미 가입한 학번입니다.",
             ), 400
 
         new_user = User()
@@ -133,7 +132,7 @@ def register():
 def check_username(username, is_internal=False):
     """/check_username/<username> 유저가 존재하는지 확인합니다."""
     found = User.query.filter(
-            User.username == username,
+        User.username == username,
     ).first()
     if not is_internal:
         if found:
@@ -145,68 +144,14 @@ def check_username(username, is_internal=False):
         return None
 
 
-def login():
-    """Issue #12, 로그인 /login"""
-    if request.method == "GET":
-        return render_template("login.html")
-    else:
-        found = check_username(request.form['usr'], is_internal=True)
-        if not found:
-            return render_template(
-                    "_error.html",
-                    _error__msg="로그인 입력정보가 잘못되었습니다.",
-            ), 400
-
-        if not bcrypt.check_password_hash(
-                found.password_hash,
-                request.form['pwd']
-        ):
-            return render_template(
-                    "_error.html",
-                    _error__msg="로그인 입력정보가 잘못되었습니다.",
-            ), 400
-
-        username = request.form['usr']
-        found.last_login = datetime.now()
-        db.session.add(found)
-        db.session.commit()
-        session['username'] = username
-        return redirect('/%s/' % username)
-
-
-def logout():
-    """issue #12 로그아웃"""
-    session.pop('username', None)
-    return redirect('/')
-
-
-def get_logged_in_username():
-    """issue #12 로그인 됬는지 확인하여 Username을 리턴합니다 (없으면 None).
-
-    사실 아래를 짯습니다.
-    >>> if 'username' in session:
-    ...     return session['username']
-    ... return None
-
-    근데 민호형이 이렇게 바꾸었습니다.
-    >>> try:
-    ...     return session['username']
-    ... except KeyError:
-    ...     return None
-
-    한번 더 바꾸면 아래처럼 됩니다.
-    """
-    return session.get('username')  # 없으면 None이 출력됨.
-
-
 def check_password():
     username = get_logged_in_username()
     password = request.form['val']
     found = check_username(username, is_internal=True)
 
     if not bcrypt.check_password_hash(
-                found.password_hash,
-                password
+            found.password_hash,
+            password
     ):
         return "oops", 400
     else:
@@ -240,9 +185,9 @@ def withdraw_manager(logged_in_user):
         return '누가 당신을 싫어하나봐요 ^^', 400
 
     return render_template(
-            "manager.html",
-            manager__right_html_for_menu="_includes/manager/withdrawal.html",
-            currently_logged_in_user=username,
+        "manager.html",
+        manager__right_html_for_menu="_includes/manager/withdrawal.html",
+        currently_logged_in_user=username,
     )
 
 def delete_user():
@@ -251,32 +196,32 @@ def delete_user():
 
     # User DB 삭제
     found = User.query.filter(
-            User.username == username,
+        User.username == username,
     ).first()
     db.session.delete(found)
 
     # URL DB 삭제
     found = Url.query.filter(
-           Url.username == username,
+        Url.username == username,
     ).all()
     for url in found:
         db.session.delete(url)
 
     # Photo DB 삭제
     found = Photo.query.filter(
-            Photo.username == username,
+        Photo.username == username,
     ).first()
     if found:
         db.session.delete(found)
         os.remove(os.path.join(
             current_app.config['UPLOAD_FOLDER'],
             found.photo,
-            )
         )
+                  )
 
     # NickRecom DB 삭제
     found = NickRecom.query.filter(
-            NickRecom.username == username,
+        NickRecom.username == username,
     ).all()
     for nickrecomm in found:
         db.session.delete(nickrecomm)

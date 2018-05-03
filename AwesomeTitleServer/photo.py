@@ -1,7 +1,8 @@
+# Standard Library
 import os
-
 import imghdr
 
+# Third-party Library
 from flask import (
     current_app,
     request,
@@ -10,11 +11,12 @@ from flask import (
     render_template,
 )
 
+# Local application
 from .db import (
     db,
     Photo,
 )
-from .user import get_logged_in_username
+from .auth.utils import get_logged_in_username
 
 image_extentions = ( 'gif', 'jpg', 'jpeg', 'png')
 
@@ -31,20 +33,20 @@ def photo_upload(link):
     username = get_logged_in_username()
     if not username:
         return render_template(
-                "_error.html",
-                _error__msg="로그인이 되어있지 않습니다.",
+            "_error.html",
+            _error__msg="로그인이 되어있지 않습니다.",
         ), 400
     if not link == username:
         return render_template(
-                "_error.html",
-                _error__msg="자신이 아닙니다!",
+            "_error.html",
+            _error__msg="자신이 아닙니다!",
         ), 400
 
     # 파일을 업로드
     if request.method == "GET":
         return render_template(
-                "manager.html",
-                manager__right_html_for_menu="_includes/manager/photo.html",
+            "manager.html",
+            manager__right_html_for_menu="_includes/manager/photo.html",
         )
 
     # 파일을 업로드 후 저장
@@ -52,14 +54,14 @@ def photo_upload(link):
         file = request.files['upfile']
         if not file:
             return render_template(
-                    "_error.html",
-                    _error__msg="파일을 업로드하지 않았습니다.",
+                "_error.html",
+                _error__msg="파일을 업로드하지 않았습니다.",
             ), 400
-        
+
         if not imghdr.what(file) in image_extentions:
             return render_template(
-                    "_error.html",
-                    _error__msg="이미지 파일이 아닙니다.",
+                "_error.html",
+                _error__msg="이미지 파일이 아닙니다.",
             ), 400
 
         filename = username + os.path.splitext(file.filename)[1]
@@ -69,7 +71,7 @@ def photo_upload(link):
             os.makedirs(current_app.config['UPLOAD_FOLDER'])
 
         found = Photo.query.filter(
-                Photo.username == username,
+            Photo.username == username,
         ).first()
 
         # Photo db에 저장이 되어있지 않으면 db에 추가
@@ -84,7 +86,7 @@ def photo_upload(link):
             os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], found.photo))
             found.photo = filename
             db.session.add(found)
-        
+
         file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
         db.session.commit()
         return redirect("/%s/manage/" % (username, ))
@@ -94,9 +96,9 @@ def delete_photo():
     username = get_logged_in_username()
     if not username:
         return render_template(
-                "_error.html",
-                _error__msg="당신 계정으로 들어가시죠?",
-                ), 400
+            "_error.html",
+            _error__msg="당신 계정으로 들어가시죠?",
+        ), 400
 
     found = Photo.query.filter(
         Photo.username == username,
@@ -104,9 +106,9 @@ def delete_photo():
 
     if not found:
         return render_template(
-                "_error.html",
-                _error__msg="삭제할 사진이 없어요!",
-                ), 400
+            "_error.html",
+            _error__msg="삭제할 사진이 없어요!",
+        ), 400
 
     filename = found.photo
 
