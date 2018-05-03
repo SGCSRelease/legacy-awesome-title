@@ -12,9 +12,9 @@ from .db import (
     Nickname,
 )
 from .user import (
-    get_logged_in_username,
     check_username,
 )
+from .auth.utils import get_logged_in_username
 
 
 def add_routes(app):

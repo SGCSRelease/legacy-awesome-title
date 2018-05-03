@@ -31,8 +31,6 @@ bcrypt = Bcrypt()
 def add_routes(app):
     app.route("/register/", methods=["GET", "POST"])(register)
     app.route("/check_username/<username>/")(check_username)
-    app.route('/login/', methods=["GET", "POST"])(login)
-    app.route('/logout/')(logout)
     app.route('/api/check_pwd/', methods=["POST"])(check_password)
     app.route('/manage/password/', methods=["GET", "POST"])(change_password)
     app.route('/<logged_in_user>/manage/withdraw/')(withdraw_manager)
@@ -144,60 +142,6 @@ def check_username(username, is_internal=False):
         if found:
             return found
         return None
-
-
-def login():
-    """Issue #12, 로그인 /login"""
-    if request.method == "GET":
-        return render_template("login.html")
-    else:
-        found = check_username(request.form['usr'], is_internal=True)
-        if not found:
-            return render_template(
-                "_error.html",
-                _error__msg="로그인 입력정보가 잘못되었습니다.",
-            ), 400
-
-        if not bcrypt.check_password_hash(
-                found.password_hash,
-                request.form['pwd']
-        ):
-            return render_template(
-                "_error.html",
-                _error__msg="로그인 입력정보가 잘못되었습니다.",
-            ), 400
-
-        username = request.form['usr']
-        found.last_login = datetime.now()
-        db.session.add(found)
-        db.session.commit()
-        session['username'] = username
-        return redirect('/%s/' % username)
-
-
-def logout():
-    """issue #12 로그아웃"""
-    session.pop('username', None)
-    return redirect('/')
-
-
-def get_logged_in_username():
-    """issue #12 로그인 됬는지 확인하여 Username을 리턴합니다 (없으면 None).
-
-    사실 아래를 짯습니다.
-    >>> if 'username' in session:
-    ...     return session['username']
-    ... return None
-
-    근데 민호형이 이렇게 바꾸었습니다.
-    >>> try:
-    ...     return session['username']
-    ... except KeyError:
-    ...     return None
-
-    한번 더 바꾸면 아래처럼 됩니다.
-    """
-    return session.get('username')  # 없으면 None이 출력됨.
 
 
 def check_password():

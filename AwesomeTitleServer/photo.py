@@ -16,7 +16,7 @@ from .db import (
     db,
     Photo,
 )
-from .user import get_logged_in_username
+from .auth.utils import get_logged_in_username
 
 image_extentions = ( 'gif', 'jpg', 'jpeg', 'png')
 
