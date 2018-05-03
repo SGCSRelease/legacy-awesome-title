@@ -4,6 +4,7 @@ from flask import (
 )
 from flask_bcrypt import Bcrypt
 
+
 bcrypt = Bcrypt()
 
 def get_logged_in_username():

@@ -6,7 +6,7 @@ from flask import (
 )
 
 # Local Application
-from AwesomeTitleServer.user import get_logged_in_username
+from .user import get_logged_in_username
 
 
 def login_required(func):
