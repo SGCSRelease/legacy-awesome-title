@@ -6,12 +6,12 @@ from flask import (
 from flask_bcrypt import Bcrypt
 
 # Local Application
-from AwesomeTitleServer import app
 from .url import goto
+from .auth import bp
 from .auth.utils import bcrypt
 
 
-@app.route('/login/', methods=['GET', 'POST'])
+@bp.route('/login/', methods=['GET', 'POST'])
 def login():
     '''
     issue #12 Login
@@ -42,7 +42,7 @@ def login():
         return redirect(url_for(goto, username))
 
 
-@app.route('/logout/')
+@bp.route('/logout/')
 def logout():
     '''
     issue #12 Logout
