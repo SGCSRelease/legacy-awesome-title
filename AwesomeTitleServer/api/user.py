@@ -10,8 +10,8 @@ from flask import (
 )
 
 # local applications
-from AwesomeTitleServer.api import bp
-from AwesomeTitleServer.db import (
+from .api import bp
+from .db import (
     db,
     User,
     Url,
@@ -19,6 +19,7 @@ from AwesomeTitleServer.db import (
     Nickname,
     NickRecom,
 )
+
 
 
 @bp.route('/user/<username>', methods=['GET'])

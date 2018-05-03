@@ -6,12 +6,12 @@ from flask import (
 )
 
 # Local Application
-from AwesomeTitleServer.db import (
+from .db import (
     User,
     Nickname,
     NickRecom,
 )
-from AwesomeTitleServer.api import bp as api
+from .api import bp as api
 
 
 @api.route('/nickname/<username>', methods=['GET'])
