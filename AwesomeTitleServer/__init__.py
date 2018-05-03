@@ -14,7 +14,7 @@ from .nickname import add_routes as add_nickname_routes
 from .nickname import has_new_nicknames
 from .photo import add_routes as add_photo_routes
 from .user import add_routes as add_user_routes
-from .user import (
+from .auth.utils import (
     bcrypt,
     get_logged_in_username,
 )
@@ -42,6 +42,9 @@ def create_app():
     add_nickname_routes(app)
     add_photo_routes(app)
     add_url_routes(app)
+
+    from AwesomeTitleServer.auth import bp as auth_bp
+    app.register_blueprint(auth_bp, prefix='/auth')
 
     return app
 
