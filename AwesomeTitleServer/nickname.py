@@ -37,13 +37,13 @@ def RecommendNickname():
         """Issue #71, 별명의 길이가 0일 경우 에러페이지로 이동."""
         if not len(nick):
             return render_template(
-                    "_error.html",
-                    _error__msg='별명이 없습니다.',
+                "_error.html",
+                _error__msg='별명이 없습니다.',
             ), 400
         if not check_username(target, is_internal=True):
             return render_template(
-                    "_error.html",
-                    _error__msg='존재하지 않는 유저에게 추천하려고 하였습니다.',
+                "_error.html",
+                _error__msg='존재하지 않는 유저에게 추천하려고 하였습니다.',
             ), 400
 
         found = Nickname.query.filter(
@@ -52,8 +52,8 @@ def RecommendNickname():
         ).first()
         if found:
             return render_template(
-                    "_error.html",
-                    _error__msg='이미 해당유저가 사용중인 별명입니다.',
+                "_error.html",
+                _error__msg='이미 해당유저가 사용중인 별명입니다.',
             ), 400
 
         new = NickRecom()
@@ -69,7 +69,7 @@ def RecommendNickname():
 </head>
 <body>추천되었습니다!</body>
 </html>
-""" % (request.form['target'],)
+        """ % (request.form['target'],)
 
 
 def ManageMyNicknames(link):
@@ -77,18 +77,18 @@ def ManageMyNicknames(link):
     Issue #7 내가 추천받은 닉네임들과 사용중인 닉네임들을 관리합니다.
     1. 내 닉네임들을 보여줌
     2. 내 닉네임들을 빼거나 추가할 수 있음.
-      - 닉네임 등록 시 url db에 추가할지 물어보고, True일경우 추가해줌.
-      - 이미 추천된 닉네임을 추가하려고할 경우, 추천받은 닉네임을 추가하는 것처럼 행동.
+    - 닉네임 등록 시 url db에 추가할지 물어보고, True일경우 추가해줌.
+    - 이미 추천된 닉네임을 추가하려고할 경우, 추천받은 닉네임을 추가하는 것처럼 행동.
     3. 추천받은 닉네임 + 추천수를 보여줌
     4. 추천받은 닉네임을 추가할 수 있음.
-      - 그러면 추천DB를 돌면서, 해당 닉네임을 추천한 것들을 다 지워야함.
-      - recommender 채우기
+    - 그러면 추천DB를 돌면서, 해당 닉네임을 추천한 것들을 다 지워야함.
+    - recommender 채우기
     """
     username = get_logged_in_username()
     if not username:
         return render_template(
-                "_error.html",
-                _error__msg='로그인 해주세요!!',
+            "_error.html",
+            _error__msg='로그인 해주세요!!',
         ), 400
 
     found = Nickname.query.filter(
@@ -124,8 +124,8 @@ def DelMyNick(idx):
     username = get_logged_in_username()
     if not found.username == username:
         return render_template(
-                "_error.html",
-                _error__msg="fuck off",
+            "_error.html",
+            _error__msg="fuck off",
         ), 400
 
     db.session.delete(found)
@@ -143,8 +143,8 @@ def ManageRecommNick(idx):
     username = get_logged_in_username()
     if not found_recomm.username == username:
         return render_template(
-                "_error.html",
-                _error__msg="ㅗㅗ",
+            "_error.html",
+            _error__msg="ㅗㅗ",
         ), 400
 
     nick = found_recomm.nick
