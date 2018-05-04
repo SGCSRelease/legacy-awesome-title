@@ -24,16 +24,19 @@ from .api import bp as api_bp
 
 
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
 
-    try:
-        from . import config
-        app.config.from_object(config)
-    except ImportError as e:
-        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-        if __name__ == "__main__":
-            raise Exception("Please run `python manage.py config` first.")
+    if test_config is None:
+        try:
+            from . import config
+            app.config.from_object(config)
+        except ImportError as e:
+            app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+            if __name__ == "__main__":
+                raise Exception("Please run `python manage.py config` first.")
+    else:
+        app.config.update(test_config)
 
     admin.init_app(app)
     bcrypt.init_app(app)
