@@ -6,7 +6,7 @@ from flask import (
 from flask_bcrypt import Bcrypt
 
 # Local Application
-from .url import goto
+from AwesomeTitleServer.url import goto
 from .auth import bp
 from .auth.utils import bcrypt
 
