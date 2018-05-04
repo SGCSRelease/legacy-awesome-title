@@ -34,7 +34,6 @@ def add_routes(app):
     app.route('/api/check_pwd/', methods=["POST"])(check_password)
     app.route('/manage/password/', methods=["GET", "POST"])(change_password)
     app.route('/<logged_in_user>/manage/withdraw/')(withdraw_manager)
-    app.route('/api/user/delete/', methods=["POST"])(delete_user)
 
 
 def register():
@@ -189,53 +188,3 @@ def withdraw_manager(logged_in_user):
         manager__right_html_for_menu="_includes/manager/withdrawal.html",
         currently_logged_in_user=username,
     )
-
-def delete_user():
-
-    username = get_logged_in_username()
-
-    # User DB 삭제
-    found = User.query.filter(
-        User.username == username,
-    ).first()
-    db.session.delete(found)
-
-    # URL DB 삭제
-    found = Url.query.filter(
-        Url.username == username,
-    ).all()
-    for url in found:
-        db.session.delete(url)
-
-    # Photo DB 삭제
-    found = Photo.query.filter(
-        Photo.username == username,
-    ).first()
-    if found:
-        db.session.delete(found)
-        os.remove(os.path.join(
-            current_app.config['UPLOAD_FOLDER'],
-            found.photo,
-        )
-                  )
-
-    # NickRecom DB 삭제
-    found = NickRecom.query.filter(
-        NickRecom.username == username,
-    ).all()
-    for nickrecomm in found:
-        db.session.delete(nickrecomm)
-
-    # Nickname DB 삭제
-    found = Nickname.query.filter(
-        Nickname.username == username,
-    ).all()
-    for nickname in found:
-        db.session.delete(nickname)
-
-    # DB commit
-    db.session.commit()
-
-    # Logout
-    session.pop('username', None)
-    return redirect('/')
