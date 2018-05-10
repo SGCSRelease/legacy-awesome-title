@@ -23,16 +23,16 @@ from .url import goto
 from .api import bp as api_bp
 
 try:
-    from . import config
+    from .config import Config
 except ImportError as e:
     raise Exception("Please run `flask config` first.")
 
 
 
-def create_app(conf=config):
+def create_app(config_class=Config):
     app = Flask(__name__)
 
-    app.config.from_object(conf)
+    app.config.from_object(config_class)
 
     admin.init_app(app)
     bcrypt.init_app(app)
