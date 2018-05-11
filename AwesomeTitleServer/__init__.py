@@ -22,18 +22,17 @@ from .url import add_routes as add_url_routes
 from .url import goto
 from .api import bp as api_bp
 
+try:
+    from .config import Config
+except ImportError as e:
+    raise Exception("Please run `flask config` first.")
 
 
-def create_app():
+
+def create_app(config_class=Config):
     app = Flask(__name__)
 
-    try:
-        from . import config
-        app.config.from_object(config)
-    except ImportError as e:
-        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-        if __name__ == "__main__":
-            raise Exception("Please run `python manage.py config` first.")
+    app.config.from_object(config_class)
 
     admin.init_app(app)
     bcrypt.init_app(app)
@@ -45,16 +44,14 @@ def create_app():
     add_photo_routes(app)
     add_url_routes(app)
 
-    from AwesomeTitleServer.auth import bp as auth_bp
-    app.register_blueprint(auth_bp, prefix='/auth')
+    # Registering Blueprints
+    from AwesomeTitleServer import auth, api
+    app.register_blueprint(auth.bp, prefix='/auth')
+    app.register_blueprint(api.bp, prefix='/api')
 
     return app
 
-
 app = create_app()
-
-app.register_blueprint(api_bp, url_prefix='/api')
-
 
 @app.route("/")
 def index():

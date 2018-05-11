@@ -1,7 +1,7 @@
 .python-version
 AwesomeTitleServer/config.py
 datas/
-
+*.pytest_cache
 
 
 
