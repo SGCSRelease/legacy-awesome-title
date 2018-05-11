@@ -5,3 +5,6 @@ from flask import (
 
 
 bp = Blueprint('auth', __name__)
+
+
+from . import login

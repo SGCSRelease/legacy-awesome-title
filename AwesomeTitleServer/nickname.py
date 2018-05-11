@@ -11,9 +11,6 @@ from .db import (
     NickRecom,
     Nickname,
 )
-from .user import (
-    check_username,
-)
 from .auth.utils import get_logged_in_username
 
 
