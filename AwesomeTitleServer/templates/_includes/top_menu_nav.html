@@ -4,7 +4,7 @@
         <ul class="nav navbar-nav">
             {% if get_logged_in_username %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/logout/">로그아웃</a>
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">로그아웃</a>
                 </li>
                 <li class="nav-item active">
                     {% if has_new_nicknames() %}
@@ -20,7 +20,7 @@
                     <a class="nav-link" href="/register/">회원가입</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/login/">로그인</a>
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">로그인</a>
                 </li>
             {% endif %}
             <li class="nav-item">
