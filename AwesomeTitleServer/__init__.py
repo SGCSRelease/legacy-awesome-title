@@ -20,15 +20,13 @@ from .auth.utils import (
 )
 from .url import add_routes as add_url_routes
 from .url import goto
-
 try:
     from .config import Config
 except ImportError as e:
     raise Exception("Please run `flask config` first.")
 
 
-
-def create_app(config_class=Config):
+def create_app(config_class=None):
     app = Flask(__name__)
 
     app.config.from_object(config_class)
@@ -50,7 +48,12 @@ def create_app(config_class=Config):
 
     return app
 
-app = create_app()
+try:
+    from .config import Config
+    app = create_app(Config)
+except ImportError as e:
+    if __name__=="__main__":
+        raise Exception("Please run `flask config` first.")
 
 @app.route("/")
 def index():
