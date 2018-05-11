@@ -1,14 +1,22 @@
+# Standard
+from datetime import datetime
+
 # Third Party
 from flask import (
+    request,
+    session,
     render_template,
     url_for,
+    redirect,
 )
 from flask_bcrypt import Bcrypt
 
 # Local Application
 from AwesomeTitleServer.url import goto
-from .auth import bp
-from .auth.utils import bcrypt
+from AwesomeTitleServer.db import db
+from AwesomeTitleServer.user import check_username
+from . import bp
+from .utils import bcrypt
 
 
 @bp.route('/login/', methods=['GET', 'POST'])
