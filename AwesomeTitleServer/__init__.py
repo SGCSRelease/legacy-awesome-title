@@ -20,7 +20,6 @@ from .auth.utils import (
 )
 from .url import add_routes as add_url_routes
 from .url import goto
-from .api import bp as api_bp
 
 try:
     from .config import Config
