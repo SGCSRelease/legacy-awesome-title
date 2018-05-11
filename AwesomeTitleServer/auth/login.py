@@ -12,7 +12,6 @@ from flask import (
 from flask_bcrypt import Bcrypt
 
 # Local Application
-from AwesomeTitleServer.url import goto
 from AwesomeTitleServer.db import db
 from AwesomeTitleServer.user import check_username
 from . import bp
@@ -47,7 +46,7 @@ def login():
         db.session.add(found)
         db.session.commit()
         session['username'] = username
-        return redirect(url_for(goto, username))
+        return redirect(url_for('goto', link=username))
 
 
 @bp.route('/logout/')
