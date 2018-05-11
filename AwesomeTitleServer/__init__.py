@@ -46,8 +46,8 @@ def create_app(config_class=Config):
 
     # Registering Blueprints
     from AwesomeTitleServer import auth, api
-    app.register_blueprint(auth.bp, prefix='/auth')
-    app.register_blueprint(api.bp, prefix='/api')
+    app.register_blueprint(auth.bp, url_prefix='/auth')
+    app.register_blueprint(api.bp, url_prefix='/api')
 
     return app
 
