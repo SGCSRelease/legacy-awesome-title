@@ -20,10 +20,6 @@ from .auth.utils import (
 )
 from .url import add_routes as add_url_routes
 from .url import goto
-try:
-    from .config import Config
-except ImportError as e:
-    raise Exception("Please run `flask config` first.")
 
 
 def create_app(config_class=None):
@@ -52,6 +48,10 @@ try:
     from .config import Config
     app = create_app(Config)
 except ImportError as e:
+    class DefaultConfig(object):
+        SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+    app = create_app(DefaultConfig)
     if __name__=="__main__":
         raise Exception("Please run `flask config` first.")
 
