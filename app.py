@@ -21,16 +21,16 @@ migrate = Migrate(app, db)
 @app.cli.command()
 @click.option('--mysql', default=None,
               help='Whether use mysql')
-@click.option('--username', default=_default,
+@click.option('--username', default=None,
               help='Mysql username')
 @click.option('--password', default=None,
               prompt=True, confirmation_prompt=True, hide_input=True,
               help='Mysql password')
-@click.option('--server', default=_server,
+@click.option('--server', default=None,
               help='Mysql server')
-@click.option('--database', default=_default,
+@click.option('--database', default=None,
               help='Mysql database')
-@click.option('--folder', default=_folder,
+@click.option('--folder', default=None,
               help='Image upload folder')
 def config(
         mysql,
@@ -61,20 +61,20 @@ def config(
             raise Exception("`-m` or `--mysql` needed `True` or `False`.")
     if use_mysql is True:
         # XXX : Check '-u' or '--username' options entered.
-        if username is _default:
+        if username is None:
             username = click.prompt("MySQL DB Username", default=username)
         # XXX : Check '-p' or '--password' options entered.
         if not password:
             password = click.prompt("MySQL DB Password", hide_input=True)
         # XXX : Check '-s' or '--server' options entered.
-        if server is _server:
-            server = click.prompt("MySQL DB Server", default=server)
+        if server is None:
+            server = click.prompt("MySQL DB Server", default=_server)
         # XXX : Check '-d' or '--database' options entered.
-        if database is _default:
-            database = click.prompt("MySQL DB Database", default=database)
+        if database is None:
+            database = click.prompt("MySQL DB Database", default=_default)
     # XXX : Check '-f' or '--folder' options entered.
-    if folder is _folder:
-        folder = click.prompt("Image Upload Folder", default=folder)
+    if folder is None:
+        folder = click.prompt("Image Upload Folder", default=_folder)
     folder = join(base, folder)
     if not exists(folder):
         makedirs(folder)
