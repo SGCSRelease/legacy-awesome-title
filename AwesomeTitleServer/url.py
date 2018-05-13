@@ -1,3 +1,4 @@
+# Third-party Library
 from flask import (
     render_template,
     url_for,
@@ -5,9 +6,10 @@ from flask import (
     redirect,
 )
 
+# Local application
 from .db import (
     db,
-    URL,
+    Url,
     User,
     Photo,
     Nickname,
@@ -31,8 +33,8 @@ def goto(link, is_manage=False):
         else:
             return userpage(found_at_User)
 
-    found = URL.query.filter(
-        URL.link == link,
+    found = Url.query.filter(
+        Url.link == link,
     ).first()
     if found:
         this_user = User.query.filter(
@@ -44,8 +46,8 @@ def goto(link, is_manage=False):
             return userpage(this_user)
     else:
         return render_template(
-                "_error.html",
-                _error__msg="존재하지 않는 페이지입니다.",
+            "_error.html",
+            _error__msg="존재하지 않는 페이지입니다.",
         ), 404
 
 
@@ -53,15 +55,15 @@ def gotomanage(link):
     return goto(link, is_manage=True)
 
 
-def addURL(link, username):
+def addUrl(link, username):
     """jmg) 아이디에 여러 링크를 연결하는 함수입니다."""
     # link 중복 check
-    found = URL.query.filter(
-            URL.link == link,
+    found = Url.query.filter(
+        Url.link == link,
     ).first()
     if found:
         return False
-    newP = URL()
+    newP = Url()
     newP.link = link
     newP.username = username
     db.session.add(newP)
@@ -89,12 +91,12 @@ def userpage(user):
     ).all()
 
     return render_template(
-            "profile.html",
-            profile__is_in_manager=False,
-            profile__photo_url=my_photo,
-            profile__user_class=user,
-            profile__user_nickname_classes=my_nicknames,
-            top_menu_nav__current_page_username=user.username,
+        "profile.html",
+        profile__is_in_manager=False,
+        profile__photo_url=my_photo,
+        profile__user_class=user,
+        profile__user_nickname_classes=my_nicknames,
+        top_menu_nav__current_page_username=user.username,
     )
 
 
@@ -113,13 +115,13 @@ def usermanagepage(user):
         Nickname.username == user.username,
     ).all()
     return render_template(
-            "manager.html",
-            manager__right_html_for_menu="_includes/profile.html",
-            profile__is_in_manager=True,
-            profile__photo_url=my_photo,
-            profile__user_class=user,
-            profile__user_nickname_classes=my_nicknames,
-            top_menu_nav__current_page_username=user.username,
+        "manager.html",
+        manager__right_html_for_menu="_includes/profile.html",
+        profile__is_in_manager=True,
+        profile__photo_url=my_photo,
+        profile__user_class=user,
+        profile__user_nickname_classes=my_nicknames,
+        top_menu_nav__current_page_username=user.username,
     )
 
 

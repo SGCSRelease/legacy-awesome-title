@@ -1,8 +1,10 @@
+# Third Party
 from flask import (
     Flask,
     redirect,
 )
 
+# Local Application
 from .db import (
     admin,
     db,
@@ -12,33 +14,46 @@ from .nickname import add_routes as add_nickname_routes
 from .nickname import has_new_nicknames
 from .photo import add_routes as add_photo_routes
 from .user import add_routes as add_user_routes
-from .user import (
+from .auth.utils import (
     bcrypt,
     get_logged_in_username,
 )
 from .url import add_routes as add_url_routes
 from .url import goto
 
-app = Flask(__name__)
+
+def create_app(config_class=None):
+    app = Flask(__name__)
+
+    app.config.from_object(config_class)
+
+    admin.init_app(app)
+    bcrypt.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+    add_user_routes(app)
+    add_nickname_routes(app)
+    add_photo_routes(app)
+    add_url_routes(app)
+
+    # Registering Blueprints
+    from AwesomeTitleServer import auth, api
+    app.register_blueprint(auth.bp, url_prefix='/auth')
+    app.register_blueprint(api.bp, url_prefix='/api')
+
+    return app
 
 try:
-    from . import config
-    app.config.from_object(config)
+    from .config import Config
+    app = create_app(Config)
 except ImportError as e:
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    if __name__ == "__main__":
-        raise Exception("Please run `python manage.py config` first.")
+    class DefaultConfig(object):
+        SQLALCHEMY_TRACK_MODIFICATIONS = True
 
-admin.init_app(app)
-bcrypt.init_app(app)
-db.init_app(app)
-migrate.init_app(app, db)
-
-add_user_routes(app)
-add_nickname_routes(app)
-add_photo_routes(app)
-add_url_routes(app)
-
+    app = create_app(DefaultConfig)
+    if __name__=="__main__":
+        raise Exception("Please run `flask config` first.")
 
 @app.route("/")
 def index():

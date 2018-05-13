@@ -1,0 +1,14 @@
+sudo: false
+language: python
+python:
+  - 3.5
+  - 3.6
+env:
+  - FLASK=1.0.2
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+  - FLASK_APP=app.py flask config --mysql=True --username=test --password=test --server=localhost --database=test --folder=DOWNLOADS
+# command to run tests
+script:
+  - pytest

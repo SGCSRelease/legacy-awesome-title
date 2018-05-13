@@ -1,3 +1,4 @@
+click
 flask
 flask-admin
 flask-migrate
